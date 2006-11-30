@@ -98,16 +98,44 @@ def main(argv) :
                 tempeventtime = 0
                 addedmoduletime = 0
 
-    for module in timeModuleDict.keys() :
-        print 'module: %30s time: %7.5f percentage: %03.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
-
-    print 'events: %30d time: %7.5f' % (timeEventCount, timeEvent/timeEventCount)
-
-    # calculate time per event for RS and Ckf
-
-    rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','cleanRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
+    # special module lists
+    rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
     ckfmodules = ['globalMixedSeeds','ckfTrackCandidates','ctfWithMaterialTracks']
 
+    trackmodules = rsmodules + ckfmodules
+
+    # print summary
+
+    separator = ''
+    for i in range(94) :
+        separator += '-'
+
+    print ''
+    print 'Module Timing Summary'
+    print ''
+    print separator
+
+    for module in rsmodules :
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+
+    print separator
+
+    for module in ckfmodules :
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+
+    print separator
+
+    sorted_keys = timeModuleDict.keys()
+    sorted_keys.sort()
+    for module in sorted_keys :
+        if module not in trackmodules :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+
+    print separator
+
+    print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount)
+
+    # calculate time per event for RS and Ckf
     rsTimePerEvent = 0.
     for rsmodule in rsmodules :
         if rsmodule in timeModuleDict.keys() :
@@ -120,33 +148,30 @@ def main(argv) :
 
     print ''
     if  rsTimePerEvent != 0 :
-        print 'module: %30s time: %7.5f percentage: %03.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
     if  ckfTimePerEvent != 0 :
-        print 'module: %30s time: %7.5f percentage: %03.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
 
-    # column for overview table
     print ''
-    print 'Column for overview table, orderer after:'
-    print 'globalMixedSeeds ckfTrackCandidates ctfWithMaterialTracks roadSearchSeeds rawRoadSearchClouds cleanRoadSearchClouds rsTrackCandidates rsWithMaterialTracks'
+    print 'Summary Sheet output'
     print ''
-    module = 'globalMixedSeeds'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'ckfTrackCandidates'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'ctfWithMaterialTracks'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'roadSearchSeeds'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'rawRoadSearchClouds'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'cleanRoadSearchClouds'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'rsTrackCandidates'
-    print timeModuleDict[module]/timeModuleCount[module]
-    module = 'rsWithMaterialTracks'
-    print timeModuleDict[module]/timeModuleCount[module]
+    print 'format:'
+    print ''
+    print 'events'
+    for module in rsmodules :
+        print module
+    for module in ckfmodules :
+        print module
 
-        
+    print ''
+    print timeEventCount
 
+    for module in rsmodules :
+        print timeModuleDict[module]/timeModuleCount[module]
+    print rsTimePerEvent
+    for module in ckfmodules :
+        print timeModuleDict[module]/timeModuleCount[module]
+    print ckfTimePerEvent
+    
 if __name__ == '__main__' :
     main(sys.argv[1:])
