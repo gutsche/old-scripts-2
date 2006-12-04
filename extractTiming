@@ -59,44 +59,40 @@ def main(argv) :
             sys.exit(2)
 
         line = logfile.readline()
-        tempeventtime = 0
-        addedmoduletime = 0
+        time = {}
         while line :
             line = line.strip()
-            if line.count('TimeEvent>') > 0 :
-                if debug :
-                    print 'TimeEvent line:',line
-                linearray = line.split()
-                try:
-                    tempeventtime = float(linearray[-1])
-                    if tempeventtime < 1000000000. :
-                        timeEvent      += tempeventtime
-                        timeEventCount += 1
-                except ValueError:
-                    print 'line:',line,'could not be used to extract time of the event'
+            # timevent is always the last information from the event
+            # fill arrays when timevent is found, normalize with normalization info
             if line.count('TimeModule>') > 0 :
                 if debug :
                     print 'TimeModule line:',line
                 try:
                     linearray = line.split()
                     if len(linearray) == 6 :
-                        temptime = float(linearray[-1])
-                        addedmoduletime += temptime
-                        tempmodule = linearray[-3]
-                        if tempmodule in timeModuleDict.keys() :
-                            timeModuleDict[tempmodule] += temptime
+                        module = linearray[-3]
+                        time[module] = float(linearray[-1])
+                        if module in timeModuleCount.keys() :
+                            timeModuleCount[module] += 1
                         else :
-                            timeModuleDict[tempmodule] = temptime
-                        if tempmodule in timeModuleCount.keys() :
-                            timeModuleCount[tempmodule] += 1
-                        else :
-                            timeModuleCount[tempmodule] = 1
+                            timeModuleCount[module] = 1
                 except ValueError:
                     print 'line:',line,'could not be used to extract time of a module'
+            if line.count('TimeEvent>') > 0 :
+                if debug :
+                    print 'TimeEvent line:',line
+                linearray = line.split()
+                try:
+                    timeEvent      += float(linearray[-1])
+                    timeEventCount += 1
+                    for module in time.keys() :
+                        if module in timeModuleDict.keys() :
+                            timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                        else :
+                            timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                except ValueError:
+                    print 'line:',line,'could not be used to extract time of the event'
             line = logfile.readline()
-            if tempeventtime != 0 :
-                tempeventtime = 0
-                addedmoduletime = 0
 
     # special module lists
     rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
