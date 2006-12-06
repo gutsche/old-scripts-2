@@ -13,31 +13,80 @@ def main(argv) :
     
     """
 
-    warnings = []
-    errors = []
+    warnings = {}
+    errors = {}
     runs = {}
 
     filenames = argv[0:]
     for filename in filenames :
         if os.path.exists(filename) :
             file = open(filename)
+            # print 'File:',filename
             line = file.readline()
             while line :
                 tmp = ''
                 if line.find('MSG-w') >= 0 :
+                    header = line
+                    line = file.readline()
+                    while line.find('pre-events') < 0 and ( line.find('Run:') < 0 and line.find('Event:') < 0 ) :
+                        header += line
+                        line = file.readline()
+                    header += line
+                    line = file.readline()
+                    header = header.replace('\n',' ')
+                    category = header.split()[1] + ' ' + header.split()[2]
+
+                    counter = 0
                     tmp += line
                     line = file.readline()
-                    while line[0] != '%' :
-                        tmp += line
-                        line = file.readline()
-                    warnings.append(tmp)
+                    try:
+                        while line[0] != '%' :
+                            if counter < 2-1 :
+                                tmp += line
+                                counter += 1
+                            line = file.readline()
+
+                        if category in warnings.keys() :
+                            if tmp in warnings[category].keys() :
+                                warnings[category][tmp] += 1
+                            else :
+                                warnings[category][tmp] = 1
+                        else :
+                            warnings[category] = {tmp : 1}
+                    except:
+                        dummy = 1
+
                 if line.find('MSG-e') >= 0 :
+                    header = line
+                    line = file.readline()
+                    while line.find('pre-events') > 0 or ( line.find('Run:') > 0 and line.find('Event:') > 0 ) :
+                        header += line
+                        line = file.readline()
+                    header = header.replace('\n',' ')
+                    category = header.split()[1] + ' ' + header.split()[2]
+
+                    counter = 0
+
                     tmp += line
                     line = file.readline()
-                    while line[0] != '%' :
-                        tmp += line
-                        line = file.readline()
-                    errors.append(tmp)
+                    try:
+                        while line[0] != '%' :
+                            if counter < 2-1 :
+                                tmp += line
+                                counter += 1
+                            line = file.readline()
+
+                        if tmp.find('next Surface') < 0 :
+                            if category in errors.keys() :
+                                if tmp in errors[category].keys() :
+                                    errors[category][tmp] += 1
+                                else :
+                                    errors[category][tmp] = 1
+                            else :
+                                errors[category] = {tmp : 1}
+                    except:
+                        dummy = 1
+
                 if line.find('Begin processing') >= 0 :
                     try:
                         run = int(line.split()[-3].strip().split(',')[0].strip())
@@ -49,34 +98,60 @@ def main(argv) :
                     except:
                         tmp = ''
                 line = file.readline()
-
+                    
         else :
             print 'File:',filename,'does not exist!'
 
+
+    # separator
+    separator = ''
+    for i in range(100) :
+        separator += '-'
+
         
     # print warnings
-    counter = 0
-    for warning in warnings :
-        counter += 1
-        print ''
-        print 'Warning:',counter
-        print ''
-        print warning
+    total = 0
+    for category in warnings.keys() :
+        for warning in warnings[category] :
+            total += warnings[category][warning]
+
+    print ''
+    print separator
+    print separator
+    print 'Number of warnings:',total
+
+    for category in warnings.keys() :
+        for warning in warnings[category].keys() :
+            print separator
+            print ''
+            print warnings[category][warning],'warning(s) in category:',category,'with first 2 lines of message:'
+            print ''
+            print warning
 
     # print errors
-    counter = 0
-    for error in errors :
-        counter += 1
-        print ''
-        print 'Error:',counter
-        print ''
-        print error
+    total = 0
+    for category in errors.keys() :
+        for error in errors[category] :
+            total += errors[category][error]
+
+    print ''
+    print separator
+    print separator
+    print 'Number of errors:',total
+
+    for category in errors.keys() :
+        for error in errors[category].keys() :
+            print separator
+            print ''
+            print errors[category][error],'error(s) in category:',category,'with first 2 lines of message:'
+            print ''
+            print error
 
     # print run and event summary
     print ''
     counter = 0
     for run in runs.keys():
-        print 'Run:',run,'Events:',runs[run]
+        print 'Run:',run,'Events:',len(runs[run])
         counter += len(runs[run])
 
     print ''
