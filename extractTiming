@@ -13,6 +13,8 @@ def main(argv) :
     --logfile <names>                         :       logfile names, single name or wildcard expression in \"
 
     optional parameters                       :
+    --no_tracking                             :       switch off reporting of dedicated tracking modules
+    --normalization <seconds>                 :       absolute normalization of GutSoftTimingNormalizationAnalyzer (default: 1.28 seconds)
     --help (-h)                               :       help
     --debug (-d)                              :       debug statements
     
@@ -21,9 +23,11 @@ def main(argv) :
     # default
     logfilename = ''
     debug = 0
+    no_tracking = 0
+    normalization = 1.28
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "logfile="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "logfile=", "no_tracking", "normalization="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -35,12 +39,24 @@ def main(argv) :
             sys.exit()
         elif opt == "--debug" :
             debug = 1
+        elif opt == "--no_tracking" :
+            no_tracking = 1
         elif opt == "--logfile" :
             logfilename = arg
+        elif opt == "--normalization" :
+            try: normalization = float(arg)
+            except:
+                print ''
+                print '    Normalization parameter not a number!'
+                print main.__doc__
+                sys.exit(2)
 
     if logfilename == '' :
         print main.__doc__
         sys.exit(2)
+
+    print 'normalization:',normalization
+
         
     # instantiate dictionaries and counters
     timeEvent       = 0
@@ -95,9 +111,13 @@ def main(argv) :
             line = logfile.readline()
 
     # special module lists
-    rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
-    ckfmodules = ['globalMixedSeeds','ckfTrackCandidates','ctfWithMaterialTracks']
-
+    if no_tracking == 1 :
+        rsmodules = []
+        ckfmodules = []
+    else :
+        rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
+        ckfmodules = ['globalMixedSeeds','ckfTrackCandidates','ctfWithMaterialTracks']
+ 
     trackmodules = rsmodules + ckfmodules
 
     # print summary
@@ -112,12 +132,12 @@ def main(argv) :
     print separator
 
     for module in rsmodules :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
     for module in ckfmodules :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
@@ -125,49 +145,50 @@ def main(argv) :
     sorted_keys.sort()
     for module in sorted_keys :
         if module not in trackmodules :
-            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
-    print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount)
+    print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount*normalization)
 
     # calculate time per event for RS and Ckf
     rsTimePerEvent = 0.
     for rsmodule in rsmodules :
         if rsmodule in timeModuleDict.keys() :
-            rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]
+            rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]*normalization
 
     ckfTimePerEvent = 0.
     for ckfmodule in ckfmodules :
         if ckfmodule in timeModuleDict.keys() :
-            ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]
+            ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]*normalization
 
     print ''
     if  rsTimePerEvent != 0 :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
     if  ckfTimePerEvent != 0 :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
+        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
 
-    print ''
-    print 'Summary Sheet output'
-    print ''
-    print 'format:'
-    print ''
-    print 'events'
-    for module in rsmodules :
-        print module
-    for module in ckfmodules :
-        print module
+    if no_tracking == 0 :
+        print ''
+        print 'Summary Sheet output'
+        print ''
+        print 'format:'
+        print ''
+        print 'events'
+        for module in rsmodules :
+            print module
+        for module in ckfmodules :
+            print module
 
-    print ''
-    print timeEventCount
+        print ''
+        print timeEventCount
 
-    for module in rsmodules :
-        print timeModuleDict[module]/timeModuleCount[module]
-    print rsTimePerEvent
-    for module in ckfmodules :
-        print timeModuleDict[module]/timeModuleCount[module]
-    print ckfTimePerEvent
+        for module in rsmodules :
+            print timeModuleDict[module]/timeModuleCount[module]*normalization
+        print rsTimePerEvent
+        for module in ckfmodules :
+            print timeModuleDict[module]/timeModuleCount[module]*normalization
+        print ckfTimePerEvent
     
 if __name__ == '__main__' :
     main(sys.argv[1:])
