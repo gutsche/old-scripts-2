@@ -139,7 +139,7 @@ def main(argv) :
     file.write('Error                 = ' + project_dir + '/$(cluster)_$(process).stderr\n')
     file.write('Log                   = ' + project_dir + '/$(cluster)_$(process).condor\n')
     file.write('notification          = never\n')
-    file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/DataSets/' + os.path.basename(generator_cff) + ' ' + str(events) + ' ' + str(seed) + '\n')
+    file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/Generation/' + os.path.basename(generator_cff) + ' ' + str(events) + ' ' + str(seed) + '\n')
     file.write('Queue ' + str(jobs) + '\n')
     file.close()
 
