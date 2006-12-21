@@ -122,7 +122,7 @@ def main(argv) :
 
     # make entry in projects.txt
     file = open(base_rundir+'/projects.txt','a')
-    line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s jobs: %6i events %6ii\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), jobs, events)
+    line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s jobs: %6i events %6i\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), jobs, events)
     file.write(line)
     file.close()
 
