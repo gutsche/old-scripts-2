@@ -1,0 +1,13 @@
+#!/bin/bash
+
+for dir in $*
+do
+cd $dir
+echo "Extract timing for $dir"
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/extractTiming --logfile "*.log" > timing.txt
+echo "Analyze logfiles for $dir"
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/postAnalysis *.log > analysis.txt
+echo "Merge histogram files in $dir"
+GutSoftHistogramFileMerger histograms.root *_histograms.root
+cd ..
+done

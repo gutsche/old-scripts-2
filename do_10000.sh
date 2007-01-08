@@ -6,7 +6,7 @@ number=`echo $1 | awk -F'_' '{print $2}'`
 project=`echo "${date}_${number}"`
 echo $project
 
-create_ewksoup.sh $project 100 1000
+create_ewksoup.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -15,7 +15,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_exoticsoup.sh $project 100 1000
+create_exoticsoup.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -24,7 +24,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_jets.sh $project 100 1000
+create_jets.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -33,7 +33,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_minbias.sh $project 100 1000
+create_minbias.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -42,7 +42,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_softmuon.sh $project 100 1000
+create_softmuon.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -51,7 +51,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_ttbar.sh $project 100 1000
+create_ttbar.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -60,7 +60,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_wenu.sh $project 100 1000
+create_wenu.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -69,7 +69,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_zmumu.sh $project 100 1000
+create_zmumu.sh $project 100 100
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then

@@ -99,7 +99,7 @@ def main(argv) :
                     print 'TimeEvent line:',line
                 linearray = line.split()
                 try:
-                    timeEvent      += float(linearray[-1])
+                    timeEvent      += float(linearray[-1])/time['gutSoftTimingNormalizationAnalyzer']
                     timeEventCount += 1
                     for module in time.keys() :
                         if module in timeModuleDict.keys() :
@@ -167,6 +167,7 @@ def main(argv) :
         print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
     if  ckfTimePerEvent != 0 :
         print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
+
 
     if no_tracking == 0 :
         print ''
