@@ -17,6 +17,15 @@ def main(argv) :
     errors = {}
     runs = {}
 
+    common_warnings = []
+    common_warnings.append('CaloSD: Problem with primaryID **** set by force to TkID ****')
+    common_warnings.append('************ Hit outside the detector ;')
+    common_warnings.append('Beware a simplified trigger primitive computation is used for the ECAL selective readout')
+    common_warnings.append('CSCRecHit2DInALayer WARNING! DIGI ON SAME CHANNEL. Please inform Muon developers')
+    common_errors   = []
+    common_errors.append('Extrapolation to vertex failed!')
+    common_errors.append('next Surface')
+
     filenames = argv[0:]
     for filename in filenames :
         if os.path.exists(filename) :
@@ -28,15 +37,16 @@ def main(argv) :
                 if line.find('MSG-w') >= 0 :
                     header = line
                     line = file.readline()
-                    while line.find('pre-events') < 0 and ( line.find('Run:') < 0 and line.find('Event:') < 0 ) :
+                    while line :
                         header += line
+                        if line.find('pre-events') > 0 or ( line.find('Run:') > 0 and line.find('Event:') > 0 ) :
+                            break
                         line = file.readline()
-                    header += line
-                    line = file.readline()
                     header = header.replace('\n',' ')
                     category = header.split()[1] + ' ' + header.split()[2]
 
                     counter = 0
+                    line = file.readline()
                     tmp += line
                     line = file.readline()
                     try:
@@ -45,6 +55,10 @@ def main(argv) :
                                 tmp += line
                                 counter += 1
                             line = file.readline()
+
+                        for common_warning in common_warnings:
+                            if tmp.find(common_warning) >= 0 :
+                                tmp = common_warning
 
                         if category in warnings.keys() :
                             if tmp in warnings[category].keys() :
@@ -59,14 +73,16 @@ def main(argv) :
                 if line.find('MSG-e') >= 0 :
                     header = line
                     line = file.readline()
-                    while line.find('pre-events') > 0 or ( line.find('Run:') > 0 and line.find('Event:') > 0 ) :
+                    while line :
                         header += line
+                        if line.find('pre-events') > 0 or ( line.find('Run:') > 0 and line.find('Event:') > 0 ) :
+                            break
                         line = file.readline()
                     header = header.replace('\n',' ')
                     category = header.split()[1] + ' ' + header.split()[2]
 
                     counter = 0
-
+                    line = file.readline()
                     tmp += line
                     line = file.readline()
                     try:
@@ -76,14 +92,17 @@ def main(argv) :
                                 counter += 1
                             line = file.readline()
 
-                        if tmp.find('next Surface') < 0 :
-                            if category in errors.keys() :
-                                if tmp in errors[category].keys() :
-                                    errors[category][tmp] += 1
-                                else :
-                                    errors[category][tmp] = 1
+                        for common_error in common_errors:
+                            if tmp.find(common_error) >= 0 :
+                                tmp = common_error
+
+                        if category in errors.keys() :
+                            if tmp in errors[category].keys() :
+                                errors[category][tmp] += 1
                             else :
-                                errors[category] = {tmp : 1}
+                                errors[category][tmp] = 1
+                        else :
+                            errors[category] = {tmp : 1}
                     except:
                         dummy = 1
 

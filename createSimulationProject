@@ -138,6 +138,7 @@ def main(argv) :
     file.write('Output                = ' + project_dir + '/$(cluster)_$(process).stdout\n')
     file.write('Error                 = ' + project_dir + '/$(cluster)_$(process).stderr\n')
     file.write('Log                   = ' + project_dir + '/$(cluster)_$(process).condor\n')
+    file.write('Requirements          = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")')
     file.write('notification          = never\n')
     file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/Generation/' + os.path.basename(generator_cff) + ' ' + str(events) + ' ' + str(seed) + '\n')
     file.write('Queue ' + str(jobs) + '\n')
