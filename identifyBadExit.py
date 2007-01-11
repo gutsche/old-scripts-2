@@ -25,7 +25,7 @@ def main(argv) :
     isolate = 0
 
     # variable setup
-    files = ["","","","",""]
+    files = ["","","","","",""]
 
     try:
         opts, args = getopt.getopt(argv, "", ["help", "debug", "isolate", "condor="])
@@ -76,13 +76,17 @@ def main(argv) :
                             files[2] = ".".join([filegroup,'cfg'])
                             files[3] = ".".join([filegroup,'stderr'])
                             files[4] = ".".join([filegroup,'stdout'])
+                            files[5] = ".".join([filegroup,'root'])
                             try:
                                 os.mkdir('isolated')
                             except:
                                 # Do nothing if it already exists
-                                dummy=1
+                                dummy = 1
                             for file in files:
-                                os.rename(file,"/".join(['isolated',file]))
+                                try:
+                                    os.rename(file,"/".join(['isolated',file]))
+                                except:
+                                    print 'Unable to find',file
                             if debug:
                                 print files,'moved to the isolated subdirectory'
                 except ValueError:
