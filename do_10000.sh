@@ -6,7 +6,7 @@ number=`echo $1 | awk -F'_' '{print $2}'`
 project=`echo "${date}_${number}"`
 echo $project
 
-create_ewksoup.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 100 --jobs 100 --dataset_cff cmssw_1_2_0_hzz4e_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -15,7 +15,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_exoticsoup.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 100 --jobs 100 --dataset_cff cmssw_1_2_0_hzz4mu_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -24,7 +24,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_jets.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 10 --jobs 997 --dataset_cff cmssw_1_2_0_jets_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -33,7 +33,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_minbias.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 10 --jobs 992 --dataset_cff cmssw_1_2_0_minbias_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -42,7 +42,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_softmuon.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 100 --jobs 100 --dataset_cff cmssw_1_2_0_single_mu_100_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -51,7 +51,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_ttbar.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 100 --jobs 100 --dataset_cff cmssw_1_2_0_single_mu_10_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -60,7 +60,7 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_wenu.sh $project 100 100
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 100 --jobs 100 --dataset_cff cmssw_1_2_0_single_mu_1_digis.cff
 
 number=`expr $number + 1`
 if [ $number -lt 10 ]; then
@@ -69,49 +69,4 @@ fi
 project=`echo "${date}_${number}"`
 echo $project
 
-create_zmumu.sh $project 100 100
-
-number=`expr $number + 1`
-if [ $number -lt 10 ]; then
-    number=`echo "0$number"`
-fi
-project=`echo "${date}_${number}"`
-echo $project
-
-create_RelVal120BJets50-120.sh $project 100 6
-
-number=`expr $number + 1`
-if [ $number -lt 10 ]; then
-    number=`echo "0$number"`
-fi
-project=`echo "${date}_${number}"`
-echo $project
-
-create_RelVal120CJets50-120.sh $project 100 6
-
-number=`expr $number + 1`
-if [ $number -lt 10 ]; then
-    number=`echo "0$number"`
-fi
-project=`echo "${date}_${number}"`
-echo $project
-
-create_RelVal120Higgs-ZZ-4Mu.sh $project 100 12
-
-number=`expr $number + 1`
-if [ $number -lt 10 ]; then
-    number=`echo "0$number"`
-fi
-project=`echo "${date}_${number}"`
-echo $project
-
-create_RelVal120SingleMuPt100.sh $project 100 60
-
-number=`expr $number + 1`
-if [ $number -lt 10 ]; then
-    number=`echo "0$number"`
-fi
-project=`echo "${date}_${number}"`
-echo $project
-
-create_RelVal120SingleMuPt10.sh $project 100 104
+./createRecontructionProject --project_name $project --parameter_set reconstruction.cfg --events 10 --jobs 995 --dataset_cff cmssw_1_2_0_ttbar_digis.cff
