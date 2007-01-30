@@ -13,6 +13,7 @@ def main(argv) :
     --logfile <names>                         :       logfile names, single name or wildcard expression in \"
 
     optional parameters                       :
+    --no_normalization                        :       switch off normalization
     --no_tracking                             :       switch off reporting of dedicated tracking modules
     --normalization <seconds>                 :       absolute normalization of GutSoftTimingNormalizationAnalyzer (default: 1.28 seconds)
     --help (-h)                               :       help
@@ -24,10 +25,11 @@ def main(argv) :
     logfilename = ''
     debug = 0
     no_tracking = 0
+    no_normalization = 0
     normalization = 1.28
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "logfile=", "no_tracking", "normalization="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "logfile=", "no_tracking", "no_normalization", "normalization="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -41,6 +43,8 @@ def main(argv) :
             debug = 1
         elif opt == "--no_tracking" :
             no_tracking = 1
+        elif opt == "--no_normalization" :
+            no_normalization = 1
         elif opt == "--logfile" :
             logfilename = arg
         elif opt == "--normalization" :
@@ -55,7 +59,8 @@ def main(argv) :
         print main.__doc__
         sys.exit(2)
 
-    print 'normalization:',normalization
+    if no_normalization == 0 :
+        print 'normalization:',normalization
 
         
     # instantiate dictionaries and counters
@@ -99,13 +104,22 @@ def main(argv) :
                     print 'TimeEvent line:',line
                 linearray = line.split()
                 try:
-                    timeEvent      += float(linearray[-1])/time['gutSoftTimingNormalizationAnalyzer']
+                    if no_normalization == 1 :
+                        timeEvent      += float(linearray[-1])
+                    else :
+                        timeEvent      += float(linearray[-1])/time['gutSoftTimingNormalizationAnalyzer']
                     timeEventCount += 1
                     for module in time.keys() :
                         if module in timeModuleDict.keys() :
-                            timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                            if no_normalization == 1 :
+                                timeModuleDict[module] += time[module]
+                            else :
+                                timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
                         else :
-                            timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                            if no_normalization == 1 :
+                                timeModuleDict[module] = time[module]
+                            else :
+                                timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
                 except ValueError:
                     print 'line:',line,'could not be used to extract time of the event'
             line = logfile.readline()
@@ -132,12 +146,18 @@ def main(argv) :
     print separator
 
     for module in rsmodules :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        if no_normalization == 1 :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        else :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
     for module in ckfmodules :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        if no_normalization == 1 :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+        else :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
@@ -145,28 +165,46 @@ def main(argv) :
     sorted_keys.sort()
     for module in sorted_keys :
         if module not in trackmodules :
-            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+            if no_normalization == 1 :
+                print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+            else :
+                print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
-    print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount*normalization)
+    if no_normalization == 1 :
+        print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount)
+    else :
+        print 'events: %50d time/ev: %9.5f' % (timeEventCount, timeEvent/timeEventCount*normalization)
 
     # calculate time per event for RS and Ckf
     rsTimePerEvent = 0.
     for rsmodule in rsmodules :
         if rsmodule in timeModuleDict.keys() :
-            rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]*normalization
+            if no_normalization == 1 :
+                rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]
+            else :
+                rsTimePerEvent += timeModuleDict[rsmodule]/timeModuleCount[rsmodule]*normalization
 
     ckfTimePerEvent = 0.
     for ckfmodule in ckfmodules :
         if ckfmodule in timeModuleDict.keys() :
-            ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]*normalization
+            if no_normalization == 1 :
+                ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]
+            else :
+                ckfTimePerEvent += timeModuleDict[ckfmodule]/timeModuleCount[ckfmodule]*normalization
 
     print ''
     if  rsTimePerEvent != 0 :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
+        if no_normalization == 1 :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount)*100)
+        else :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('RS', rsTimePerEvent, rsTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
     if  ckfTimePerEvent != 0 :
-        print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
+        if no_normalization == 1 :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount)*100)
+        else :
+            print 'module: %50s time/ev: %9.5f percentage: %4.1f' % ('CKF', ckfTimePerEvent, ckfTimePerEvent/(timeEvent/timeEventCount*normalization)*100)
 
 
     if no_tracking == 0 :
@@ -185,10 +223,16 @@ def main(argv) :
         print timeEventCount
 
         for module in rsmodules :
-            print timeModuleDict[module]/timeModuleCount[module]*normalization
+            if no_normalization == 1 :
+                print timeModuleDict[module]/timeModuleCount[module]
+            else :
+                print timeModuleDict[module]/timeModuleCount[module]*normalization
         print rsTimePerEvent
         for module in ckfmodules :
-            print timeModuleDict[module]/timeModuleCount[module]*normalization
+            if no_normalization == 1 :
+                print timeModuleDict[module]/timeModuleCount[module]
+            else :
+                print timeModuleDict[module]/timeModuleCount[module]*normalization
         print ckfTimePerEvent
     
 if __name__ == '__main__' :
