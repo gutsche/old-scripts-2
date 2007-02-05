@@ -1,0 +1,18 @@
+#!/bin/sh
+
+for dir in $*
+do
+cd $dir
+echo ""
+echo "delete directory in ~/transfer/$dir"
+rm -rf ~/transfer/$dir
+echo "make directory ~/transfer/$dir"
+mkdir -p ~/transfer/$dir
+echo "copy analysis.txt to ~/transfer/$dir"
+cp analysis.txt ~/transfer/$dir
+echo "copy timing.txt to ~/transfer/$dir"
+cp timing.txt ~/transfer/$dir
+echo "copy *.png to ~/transfer/$dir"
+cp *.png ~/transfer/$dir
+cd ..
+done

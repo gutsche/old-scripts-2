@@ -41,9 +41,9 @@ def main(argv) :
         elif opt == "--absolute" :
             absolute = 1
         elif opt == "--file" :
-            logfilename = arg
+            filename = arg
 
-    if logfilename == '' :
+    if filename == '' :
         print main.__doc__
         sys.exit(2)
 
@@ -53,14 +53,15 @@ def main(argv) :
         absolute_dir = os.getcwd()
         
     output += 'replace PoolSource.fileNames = {\n'
-    filenames = glob.glob(logfilename)
+    filenames = glob.glob(filename)
     filenames.sort()
 
     for filename in filenames :
-        if absolute :
-            output += '  "file:'+absolute_dir+'/'+filename+'",\n'
-        else :
-            output += '  "file:'+filename+'",\n'
+	if filename.find('histograms') < 0 :
+            if absolute :
+                output += '  "file:'+absolute_dir+'/'+filename+'",\n'
+            else :
+                output += '  "file:'+filename+'",\n'
     output = output[:-2]+'\n'
     output += '}\n'
 

@@ -10,6 +10,6 @@ $CMSSW_BASE/src/GutSoftConfigurations/Scripts/postAnalysis *.log > analysis.txt
 echo "Merge histogram files in $dir"
 GutSoftHistogramFileMerger histograms.root *_histograms.root
 echo "preparing efficiency plots"
-root 'prepareEfficiencyPlots.C("histograms.root")'
+root -b -l -q 'prepareEfficiencyPlots.C("histograms.root")'
 cd ..
 done
