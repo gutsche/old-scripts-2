@@ -96,32 +96,49 @@ def main(argv) :
                         if module in timeModuleCount.keys() :
                             timeModuleCount[module] += 1
                         else :
-                            timeModuleCount[module] = 1
+                            timeModuleCount[module] = 0
                 except ValueError:
                     print 'line:',line,'could not be used to extract time of a module'
             if line.count('TimeEvent>') > 0 :
                 if debug :
                     print 'TimeEvent line:',line
-                linearray = line.split()
-                try:
+                timeEventCount += 1
+                for module in time.keys() :
                     if no_normalization == 1 :
-                        timeEvent      += float(linearray[-1])
+                        timeEvent += time[module]
                     else :
-                        timeEvent      += float(linearray[-1])/time['gutSoftTimingNormalizationAnalyzer']
-                    timeEventCount += 1
-                    for module in time.keys() :
-                        if module in timeModuleDict.keys() :
-                            if no_normalization == 1 :
-                                timeModuleDict[module] += time[module]
-                            else :
-                                timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                        timeEvent += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                    if module in timeModuleDict.keys() :
+                        if no_normalization == 1 :
+                            timeModuleDict[module] += time[module]
                         else :
-                            if no_normalization == 1 :
-                                timeModuleDict[module] = time[module]
-                            else :
-                                timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
-                except ValueError:
-                    print 'line:',line,'could not be used to extract time of the event'
+                            timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                    else :
+                        if no_normalization == 1 :
+                            timeModuleDict[module] = time[module]
+                        else :
+                            timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
+                    
+#                linearray = line.split()
+#                try:
+#                    if no_normalization == 1 :
+#                        timeEvent      += float(linearray[-1])
+#                    else :
+#                        timeEvent      += float(linearray[-1])/time['gutSoftTimingNormalizationAnalyzer']
+#                    timeEventCount += 1
+#                    for module in time.keys() :
+#                        if module in timeModuleDict.keys() :
+#                            if no_normalization == 1 :
+#                                timeModuleDict[module] += time[module]
+#                            else :
+#                                timeModuleDict[module] += time[module]/time['gutSoftTimingNormalizationAnalyzer']
+#                        else :
+#                            if no_normalization == 1 :
+#                                timeModuleDict[module] = time[module]
+#                            else :
+#                                timeModuleDict[module] = time[module]/time['gutSoftTimingNormalizationAnalyzer']
+#                except ValueError:
+#                    print 'line:',line,'could not be used to extract time of the event'
             line = logfile.readline()
 
     # special module lists
