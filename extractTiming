@@ -182,10 +182,11 @@ def main(argv) :
     sorted_keys.sort()
     for module in sorted_keys :
         if module not in trackmodules :
-            if no_normalization == 1 :
-                print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
-            else :
-                print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+            if timeModuleCount[module] != 0 and timeEventCount != 0 :
+                if no_normalization == 1 :
+                    print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module], (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
+                else :
+                    print 'module: %50s time/ev: %9.5f percentage: %4.1f' % (module, timeModuleDict[module]/timeModuleCount[module]*normalization, (timeModuleDict[module]/timeModuleCount[module])/(timeEvent/timeEventCount)*100)
 
     print separator
 
