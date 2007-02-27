@@ -5,9 +5,9 @@ import sys, os, getopt, glob
 def main(argv) :
     """
     
-    extractTimingFromCMSSW
+    extractTiming
     
-    activate timing service in CMSSW and use this python script tp average timing per module
+    activate timing service in CMSSW and use this python script to average timing per module
 
     required parameters
     --logfile <names>                         :       logfile names, single name or wildcard expression in \"
@@ -146,7 +146,7 @@ def main(argv) :
         rsmodules = []
         ckfmodules = []
     else :
-        rsmodules = ['roadSearchSeeds','rawRoadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
+        rsmodules = ['roadSearchSeeds','roadSearchClouds','rsTrackCandidates','rsWithMaterialTracks']
         ckfmodules = ['globalMixedSeeds','ckfTrackCandidates','ctfWithMaterialTracks']
  
     trackmodules = rsmodules + ckfmodules

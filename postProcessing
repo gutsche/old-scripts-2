@@ -11,5 +11,7 @@ echo "Merge histogram files in $dir"
 GutSoftHistogramFileMerger histograms.root *_histograms.root
 echo "preparing efficiency plots"
 root -b -l -q 'prepareEfficiencyPlots.C("histograms.root")'
+echo "preparing rs/ctf comparison plots"
+root -b -l -q 'compareTwoHistograms.C("histograms.root")'
 cd ..
 done

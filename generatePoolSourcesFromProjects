@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for project in $*
+do
+cd $project
+echo "Generating PoolSource for root files in $project"
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/$project.cff
+cd ..
+done
+
+

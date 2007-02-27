@@ -1,0 +1,90 @@
+#!/usr/bin/python
+
+import sys, os, getopt, glob
+
+def main(argv) :
+    """
+    
+    collectTiming
+    
+    collect timing information from different processings and produce table
+
+    required parameters
+    --projectname <names>                         :       project names, single name or wildcard expression in \"
+
+    optional parameters                       :
+    --filename                                :       filename containing output of extractTiming
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+    """
+
+    # default
+    projectname = ''
+    debug = 0
+    filename = "timing.txt"
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "projectname=", "filename="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--projectname" :
+            projectname = arg
+        elif opt == "--filename" :
+            filename = arg
+
+    if projectname == '' :
+        print main.__doc__
+        sys.exit(2)
+
+    # preinitalize array for table lines
+    timing = []
+    for i in range(10) :
+        tmp = []
+        timing.append(tmp)
+
+
+    projects = glob.glob(projectname)
+    projects.sort()
+
+    for project in projects :
+
+        print 'Collecting timing info from project:',project
+
+        # open file
+        try:
+            file = open(project+'/'+filename)
+        except IOError:
+            print ''
+            print 'Could not open logfile: ',project+'/'+filename
+            print main.__doc__
+            sys.exit(2)
+
+        # collect last 10 lines
+        lines = file.readlines()
+        index = -11
+        for i in range(10) :
+            index += 1
+#            print lines[index].strip()
+            timing[i].append(lines[index].strip())
+            
+
+    for i in range(len(timing)) :
+        tmp = ''
+        for j in range(len(timing[i])) :
+            tmp += timing[i][j]
+            tmp += " "
+        print tmp
+        
+    
+if __name__ == '__main__' :
+    main(sys.argv[1:])
