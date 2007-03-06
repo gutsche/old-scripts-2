@@ -14,6 +14,7 @@ def main(argv) :
     --file <names>                         :       file names (single file or wildcard expression in \"
 
     optional parameters                    :
+    --dcache                               :       file is located in /pnfs/..., use dcache:
     --absolute                             :       use absolute paths
     --help (-h)                            :       help
     --debug (-d)                           :       debug statements
@@ -24,9 +25,10 @@ def main(argv) :
     filename = ''
     absolute = 0
     debug = 0
+    dcache = 0
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "file=", "absolute"])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "file=", "absolute", "dcache"])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -40,6 +42,8 @@ def main(argv) :
             debug = 1
         elif opt == "--absolute" :
             absolute = 1
+        elif opt == "--dcache" :
+            dcache = 1
         elif opt == "--file" :
             filename = arg
 
@@ -56,12 +60,16 @@ def main(argv) :
     filenames = glob.glob(filename)
     filenames.sort()
 
+    filetype = 'file:'
+    if dcache == 1 :
+        filetype = 'dcache:'
+
     for filename in filenames :
 	if filename.find('histograms') < 0 :
             if absolute :
-                output += '  "file:'+absolute_dir+'/'+filename+'",\n'
+                output += '  "'+filetype+absolute_dir+'/'+filename+'",\n'
             else :
-                output += '  "file:'+filename+'",\n'
+                output += '  "'+filetype+filename+'",\n'
     output = output[:-2]+'\n'
     output += '}\n'
 
