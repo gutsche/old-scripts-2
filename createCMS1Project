@@ -1,0 +1,145 @@
+#!/usr/bin/python
+
+import sys, os, getopt, glob
+
+def main(argv) :
+    """
+    
+    createCMS1Project
+    
+    creates project in base_rundir and corresponding condor jdl
+
+    required parameters         :
+    --base_rundir   <dir>       : base_rundir where project is created, default: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor
+    --project_name  <name>      : subdirectory name in base_rundir
+    --parameter_set <filename>  : parameter-set in GutSoftConfiguration/Condor
+    --dataset_cff   <filename>  : cff holding input files in CMS1/DataSets
+    --events        <number>    : number of events per job
+    --jobs          <number>    : number of jobs
+
+
+    optional parameters         :
+    --help (-h)                 : help
+    --debug (-d)                : debug statements
+    
+    """
+
+    # default
+    base_rundir = '/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor'
+    project_name = ''
+    parameter_set = ''
+    dataset_cff = ''
+    events = 0
+    josb = 0
+    debug = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "base_rundir=", "project_name=", "parameter_set=", "events=", "jobs=", "dataset_cff="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--base_rundir" :
+            base_rundir = arg
+        elif opt == "--project_name" :
+            project_name = arg
+        elif opt == "--parameter_set" :
+            parameter_set = arg
+        elif opt == "--dataset_cff" :
+            dataset_cff = arg
+        elif opt == "--events" :
+            try:
+                events = int(arg)
+            except:
+                print ''
+                print '    --events didn\'t specify a number'
+                print main.__doc__
+                sys.exit()
+        elif opt == "--jobs" :
+            try:
+                jobs = int(arg)
+            except:
+                print ''
+                print '    --jobs didn\'t specify a number'
+                print main.__doc__
+                sys.exit()
+
+    # check for command line parameters
+    if project_name == '' or parameter_set == '' or jobs == 0 or events == 0 or dataset_cff == '':
+        print main.__doc__
+        sys.exit(2)
+
+    # get CMSSW_BASE
+    CMSSW_BASE = os.environ['CMSSW_BASE']
+
+    # create absolute paths
+    parameter_set = CMSSW_BASE + '/src/GutSoftConfigurations/Condor/' + parameter_set
+    dataset_cff   = CMSSW_BASE + '/src/CMS1/DataSets/' + dataset_cff
+
+    # check if input files exist
+    if not os.path.exists(parameter_set) :
+        print ''
+        print '    parameter_set:',parameter_set,'does not exist!'
+        print main.__doc__
+        sys.exit()
+
+    if not os.path.exists(dataset_cff) :
+        print ''
+        print '    dataset_cff:',dataset_cff,'does not exist!'
+        print main.__doc__
+        sys.exit()
+
+    # check if project directory exists
+    project_dir = base_rundir + '/' + project_name
+    if os.path.exists(project_dir) :
+        print ''
+        print '    project_dir:',project_dir,'already exists!'
+        print main.__doc__
+        sys.exit()
+        
+    # header printout
+    print ''
+    print '     createAnalysisProject'
+    print ''
+    print '     create project      :',project_name
+    print '     in base_rundir      :',base_rundir
+    print ''
+    print '     executing           :',os.path.basename(parameter_set)
+    print '     using datasets from :',os.path.basename(dataset_cff)
+    print ''
+    print '     running',jobs,'jobs over each',events,'events'
+    print ''
+
+    # create project_dir
+    os.makedirs(project_dir)
+
+    # make entry in projects.txt
+    file = open(base_rundir+'/projects.txt','a')
+    line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s jobs: %6i events %6i\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), jobs, events)
+    file.write(line)
+    file.close()
+
+    # create jdl
+    file = open(project_dir+'/condor.jdl','w')
+    file.write('universe              = vanilla\n')
+    file.write('Executable            = ' + CMSSW_BASE + '/src/GutSoftConfigurations/Condor/analysis\n')
+    file.write('should_transfer_files = NO\n')
+    file.write('Output                = ' + project_dir + '/$(cluster)_$(process).stdout\n')
+    file.write('Error                 = ' + project_dir + '/$(cluster)_$(process).stderr\n')
+    file.write('Log                   = ' + project_dir + '/$(cluster)_$(process).condor\n')
+    file.write('Requirements          = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")\n')
+    file.write('notification          = never\n')
+    file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' CMS1/DataSets/' + os.path.basename(dataset_cff) + ' ' + str(events) + '\n')
+    file.write('Queue ' + str(jobs) + '\n')
+    file.close()
+
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
