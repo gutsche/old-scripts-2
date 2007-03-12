@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while [ $1 ]; do
+ps -u gutsche -o pid,etime,rss,vsize | grep $1
+sleep 10s
+done
+
