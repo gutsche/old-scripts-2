@@ -16,6 +16,7 @@ def main(argv) :
     warnings = {}
     errors = {}
     runs = {}
+    files = {}
 
     common_warnings = []
     common_warnings.append('CaloSD: Problem with primaryID **** set by force to TkID ****')
@@ -27,6 +28,7 @@ def main(argv) :
     common_errors.append('next Surface')
 
     filenames = argv[0:]
+    current_file = ''
     for filename in filenames :
         if os.path.exists(filename) :
             file = open(filename)
@@ -34,6 +36,15 @@ def main(argv) :
             line = file.readline()
             while line :
                 tmp = ''
+                if line.find('<PFN>') >= 0 :
+                    current_file = line.split(">")[1].split("<")[0].strip()
+                if line.find('<EventsRead>') >= 0 and current_file != '' :
+                    events = int(line.split(">")[1].split("<")[0].strip())
+                    if current_file in files.keys() :
+                        files[current_file] += events
+                    else :
+                        files[current_file] = events
+                    current_file = ''
                 if line.find('MSG-w') >= 0 :
                     header = line
                     line = file.readline()
@@ -176,7 +187,20 @@ def main(argv) :
         counter += len(runs[run])
 
     print ''
-    print 'Processed',len(runs.keys()),' Run(s) with total',counter,'Event(s).'        
+    print 'Processed',len(runs.keys()),' Run(s) with total',counter,'Event(s).'
+
+    # print files and number of read events per file
+    print ''
+    print 'number of events per file'
+    print ''
+
+    filenames = files.keys()
+    # filenames.sort()
+    
+    for file in filenames :
+        print '%5d events read in file: %s' % (files[file],file)
+
+    
 
 if __name__ == '__main__' :
     main(sys.argv[1:])
