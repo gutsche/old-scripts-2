@@ -46,3 +46,12 @@
 
 ./createSimulationProject --project_name 070303_71 --parameter_set simulation_pythia_lowlumipileup.cfg --generator_cff bjets_120_170.cff --seed 123 --events 100 --jobs 30
 ./createSimulationProject --project_name 070303_72 --parameter_set simulation_pythia_lowlumipileup.cfg --generator_cff ttbar.cff --seed 123 --events 100 --jobs 30
+
+./createSimulationProject --project_name 070303_81 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_5.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070303_82 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_10.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070303_83 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_55.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070303_84 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_100.cff --seed 123 --events 1000 --jobs 10
+
+
+
+
