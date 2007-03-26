@@ -17,7 +17,9 @@ def main(argv) :
     errors = {}
     runs = {}
     files = {}
-
+    jobs = {}
+    exceptions = []
+    
     common_warnings = []
     common_warnings.append('CaloSD: Problem with primaryID **** set by force to TkID ****')
     common_warnings.append('************ Hit outside the detector ;')
@@ -32,7 +34,7 @@ def main(argv) :
     for filename in filenames :
         if os.path.exists(filename) :
             file = open(filename)
-            # print 'File:',filename
+            events_per_job = 0
             line = file.readline()
             while line :
                 tmp = ''
@@ -44,6 +46,7 @@ def main(argv) :
                         files[current_file] += events
                     else :
                         files[current_file] = events
+                    events_per_job += events
                     current_file = ''
                 if line.find('MSG-w') >= 0 :
                     header = line
@@ -114,8 +117,13 @@ def main(argv) :
                                 errors[category][tmp] = 1
                         else :
                             errors[category] = {tmp : 1}
+                        
                     except:
                         dummy = 1
+
+                    if tmp.find("xception") >= 0 :
+                        if filename not in exceptions :
+                            exceptions.append(filename)
 
                 if line.find('Begin processing') >= 0 :
                     try:
@@ -128,6 +136,8 @@ def main(argv) :
                     except:
                         tmp = ''
                 line = file.readline()
+
+            jobs[filename] = events_per_job
                     
         else :
             print 'File:',filename,'does not exist!'
@@ -177,6 +187,21 @@ def main(argv) :
             print ''
             print error
 
+    # print exceptions
+    total = 0
+    for job in exceptions :
+        total += 1
+
+    print ''
+    print separator
+    print separator
+    print 'Number of files with exceptions:',total
+    print separator
+    print ''
+    
+    for job in exceptions :
+            print 'Exception in job: ' + job
+
     # print run and event summary
     print ''
     counter = 0
@@ -189,6 +214,17 @@ def main(argv) :
     print ''
     print 'Processed',len(runs.keys()),' Run(s) with total',counter,'Event(s).'
 
+    # print jobs and number of read events per job
+    print ''
+    print 'number of events per job'
+    print ''
+    
+    jobnames = jobs.keys()
+    jobnames.sort()
+
+    for job in jobnames :
+        print '%5d events read in job: %s' % (jobs[job],job)
+        
     # print files and number of read events per file
     print ''
     print 'number of events per file'
