@@ -2,6 +2,13 @@
 
 import sys, os, getopt, glob, popen2
 
+def makeNonBlocking(fd):
+    fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+    try:
+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NDELAY)
+    except AttributeError:
+	    fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.FNDELAY)
+
 def main(argv) :
     """
     
@@ -69,13 +76,47 @@ def main(argv) :
 
     for filename in filenames :
 	if filename.find('histograms') < 0 :
-            cmd = 'EdmFileUtil -e -f ' + filetype+absolute_dir+filename
+            # create tmp parameter-set
+            (stdout,stdin) = popen2.popen4('/bin/mktemp')
+            tempfilename = stdout.readline().strip()
+            file = open(tempfilename,'w')
+            #write check jdl
+            file.write('process C = {\n')
+            file.write('include "GutSoftConfigurations/MessageLogger/messageLogger.cff"\n')
+            file.write('source = PoolSource\n')
+            file.write('{\n')
+            file.write('  untracked vstring fileNames =\n')
+            file.write('  {\n')
+            file.write('    "'+filetype+absolute_dir+filename+'"\n')
+            file.write('  }\n')
+            file.write('  untracked int32  maxEvents  = -1\n')
+            file.write('  untracked uint32 skipEvents = 0\n')
+            file.write('}\n')
+            file.write('# file check analyzer\n')
+            file.write('include "GutSoftAnalyzers/GutSoftFileCheckAnalyzer/data/gutSoftFileCheckAnalyzer.cff"\n')
+            file.write('path p =\n')
+            file.write('{\n')
+            file.write('  gutSoftFileCheckAnalyzer\n')
+            file.write('}\n')
+            file.write('}\n')
+            file.close()
+            # run parameter-set
+            cmd = 'cmsRun ' + tempfilename
             proc = popen2.Popen4(cmd)
-            exit = proc.wait()
+            #outfile = proc.fromchild
+            #outfd = outfile.fileno()
+            #makeNonBlocking(outfd)
+            exit = proc.poll()
+            lines = []
+            while ( exit == -1 ) :
+                lines += proc.fromchild.readlines()
+                exit = proc.poll()
             if exit == 0 :
                 events = 0
                 try:
-                    events = int(proc.fromchild.readlines()[-1].split()[2])
+                    for line in lines:
+                        if line.find('Number of Events:') >= 0:
+                            events = int(line.split()[-1])
                 except:
                     print 'Number of events could not be extracted from '+filetype+absolute_dir+filename
                 files[filetype+absolute_dir+filename] = events
@@ -83,6 +124,7 @@ def main(argv) :
             else :
                 corrupt_files = 1
                 files[filetype+absolute_dir+filename] = -1
+            os.remove(tempfilename)
 
 
     # output
