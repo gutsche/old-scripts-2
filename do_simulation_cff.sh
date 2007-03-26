@@ -171,3 +171,19 @@ cd ..
 cd 070303_72
 $CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/cmssw_1_3_0_pre5_ttbar_lowlumipileup.cff
 cd ..
+
+cd 070303_81
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/cmssw_1_3_0_pre5_single_gamma_pt_5.cff
+cd ..
+
+cd 070303_82
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/cmssw_1_3_0_pre5_single_gamma_pt_10.cff
+cd ..
+
+cd 070303_83
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/cmssw_1_3_0_pre5_single_gamma_pt_55.cff
+cd ..
+
+cd 070303_84
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/generatePoolSourceFromFiles --file "*.root" --absolute > $CMSSW_BASE/src/GutSoftConfigurations/DataSets/cmssw_1_3_0_pre5_single_gamma_pt_100.cff
+cd ..
