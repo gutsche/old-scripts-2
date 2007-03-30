@@ -44,8 +44,8 @@
 
 ./createSimulationProject --project_name 070328_61 --parameter_set simulation_pythia.cfg --generator_cff minbias.cff --seed 123 --events 100 --jobs 30
 
-./createSimulationProject --project_name 070328_71 --parameter_set simulation_pythia_lowlumipileup.cfg --generator_cff bjets_120_170.cff --seed 123 --events 100 --jobs 30
-./createSimulationProject --project_name 070328_72 --parameter_set simulation_pythia_lowlumipileup.cfg --generator_cff ttbar.cff --seed 123 --events 100 --jobs 30
+./createSimulationProject --project_name 070328_71 --parameter_set simulation_pythia.cfg --generator_cff bjets_120_170.cff --seed 123 --events 100 --jobs 30
+./createSimulationProject --project_name 070328_72 --parameter_set simulation_pythia.cfg --generator_cff ttbar.cff --seed 123 --events 100 --jobs 30
 
 ./createSimulationProject --project_name 070328_81 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_5.cff --seed 123 --events 1000 --jobs 10
 ./createSimulationProject --project_name 070328_82 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_10.cff --seed 123 --events 1000 --jobs 10
