@@ -1,0 +1,32 @@
+#!/bin/bash
+
+./createSimulationProject --project_name 070420_01_01 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.0_0.1.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_02 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.1_0.2.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_03 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.2_0.3.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_04 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.3_0.4.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_05 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.4_0.5.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_06 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.5_0.6.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_07 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.6_0.7.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_08 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.7_0.8.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_09 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.8_0.9.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_10 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_0.9_1.0.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_11 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.0_1.1.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_12 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.1_1.2.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_13 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.2_1.3.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_14 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.3_1.4.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_15 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.4_1.5.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_16 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.5_1.6.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_17 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.6_1.7.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_18 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.7_1.8.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_19 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.8_1.9.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_20 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_1.9_2.0.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_21 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.0_2.1.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_22 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.1_2.2.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_23 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.2_2.3.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_24 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.3_2.4.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_25 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.4_2.5.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_26 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.5_2.6.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_27 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.6_2.7.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_28 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.7_2.8.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_29 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.8_2.9.cff --seed 123 --events 1000 --jobs 10
+./createSimulationProject --project_name 070420_01_30 --parameter_set simulation_gun.cfg --generator_cff single_mu_jet_3_2.9_3.0.cff --seed 123 --events 1000 --jobs 10
