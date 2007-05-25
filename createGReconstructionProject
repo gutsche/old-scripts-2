@@ -80,7 +80,7 @@ def main(argv) :
     CMSSW_BASE = os.environ['CMSSW_BASE']
 
     # create absolute paths
-    parameter_set = CMSSW_BASE + '/src/GutSoftConfigurations/Condor/' + parameter_set
+    parameter_set = CMSSW_BASE + '/src/GutSoftConfigurations/Condor_G/' + parameter_set
     dataset_cff   = CMSSW_BASE + '/src/GutSoftConfigurations/DataSets/' + dataset_cff
 
     # check if input files exist
