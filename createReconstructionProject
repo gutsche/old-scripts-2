@@ -14,6 +14,7 @@ def main(argv) :
     --project_name  <name>      : subdirectory name in base_rundir
     --parameter_set <filename>  : parameter-set in GutSoftConfigurations/Condor
     --dataset_cff   <filename>  : cff holding input files in GutSoftConfigurations/DataSets
+    --pileup_cff    <filename>  : cff holding pileup files in GutSoftConfigurations/DataSets
     --events        <number>    : number of events per job
     --jobs          <number>    : number of jobs
 
@@ -29,12 +30,13 @@ def main(argv) :
     project_name = ''
     parameter_set = ''
     dataset_cff = ''
+    pileup_cff = ''
     events = 0
     josb = 0
     debug = 0
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "base_rundir=", "project_name=", "parameter_set=", "events=", "jobs=", "dataset_cff="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "base_rundir=", "project_name=", "parameter_set=", "events=", "jobs=", "dataset_cff=", "pileup_cff="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -54,6 +56,8 @@ def main(argv) :
             parameter_set = arg
         elif opt == "--dataset_cff" :
             dataset_cff = arg
+        elif opt == "--pileup_cff" :
+            pileup_cff = arg
         elif opt == "--events" :
             try:
                 events = int(arg)
@@ -122,7 +126,11 @@ def main(argv) :
 
     # make entry in projects.txt
     file = open(base_rundir+'/projects.txt','a')
-    line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s jobs: %6i events %6i\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), jobs, events)
+    if pileup_cff != '' :
+        line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s pileup: %30s jobs: %6i events %6i\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), os.path.basename(pileup_cff), jobs, events)
+    else:
+        line = 'project: %10s CMSSW: %16s parameter_set: %30s dataset: %30s jobs: %6i events %6i\n' % (project_name, os.environ['CMSSW_VERSION'], os.path.basename(parameter_set), os.path.basename(dataset_cff), jobs, events)
+
     file.write(line)
     file.close()
 
@@ -136,7 +144,10 @@ def main(argv) :
     file.write('Log                   = ' + project_dir + '/$(cluster)_$(process).condor\n')
     file.write('Requirements          = Memory >= 199 && OpSys == "LINUX" && (Arch != "DUMMY")\n')
     file.write('notification          = never\n')
-    file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/DataSets/' + os.path.basename(dataset_cff) + ' ' + str(events) + '\n')
+    if pileup_cff != '' :
+        file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/DataSets/' + os.path.basename(dataset_cff) + ' ' + str(events) + ' GutSoftConfigurations/DataSets/' + os.path.basename(pileup_cff) + '\n')
+    else:
+        file.write('Arguments             = $(cluster) $(process) ' + CMSSW_BASE + ' ' + project_dir + ' ' + parameter_set + ' GutSoftConfigurations/DataSets/' + os.path.basename(dataset_cff) + ' ' + str(events) + '\n')
     file.write('Queue ' + str(jobs) + '\n')
     file.close()
 
