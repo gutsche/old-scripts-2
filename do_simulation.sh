@@ -53,3 +53,5 @@
 ./createSimulationProject --project_name 070709_03_82 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_10.cff --seed 123 --events 1000 --jobs 10
 ./createSimulationProject --project_name 070709_03_83 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_55.cff --seed 123 --events 1000 --jobs 10
 ./createSimulationProject --project_name 070709_03_84 --parameter_set simulation_gun.cfg --generator_cff single_gamma_pt_100.cff --seed 123 --events 1000 --jobs 10
+
+./createSimulationProject --project_name 070709_03_91 --parameter_set simulation_pythia.cfg --generator_cff zmumu.cff --seed 123 --events 100 --jobs 100
