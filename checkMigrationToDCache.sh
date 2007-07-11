@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# migrate development sample to dCache
+# check migration of development sample to dCache and recopy corrupt files
 # input: projects in condor
 # execute in condor
 
@@ -13,42 +13,6 @@ do
     echo "changing to $project"
     cd $project
     echo ""
-
-    echo "create copyjob file"
-    rm -f copy.job
-    touch copy.job
-
-    echo "copying all .root files"
-    echo ""
-    for rootfile in `ls *.root 2>/dev/null`
-    do
-	echo "adding $rootfile to copyjob file: file:////`pwd`/$rootfile srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$rootfile"
-	echo "file:////`pwd`/$rootfile srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$rootfile" >> copy.job
-    done
-    echo ""
-
-    echo "copying all .log.gz files"
-    echo ""
-    for loggzfile in `ls *.log.gz 2>/dev/null`
-    do
-	echo "adding $loggzfile to copyjob file: file:////`pwd`/$loggzfile srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$loggzfile"
-	echo "file:////`pwd`/$loggzfile srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$loggzfile" >> copy.job
-    done
-    echo ""
-
-    echo "zipping and copying all .log files"
-    echo ""
-    for logfile in `ls *.log 2>/dev/null`
-    do
-	echo "zipping $logfile"
-	gzip $logfile
-	echo "adding $logfile.gz to copyjob file: file:////`pwd`/$logfile.gz srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$logfile.gz"
-	echo "file:////`pwd`/$logfile.gz srm://cmssrm.fnal.gov:8443/srm/managerv1?SFN=/resilient/gutsche/condor/$project/$logfile.gz" >> copy.job
-    done
-    echo ""    
-
-    echo "execute srmcp -copyjobfile=copy.job"
-    srmcp -debug=true -copyjobfile=copy.job
 
     echo "checking all .root files"
     echo ""
