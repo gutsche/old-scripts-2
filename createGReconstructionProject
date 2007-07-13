@@ -142,7 +142,7 @@ def main(argv) :
     file.write('Executable            = ' + CMSSW_BASE + '/src/GutSoftConfigurations/Condor_G/reconstruction\n')
     file.write('should_transfer_files   = yes\n')
     file.write('when_to_transfer_output = ON_EXIT\n')
-    file.write('transfer_output_files = $(cluster)_$(process).cfg,$(cluster)_$(process)_histograms.root,$(cluster)_$(process).log,$(cluster)_$(process).sh\n')
+    file.write('transfer_output_files = $(cluster)_$(process).cfg,$(cluster)_$(process).root,$(cluster)_$(process)_histograms.root,$(cluster)_$(process).log.gz,$(cluster)_$(process).sh\n')
     file.write('Output                = $(cluster)_$(process).stdout\n')
     file.write('Error                 = $(cluster)_$(process).stderr\n')
     file.write('Log                   = $(cluster)_$(process).condor\n')

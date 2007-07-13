@@ -72,10 +72,15 @@ def main(argv) :
 
     for filename in glob.glob(logfilename) :
         try:
-            logfile = open(filename)
+            if filename[-3:] == '.gz' :
+                # zipped file
+                import gzip
+                logfile = gzip.GzipFile(filename)
+            else :
+                logfile = open(filename)
         except IOError:
             print ''
-            print 'Could not open logfile: ',logfilename
+            print 'Could not open logfile: ',filename
             print main.__doc__
             sys.exit(2)
 

@@ -10,9 +10,9 @@ root -b -l -q 'prepareEfficiencyPlots.C("histograms.root")'
 echo "preparing rs/ctf comparison plots"
 root -b -l -q 'compareTwoHistograms.C("histograms.root")'
 echo "Extract timing for $dir"
-$CMSSW_BASE/src/GutSoftConfigurations/Scripts/extractTiming --logfile "*.log" > timing.txt
-#echo "Analyze logfiles for $dir"
-#$CMSSW_BASE/src/GutSoftConfigurations/Scripts/postAnalysis *.log > analysis.txt
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/extractTiming --logfile "*.log.gz" > timing.txt
+echo "Analyze logfiles for $dir"
+$CMSSW_BASE/src/GutSoftConfigurations/Scripts/postAnalysis *.log.gz > analysis.txt
 echo "GZip logfiles"
 find . -name "*.log" -exec gzip {} \;
 cd ..

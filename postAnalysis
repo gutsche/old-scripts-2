@@ -33,7 +33,18 @@ def main(argv) :
     current_file = ''
     for filename in filenames :
         if os.path.exists(filename) :
-            file = open(filename)
+            try:
+                if filename[-3:] == '.gz' :
+                    # zipped file
+                    import gzip
+                    file = gzip.GzipFile(filename)
+                else :
+                    file = open(filename)
+            except IOError:
+                print ''
+                print 'Could not open file: ',filename
+                print main.__doc__
+                sys.exit(2)
             events_per_job = 0
             line = file.readline()
             while line :
