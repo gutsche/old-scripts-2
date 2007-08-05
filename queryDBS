@@ -1,0 +1,296 @@
+#!/usr/bin/env python
+
+import sys, os, getopt
+import DBSAPI.dbsApi
+
+def main(argv) :
+    """
+    
+    queryDBS    
+    
+    query DBS for datasetpath allowing wildcards
+
+    required parameters
+    --path <path>                             :       datasetpath allowing wildcards in \"
+
+    optional parameters                       :
+    --dbs <dbs>                               :       dbs url (default: http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet)
+    --cff                                     :       write out cff for datasetpaths, outputfilename derived from datasetpath
+    --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
+    --force                                   :       generate ForceMerge messages
+    --twiki                                   :       generate TWiki page, outputfilename derived from CMSSW release
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+    """
+
+    # default
+    dbs   = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
+    path  = ''
+    debug = 0
+    cff   = 0
+    unmerged_cff   = 0
+    force = 0
+    twiki = 0
+
+    # samples
+    samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
+
+    row_starts = {}
+    row_starts['SingleMuPt1Minus'] = '|single &mu; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_minus.cff][cff]]  |'
+    row_starts['SingleMuPt1Plus'] = '|single &mu; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_plus.cff][cff]]  |'
+    row_starts['SingleMuPt2Minus'] = '|single &mu; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_minus.cff][cff]]  |'
+    row_starts['SingleMuPt2Plus'] = '|single &mu; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_plus.cff][cff]]  |'
+    row_starts['SingleMuPt5Minus'] = '|single &mu; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_minus.cff][cff]]  |'
+    row_starts['SingleMuPt5Plus'] = '|single &mu; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_plus.cff][cff]]  |'
+    row_starts['SingleMuPt10Minus'] = '|single &mu; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_minus.cff][cff]]  |'
+    row_starts['SingleMuPt10Plus'] = '|single &mu; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_plus.cff][cff]]  |'
+    row_starts['SingleMuPt25Minus'] = '|single &mu; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_minus.cff][cff]]  |'
+    row_starts['SingleMuPt25Plus'] = '|single &mu; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_plus.cff][cff]]  |'
+    row_starts['SingleMuPt100Minus'] = '|single &mu; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_minus.cff][cff]]  |'
+    row_starts['SingleMuPt100Plus'] = '|single &mu; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_plus.cff][cff]]  |'
+    row_starts['SingleEPt1Minus'] = '|single e minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_minus.cff][cff]]  |'
+    row_starts['SingleEPt1Plus'] = '|single e plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_plus.cff][cff]]  |'
+    row_starts['SingleEPt2Minus'] = '|single e minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_minus.cff][cff]]  |'
+    row_starts['SingleEPt2Plus'] = '|single e plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_plus.cff][cff]]  |'
+    row_starts['SingleEPt5Minus'] = '|single e minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_minus.cff][cff]]  |'
+    row_starts['SingleEPt5Plus'] = '|single e plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_plus.cff][cff]]  |'
+    row_starts['SingleEPt10Minus'] = '|single e minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_minus.cff][cff]]  |'
+    row_starts['SingleEPt10Plus'] = '|single e plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_plus.cff][cff]]  |'
+    row_starts['SingleEPt25Minus'] = '|single e minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_minus.cff][cff]]  |'
+    row_starts['SingleEPt25Plus'] = '|single e plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_plus.cff][cff]]  |'
+    row_starts['SingleEPt100Minus'] = '|single e minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_minus.cff][cff]]  |'
+    row_starts['SingleEPt100Plus'] = '|single e plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_plus.cff][cff]]  |'
+    row_starts['SinglePiPt1Minus'] = '|single &pi; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_minus.cff][cff]]  |'
+    row_starts['SinglePiPt1Plus'] = '|single &pi; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_plus.cff][cff]]  |'
+    row_starts['SinglePiPt2Minus'] = '|single &pi; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_minus.cff][cff]]  |'
+    row_starts['SinglePiPt2Plus'] = '|single &pi; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_plus.cff][cff]]  |'
+    row_starts['SinglePiPt5Minus'] = '|single &pi; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_minus.cff][cff]]  |'
+    row_starts['SinglePiPt5Plus'] = '|single &pi; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_plus.cff][cff]]  |'
+    row_starts['SinglePiPt10Minus'] = '|single &pi; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_minus.cff][cff]]  |'
+    row_starts['SinglePiPt10Plus'] = '|single &pi; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_plus.cff][cff]]  |'
+    row_starts['SinglePiPt25Minus'] = '|single &pi; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_minus.cff][cff]]  |'
+    row_starts['SinglePiPt25Plus'] = '|single &pi; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_plus.cff][cff]]  |'
+    row_starts['SinglePiPt100Minus'] = '|single &pi; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_minus.cff][cff]]  |'
+    row_starts['SinglePiPt100Plus'] = '|single &pi; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_plus.cff][cff]]  |'
+    row_starts['Singlegamma_pt_5'] = '|single &gamma; p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_5.cff][cff]]  |'
+    row_starts['Singlegamma_pt_10'] = '|single &gamma; p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_10.cff][cff]]  |'
+    row_starts['Singlegamma_pt_55'] = '|single &gamma; p<sub>T</sub> 55 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_55.cff][cff]]  |'
+    row_starts['Singlegamma_pt_100'] = '|single &gamma; p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_100.cff][cff]]  |'
+    row_starts['MinBias'] = '|minbias|  [[%PUBURLPATH%/%WEB%/RoadSearch/minbias.cff][cff]]  |'
+    row_starts['ZMuMu'] = '|Z->&mu;&mu;|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
+    row_starts['BJets120_170'] = '|b<sub>Jets</sub> 120 - 170 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
+    row_starts['BJets120_170_LowLumiPileup'] = '|b<sub>Jets</sub> 120 - 170 !GeV low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
+    row_starts['TTBar'] = '|TTbar|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
+    row_starts['TTBar_LowLumiPileup'] = '|TTbar low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
+
+
+    try:
+        cmssw_version = os.environ.get("CMSSW_VERSION")
+    except:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki"])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--dbs" :
+            dbs = arg
+        elif opt == "--path" :
+            path = arg
+        elif opt == "--cff" :
+            cff = 1
+        elif opt == "--unmerged-cff" :
+            unmerged_cff = 1
+        elif opt == "--force" :
+            force = 1
+        elif opt == "--twiki" :
+            twiki = 1
+
+    if path == '' :
+        print main.__doc__
+        sys.exit(2)
+
+    if debug:
+        print 'Parameters:'
+        print 'path=',path
+        print 'dbs=',dbs
+
+    # init dbs
+    args = {}
+    args['url']   = dbs
+    args['level'] = 'CRITICAL'
+
+    try:
+        api = DBSAPI.dbsApi.DbsApi(args)
+        if debug:
+            print ''
+            print 'Connected dbs:',dbs
+    except:
+        print ''
+        print 'Problem connecting DBS'
+        sys.exit(1)
+
+    # arrays
+    unmergedDataSets      = {}
+    dataSets              = {}
+
+    # list processed datasets
+    try:
+        path_array = path.split('/')
+    except:
+        print ''
+        print 'Datasetpath:',path,'cannot be parsed by /PRIMARY/PROCESSED/TIER'
+        print 'Default to /*/*/*'
+        path_array = ['','*','*','*']
+
+    if debug:
+        print ''
+        print 'List processed datasets for:',path_array[1:]
+        
+    datasets   = api.listProcessedDatasets(path_array[1],path_array[3],path_array[2])
+
+    for dataset in datasets:
+        for datasetpath in dataset.get('PathList') :
+            if datasetpath.find('unmerged') > 0 :
+                temp = queryDataset(api,datasetpath,debug)
+                unmergedDataSets[temp['datasetpath'].split('/')[1].replace('DevelopmentSample','')] = temp
+            else :
+                temp = queryDataset(api,datasetpath,debug)
+                dataSets[temp['datasetpath'].split('/')[1].replace('DevelopmentSample','')] = temp
+
+    if len(unmergedDataSets) > 0 :
+        print ''
+        print 'Unmerged DataSets: available:',len(unmergedDataSets)
+        print ''
+        for sample in samples:
+            if sample in unmergedDataSets.keys() :
+                print "%s: events:%6d size: %s GB" % (unmergedDataSets[sample]['datasetpath'].ljust(115),unmergedDataSets[sample]['events'],formatSize(unmergedDataSets[sample]['size'],True))
+                if unmerged_cff == 1 :
+                    writeCff(unmergedDataSets[sample],debug)
+        for dataset in unmergedDataSets.keys():
+            if unmergedDataSets[dataset]['datasetpath'].split('/')[1].replace('DevelopmentSample','') not in samples:
+                print "%s: events:%6d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
+                if unmerged_cff == 1 :
+                    writeCff(unmergedDataSets[dataset],debug)
+
+    if len(dataSets) > 0 :
+        print ''
+        print 'DataSets: available:',len(dataSets)
+        print ''
+        for sample in samples:
+            if sample in dataSets.keys() :
+                print "%s: events:%6d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
+                if cff == 1 :
+                    writeCff(dataSets[sample],debug)
+        for dataset in dataSets.keys():
+            if dataSets[dataset]['datasetpath'].split('/')[1].replace('DevelopmentSample','') not in samples:
+                print "%s: events:%6d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
+                if cff == 1 :
+                    writeCff(dataSets[dataset],debug)
+
+    if force == 1:
+        print ''
+        print 'Samples which have to be ForceMerge\'d'
+        print ''
+        for merged in dataSets.keys():
+            for unmerged in unmergedDataSets.keys():
+                if dataSets[merged]['datasetpath'] == unmergedDataSets[unmerged]['datasetpath'].replace('-unmerged','') :
+                    if dataSets[merged]['events'] != unmergedDataSets[unmerged]['events'] :
+                        print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
+
+    if twiki == 1:
+        twikifile = open(cmssw_version + '.twiki','w')
+        twikifile.write('---+ Development Samples for ' + cmssw_version + '\n')
+        twikifile.write('\n')
+        twikifile.write('*dbs_url = ' + dbs + '*\n')
+        twikifile.write('\n')
+        twikifile.write('|  *Sample*  |  *Generation cff*  |  *DatasetPath*  |  *Number of events*  |  *Size [GB]*  |  *Files at FNAL (cff)*  |\n')
+        for sample in samples:
+            if sample in dataSets.keys() :
+                twikifile.write(row_starts[sample] + dataSets[sample]['datasetpath'] + '|  ' + str(dataSets[sample]['events']) + ' |  ' + formatSize(dataSets[sample]['size']) + ' |  ' + '[[%ATTACHURL%/' + formatCFFName(dataSets[sample]['datasetpath']) + '][cff]]  |\n')
+            else :
+                twikifile.write(row_starts[sample] + ' | | | |\n')
+        twikifile.close()
+
+def formatSize(size,format = False) :
+    """
+    format size
+    """
+    if format :
+        result = "%5.2f" % (size/1024.0/1024.0/1024.0)
+    else :
+        result = "%.2f" % (size/1024.0/1024.0/1024.0)
+    return result
+
+def formatCFFName(datasetpath) :
+    """
+    format cff filename
+    """
+    result = datasetpath.replace('/','__')[2:]+'.cff'
+    return result
+
+def queryDataset(api,datasetpath,debug):
+    """
+    query dataset
+    """
+
+    result    = {}
+    events    = 0
+    size      = 0
+    filenames = []
+
+    files = api.listFiles(datasetpath)
+    for file in files:
+        filenames.append(file['LogicalFileName'])
+        events += file['NumberOfEvents']
+        size   += file['FileSize']
+        if debug:
+            print file['LogicalFileName'],file['NumberOfEvents'],file['FileSize']
+
+    result['datasetpath'] = datasetpath
+    result['events']      = events
+    result['size']        = size
+    result['filenames']   = filenames
+
+    if debug:
+        print result['datasetpath'],result['events'],result['size']
+
+    return result
+
+def writeCff(dataset,cff):
+    """
+    write cff
+    """
+
+    outputfile = file(formatCFFName(dataset['datasetpath']),'w')
+
+    output = ''
+    output += '#\n'
+    output += '# datasetpath: '+ str(dataset['datasetpath']) + '\n'
+    output += '# events     : '+ str(dataset['events']) + '\n'
+    output += '# size       : %s GB\n' % (formatSize(dataset['size'],True))
+    output += '#\n'
+    output += 'replace PoolSource.fileNames = {\n'
+    for filename in dataset['filenames'] :
+        output += '  "' + filename + '",\n'
+    output = output[:-2]+'\n'
+    output += '}\n'
+
+    outputfile.write(output)
+
+    outputfile.close()
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
