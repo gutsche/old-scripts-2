@@ -15,6 +15,7 @@ def main(argv) :
 
     optional parameters                       :
     --dbs <dbs>                               :       dbs url (default: http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet)
+    --se <se>                                 :       storage element url (default: cmssrm.fnal.gov)
     --cff                                     :       write out cff for datasetpaths, outputfilename derived from datasetpath
     --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
     --force                                   :       generate ForceMerge messages
@@ -26,6 +27,7 @@ def main(argv) :
 
     # default
     dbs   = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
+    se    = 'cmssrm.fnal.gov'
     path  = ''
     debug = 0
     cff   = 0
@@ -34,55 +36,7 @@ def main(argv) :
     twiki = 0
 
     # samples
-    samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
-
-    row_starts = {}
-    row_starts['SingleMuPt1Minus'] = '|single &mu; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_minus.cff][cff]]  |'
-    row_starts['SingleMuPt1Plus'] = '|single &mu; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_plus.cff][cff]]  |'
-    row_starts['SingleMuPt2Minus'] = '|single &mu; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_minus.cff][cff]]  |'
-    row_starts['SingleMuPt2Plus'] = '|single &mu; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_plus.cff][cff]]  |'
-    row_starts['SingleMuPt5Minus'] = '|single &mu; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_minus.cff][cff]]  |'
-    row_starts['SingleMuPt5Plus'] = '|single &mu; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_plus.cff][cff]]  |'
-    row_starts['SingleMuPt10Minus'] = '|single &mu; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_minus.cff][cff]]  |'
-    row_starts['SingleMuPt10Plus'] = '|single &mu; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_plus.cff][cff]]  |'
-    row_starts['SingleMuPt25Minus'] = '|single &mu; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_minus.cff][cff]]  |'
-    row_starts['SingleMuPt25Plus'] = '|single &mu; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_plus.cff][cff]]  |'
-    row_starts['SingleMuPt100Minus'] = '|single &mu; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_minus.cff][cff]]  |'
-    row_starts['SingleMuPt100Plus'] = '|single &mu; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_plus.cff][cff]]  |'
-    row_starts['SingleEPt1Minus'] = '|single e minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_minus.cff][cff]]  |'
-    row_starts['SingleEPt1Plus'] = '|single e plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_plus.cff][cff]]  |'
-    row_starts['SingleEPt2Minus'] = '|single e minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_minus.cff][cff]]  |'
-    row_starts['SingleEPt2Plus'] = '|single e plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_plus.cff][cff]]  |'
-    row_starts['SingleEPt5Minus'] = '|single e minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_minus.cff][cff]]  |'
-    row_starts['SingleEPt5Plus'] = '|single e plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_plus.cff][cff]]  |'
-    row_starts['SingleEPt10Minus'] = '|single e minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_minus.cff][cff]]  |'
-    row_starts['SingleEPt10Plus'] = '|single e plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_plus.cff][cff]]  |'
-    row_starts['SingleEPt25Minus'] = '|single e minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_minus.cff][cff]]  |'
-    row_starts['SingleEPt25Plus'] = '|single e plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_plus.cff][cff]]  |'
-    row_starts['SingleEPt100Minus'] = '|single e minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_minus.cff][cff]]  |'
-    row_starts['SingleEPt100Plus'] = '|single e plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_plus.cff][cff]]  |'
-    row_starts['SinglePiPt1Minus'] = '|single &pi; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_minus.cff][cff]]  |'
-    row_starts['SinglePiPt1Plus'] = '|single &pi; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_plus.cff][cff]]  |'
-    row_starts['SinglePiPt2Minus'] = '|single &pi; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_minus.cff][cff]]  |'
-    row_starts['SinglePiPt2Plus'] = '|single &pi; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_plus.cff][cff]]  |'
-    row_starts['SinglePiPt5Minus'] = '|single &pi; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_minus.cff][cff]]  |'
-    row_starts['SinglePiPt5Plus'] = '|single &pi; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_plus.cff][cff]]  |'
-    row_starts['SinglePiPt10Minus'] = '|single &pi; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_minus.cff][cff]]  |'
-    row_starts['SinglePiPt10Plus'] = '|single &pi; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_plus.cff][cff]]  |'
-    row_starts['SinglePiPt25Minus'] = '|single &pi; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_minus.cff][cff]]  |'
-    row_starts['SinglePiPt25Plus'] = '|single &pi; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_plus.cff][cff]]  |'
-    row_starts['SinglePiPt100Minus'] = '|single &pi; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_minus.cff][cff]]  |'
-    row_starts['SinglePiPt100Plus'] = '|single &pi; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_plus.cff][cff]]  |'
-    row_starts['Singlegamma_pt_5'] = '|single &gamma; p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_5.cff][cff]]  |'
-    row_starts['Singlegamma_pt_10'] = '|single &gamma; p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_10.cff][cff]]  |'
-    row_starts['Singlegamma_pt_55'] = '|single &gamma; p<sub>T</sub> 55 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_55.cff][cff]]  |'
-    row_starts['Singlegamma_pt_100'] = '|single &gamma; p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_100.cff][cff]]  |'
-    row_starts['MinBias'] = '|minbias|  [[%PUBURLPATH%/%WEB%/RoadSearch/minbias.cff][cff]]  |'
-    row_starts['ZMuMu'] = '|Z->&mu;&mu;|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
-    row_starts['BJets120_170'] = '|b<sub>Jets</sub> 120 - 170 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
-    row_starts['BJets120_170_LowLumiPileup'] = '|b<sub>Jets</sub> 120 - 170 !GeV low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
-    row_starts['TTBar'] = '|TTbar|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
-    row_starts['TTBar_LowLumiPileup'] = '|TTbar low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
+    samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','ZMuMu_LowLumiPileup','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
 
 
     try:
@@ -93,7 +47,7 @@ def main(argv) :
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki"])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -107,6 +61,8 @@ def main(argv) :
             debug = 1
         elif opt == "--dbs" :
             dbs = arg
+        elif opt == "--se" :
+            se = arg
         elif opt == "--path" :
             path = arg
         elif opt == "--cff" :
@@ -164,10 +120,10 @@ def main(argv) :
     for dataset in datasets:
         for datasetpath in dataset.get('PathList') :
             if datasetpath.find('unmerged') > 0 :
-                temp = queryDataset(api,datasetpath,debug)
+                temp = queryDataset(api,datasetpath,se,debug)
                 unmergedDataSets[temp['datasetpath'].split('/')[1].replace('DevelopmentSample','')] = temp
             else :
-                temp = queryDataset(api,datasetpath,debug)
+                temp = queryDataset(api,datasetpath,se,debug)
                 dataSets[temp['datasetpath'].split('/')[1].replace('DevelopmentSample','')] = temp
 
     if len(unmergedDataSets) > 0 :
@@ -191,12 +147,12 @@ def main(argv) :
         print ''
         for sample in samples:
             if sample in dataSets.keys() :
-                print "%s: events:%6d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
+                print "%s: events: %6d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[sample],debug)
         for dataset in dataSets.keys():
             if dataSets[dataset]['datasetpath'].split('/')[1].replace('DevelopmentSample','') not in samples:
-                print "%s: events:%6d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
+                print "%s: events: %6d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[dataset],debug)
 
@@ -211,6 +167,55 @@ def main(argv) :
                         print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
 
     if twiki == 1:
+        row_starts = {}
+        row_starts['SingleMuPt1Minus'] = '|single &mu; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_minus.cff][cff]]  |'
+        row_starts['SingleMuPt1Plus'] = '|single &mu; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_plus.cff][cff]]  |'
+        row_starts['SingleMuPt2Minus'] = '|single &mu; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_minus.cff][cff]]  |'
+        row_starts['SingleMuPt2Plus'] = '|single &mu; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_plus.cff][cff]]  |'
+        row_starts['SingleMuPt5Minus'] = '|single &mu; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_minus.cff][cff]]  |'
+        row_starts['SingleMuPt5Plus'] = '|single &mu; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_plus.cff][cff]]  |'
+        row_starts['SingleMuPt10Minus'] = '|single &mu; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_minus.cff][cff]]  |'
+        row_starts['SingleMuPt10Plus'] = '|single &mu; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_plus.cff][cff]]  |'
+        row_starts['SingleMuPt25Minus'] = '|single &mu; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_minus.cff][cff]]  |'
+        row_starts['SingleMuPt25Plus'] = '|single &mu; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_plus.cff][cff]]  |'
+        row_starts['SingleMuPt100Minus'] = '|single &mu; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_minus.cff][cff]]  |'
+        row_starts['SingleMuPt100Plus'] = '|single &mu; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_plus.cff][cff]]  |'
+        row_starts['SingleEPt1Minus'] = '|single e minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_minus.cff][cff]]  |'
+        row_starts['SingleEPt1Plus'] = '|single e plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_plus.cff][cff]]  |'
+        row_starts['SingleEPt2Minus'] = '|single e minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_minus.cff][cff]]  |'
+        row_starts['SingleEPt2Plus'] = '|single e plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_plus.cff][cff]]  |'
+        row_starts['SingleEPt5Minus'] = '|single e minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_minus.cff][cff]]  |'
+        row_starts['SingleEPt5Plus'] = '|single e plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_plus.cff][cff]]  |'
+        row_starts['SingleEPt10Minus'] = '|single e minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_minus.cff][cff]]  |'
+        row_starts['SingleEPt10Plus'] = '|single e plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_plus.cff][cff]]  |'
+        row_starts['SingleEPt25Minus'] = '|single e minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_minus.cff][cff]]  |'
+        row_starts['SingleEPt25Plus'] = '|single e plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_plus.cff][cff]]  |'
+        row_starts['SingleEPt100Minus'] = '|single e minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_minus.cff][cff]]  |'
+        row_starts['SingleEPt100Plus'] = '|single e plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_plus.cff][cff]]  |'
+        row_starts['SinglePiPt1Minus'] = '|single &pi; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_minus.cff][cff]]  |'
+        row_starts['SinglePiPt1Plus'] = '|single &pi; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_plus.cff][cff]]  |'
+        row_starts['SinglePiPt2Minus'] = '|single &pi; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_minus.cff][cff]]  |'
+        row_starts['SinglePiPt2Plus'] = '|single &pi; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_plus.cff][cff]]  |'
+        row_starts['SinglePiPt5Minus'] = '|single &pi; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_minus.cff][cff]]  |'
+        row_starts['SinglePiPt5Plus'] = '|single &pi; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_plus.cff][cff]]  |'
+        row_starts['SinglePiPt10Minus'] = '|single &pi; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_minus.cff][cff]]  |'
+        row_starts['SinglePiPt10Plus'] = '|single &pi; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_plus.cff][cff]]  |'
+        row_starts['SinglePiPt25Minus'] = '|single &pi; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_minus.cff][cff]]  |'
+        row_starts['SinglePiPt25Plus'] = '|single &pi; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_plus.cff][cff]]  |'
+        row_starts['SinglePiPt100Minus'] = '|single &pi; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_minus.cff][cff]]  |'
+        row_starts['SinglePiPt100Plus'] = '|single &pi; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_plus.cff][cff]]  |'
+        row_starts['Singlegamma_pt_5'] = '|single &gamma; p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_5.cff][cff]]  |'
+        row_starts['Singlegamma_pt_10'] = '|single &gamma; p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_10.cff][cff]]  |'
+        row_starts['Singlegamma_pt_55'] = '|single &gamma; p<sub>T</sub> 55 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_55.cff][cff]]  |'
+        row_starts['Singlegamma_pt_100'] = '|single &gamma; p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_100.cff][cff]]  |'
+        row_starts['MinBias'] = '|minbias|  [[%PUBURLPATH%/%WEB%/RoadSearch/minbias.cff][cff]]  |'
+        row_starts['ZMuMu'] = '|Z->&mu;&mu;|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
+        row_starts['ZMuMu_LowLumiPileup'] = '|Z->&mu;&mu; low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
+        row_starts['BJets120_170'] = '|b<sub>Jets</sub> 120 - 170 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
+        row_starts['BJets120_170_LowLumiPileup'] = '|b<sub>Jets</sub> 120 - 170 !GeV low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
+        row_starts['TTBar'] = '|TTbar|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
+        row_starts['TTBar_LowLumiPileup'] = '|TTbar low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
+
         twikifile = open(cmssw_version + '.twiki','w')
         twikifile.write('---+ Development Samples for ' + cmssw_version + '\n')
         twikifile.write('\n')
@@ -241,7 +246,7 @@ def formatCFFName(datasetpath) :
     result = datasetpath.replace('/','__')[2:]+'.cff'
     return result
 
-def queryDataset(api,datasetpath,debug):
+def queryDataset(api,datasetpath,se,debug):
     """
     query dataset
     """
@@ -251,13 +256,15 @@ def queryDataset(api,datasetpath,debug):
     size      = 0
     filenames = []
 
-    files = api.listFiles(datasetpath)
-    for file in files:
-        filenames.append(file['LogicalFileName'])
-        events += file['NumberOfEvents']
-        size   += file['FileSize']
-        if debug:
-            print file['LogicalFileName'],file['NumberOfEvents'],file['FileSize']
+    blocks = api.listBlocks(dataset=datasetpath,block_name="*",storage_element_name=se);
+    for block in blocks:
+        files = api.listFiles(blockName=block['Name'])
+        for file in files:
+            filenames.append(file['LogicalFileName'])
+            events += file['NumberOfEvents']
+            size   += file['FileSize']
+            if debug:
+                print file['LogicalFileName'],file['NumberOfEvents'],file['FileSize']
 
     result['datasetpath'] = datasetpath
     result['events']      = events
