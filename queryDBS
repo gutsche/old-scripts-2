@@ -20,6 +20,8 @@ def main(argv) :
     --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
     --force                                   :       generate ForceMerge messages
     --twiki                                   :       generate TWiki page, outputfilename derived from CMSSW release
+    --crab                                    :       create calls to createCRABReconstructionProject for all merged datasets (requires --project_name_start) and write them in file named after project_name_start
+    --project_name_start <name>               :       project name start needed by --crab
     --help (-h)                               :       help
     --debug (-d)                              :       debug statements
     
@@ -34,6 +36,8 @@ def main(argv) :
     unmerged_cff   = 0
     force = 0
     twiki = 0
+    crab  = 0
+    project_name_start = ''
 
     # samples
     samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','ZMuMu_LowLumiPileup','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
@@ -46,8 +50,13 @@ def main(argv) :
         print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
         sys.exit(2)
 
+    if cmssw_version == None:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -73,8 +82,17 @@ def main(argv) :
             force = 1
         elif opt == "--twiki" :
             twiki = 1
+        elif opt == "--crab" :
+            crab = 1
+        elif opt == "--project_name_start" :
+            project_name_start = arg
+            
 
     if path == '' :
+        print main.__doc__
+        sys.exit(2)
+
+    if crab == 1 and project_name_start == '' :
         print main.__doc__
         sys.exit(2)
 
@@ -165,6 +183,9 @@ def main(argv) :
                 if dataSets[merged]['datasetpath'] == unmergedDataSets[unmerged]['datasetpath'].replace('-unmerged','') :
                     if dataSets[merged]['events'] != unmergedDataSets[unmerged]['events'] :
                         print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
+        for sample in samples :
+            if sample in unmergedDataSets.keys() and sample not in dataSets.keys():
+                print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
 
     if twiki == 1:
         row_starts = {}
@@ -228,6 +249,135 @@ def main(argv) :
             else :
                 twikifile.write(row_starts[sample] + ' | | | |\n')
         twikifile.close()
+
+    if crab == 1:
+        project_name_extension = {}
+        project_name_extension['SingleMuPt1Minus']           = 10
+        project_name_extension['SingleMuPt1Plus']            = 20
+        project_name_extension['SingleMuPt2Minus']           = 11
+        project_name_extension['SingleMuPt2Plus']            = 21
+        project_name_extension['SingleMuPt5Minus']           = 12
+        project_name_extension['SingleMuPt5Plus']            = 22
+        project_name_extension['SingleMuPt10Minus']          = 13
+        project_name_extension['SingleMuPt10Plus']           = 23
+        project_name_extension['SingleMuPt25Minus']          = 14
+        project_name_extension['SingleMuPt25Plus']           = 24
+        project_name_extension['SingleMuPt100Minus']         = 15
+        project_name_extension['SingleMuPt100Plus']          = 25
+        project_name_extension['SingleEPt1Minus']            = 30
+        project_name_extension['SingleEPt1Plus']             = 40
+        project_name_extension['SingleEPt2Minus']            = 31
+        project_name_extension['SingleEPt2Plus']             = 41
+        project_name_extension['SingleEPt5Minus']            = 32
+        project_name_extension['SingleEPt5Plus']             = 42
+        project_name_extension['SingleEPt10Minus']           = 33
+        project_name_extension['SingleEPt10Plus']            = 43
+        project_name_extension['SingleEPt25Minus']           = 34
+        project_name_extension['SingleEPt25Plus']            = 44
+        project_name_extension['SingleEPt100Minus']          = 35
+        project_name_extension['SingleEPt100Plus']           = 45
+        project_name_extension['SinglePiPt1Minus']           = 50
+        project_name_extension['SinglePiPt1Plus']            = 60
+        project_name_extension['SinglePiPt2Minus']           = 51
+        project_name_extension['SinglePiPt2Plus']            = 61
+        project_name_extension['SinglePiPt5Minus']           = 52
+        project_name_extension['SinglePiPt5Plus']            = 62
+        project_name_extension['SinglePiPt10Minus']          = 53
+        project_name_extension['SinglePiPt10Plus']           = 63
+        project_name_extension['SinglePiPt25Minus']          = 54
+        project_name_extension['SinglePiPt25Plus']           = 64
+        project_name_extension['SinglePiPt100Minus']         = 55
+        project_name_extension['SinglePiPt100Plus']          = 65
+        project_name_extension['Singlegamma_pt_5']           = 70
+        project_name_extension['Singlegamma_pt_10']          = 71
+        project_name_extension['Singlegamma_pt_55']          = 72
+        project_name_extension['Singlegamma_pt_100']         = 73
+        project_name_extension['MinBias']                    = 80
+        project_name_extension['ZMuMu']                      = 81
+        project_name_extension['ZMuMu_LowLumiPileup']        = 82
+        project_name_extension['BJets120_170']               = 83
+        project_name_extension['BJets120_170_LowLumiPileup'] = 84
+        project_name_extension['TTBar']                      = 85
+        project_name_extension['TTBar_LowLumiPileup']        = 86
+
+        events = {}
+        events['SingleMuPt1Minus']           = 1000
+        events['SingleMuPt1Plus']            = 1000
+        events['SingleMuPt2Minus']           = 1000
+        events['SingleMuPt2Plus']            = 1000
+        events['SingleMuPt5Minus']           = 1000
+        events['SingleMuPt5Plus']            = 1000
+        events['SingleMuPt10Minus']          = 1000
+        events['SingleMuPt10Plus']           = 1000
+        events['SingleMuPt25Minus']          = 1000
+        events['SingleMuPt25Plus']           = 1000
+        events['SingleMuPt100Minus']         = 1000
+        events['SingleMuPt100Plus']          = 1000
+        events['SingleEPt1Minus']            = 1000
+        events['SingleEPt1Plus']             = 1000
+        events['SingleEPt2Minus']            = 1000
+        events['SingleEPt2Plus']             = 1000
+        events['SingleEPt5Minus']            = 1000
+        events['SingleEPt5Plus']             = 1000
+        events['SingleEPt10Minus']           = 1000
+        events['SingleEPt10Plus']            = 1000
+        events['SingleEPt25Minus']           = 1000
+        events['SingleEPt25Plus']            = 1000
+        events['SingleEPt100Minus']          = 1000
+        events['SingleEPt100Plus']           = 1000
+        events['SinglePiPt1Minus']           = 1000
+        events['SinglePiPt1Plus']            = 1000
+        events['SinglePiPt2Minus']           = 1000
+        events['SinglePiPt2Plus']            = 1000
+        events['SinglePiPt5Minus']           = 1000
+        events['SinglePiPt5Plus']            = 1000
+        events['SinglePiPt10Minus']          = 1000
+        events['SinglePiPt10Plus']           = 1000
+        events['SinglePiPt25Minus']          = 1000
+        events['SinglePiPt25Plus']           = 1000
+        events['SinglePiPt100Minus']         = 1000
+        events['SinglePiPt100Plus']          = 1000
+        events['Singlegamma_pt_5']           = 1000
+        events['Singlegamma_pt_10']          = 1000
+        events['Singlegamma_pt_55']          = 1000
+        events['Singlegamma_pt_100']         = 1000
+        events['MinBias']                    = 500
+        events['ZMuMu']                      = 200
+        events['ZMuMu_LowLumiPileup']        = 200
+        events['BJets120_170']               = 200
+        events['BJets120_170_LowLumiPileup'] = 200
+        events['TTBar']                      = 200
+        events['TTBar_LowLumiPileup']        = 200
+
+
+        crabfile = open(project_name_start + '.crab','w')
+        # change script permission to executable
+        os.chmod(project_name_start + '.crab',0755)
+        # write header
+        crabfile.write('#!/bin/bash\n')
+        
+        print ''
+        print 'writing out crab project creation commands to file: ' + project_name_start + '.crab'
+
+        for sample in samples :
+            if sample in dataSets.keys():
+                msg  = './createCRABReconstructionProject --project_name ' + project_name_start + '_' + str(project_name_extension[sample])
+                msg += ' --datasetpath ' + dataSets[sample]['datasetpath']
+                msg += ' --events ' + str(events[sample])
+                msg += ' --dbs ' + dbs
+                msg += '\n'
+                crabfile.write(msg)
+        counter = 90
+        for merged in dataSets.keys():
+            if merged not in samples:
+                msg  = './createCRABReconstructionProject --project_name ' + project_name_start + '_' + str(counter)
+                counter += 1
+                msg += ' --datasetpath ' + dataSets[sample]['datasetpath']
+                msg += ' --events 1000'
+                msg += '\n'
+                crabfile.write(msg)
+
+        
 
 def formatSize(size,format = False) :
     """

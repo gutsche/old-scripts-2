@@ -1,0 +1,183 @@
+#!/usr/bin/python
+
+import sys, os, getopt, glob
+
+def main(argv) :
+    """
+    
+    createCRABReconstructionProject
+    
+    creates CRAB project in base_rundir and corresponding crab.cfg
+
+    required parameters         :
+    --project_name  <name>      : subdirectory name in base_rundir
+    --datasetpath   <path>      : datasetpath from dbs
+    --events        <number>    : number of events per job
+
+
+    optional parameters         :
+    --base_rundir   <dir>       : base_rundir where project is created, (default: /uscmst1b_scratch/lpc1/lpctrk/gutsche/condor)
+    --dbs           <url>       : dbs url (default: http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet)
+    --total         <number>    : total number of events to process (default: -1)
+    --help (-h)                 : help
+    --debug (-d)                : debug statements
+    
+    """
+
+    # default
+    base_rundir  = '/uscmst1b_scratch/lpc1/lpctrk/gutsche/condor'
+    project_name = ''
+    datasetpath  = ''
+    events       = 0
+    dbs          = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
+    total        = -1
+    debug        = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "base_rundir=", "project_name=", "datasetpath=", "events=", "dbs=", "total="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--base_rundir" :
+            base_rundir = arg
+        elif opt == "--project_name" :
+            project_name = arg
+        elif opt == "--datasetpath" :
+            datasetpath = arg
+        elif opt == "--events" :
+            try:
+                events = int(arg)
+            except:
+                print ''
+                print '    --events didn\'t specify a number'
+                print main.__doc__
+                sys.exit()
+        elif opt == "--dbs" :
+            dbs = arg
+        elif opt == "--total" :
+            try:
+                total = int(arg)
+            except:
+                print ''
+                print '    --total didn\'t specify a number'
+                print main.__doc__
+                sys.exit()
+
+    # check for command line parameters
+    if project_name == '' or datasetpath == '' or events == 0 :
+        print main.__doc__
+        sys.exit(2)
+
+    # get CMSSW_BASE
+    try:
+        CMSSW_BASE = os.environ['CMSSW_BASE']
+    except:
+        print ''
+        print 'CMSSW base directory cannot be determined from $CMSSW_BASE, please setup a user area!'
+        sys.exit(2)
+
+    if CMSSW_BASE == None:
+        print ''
+        print 'CMSSW base directory cannot be determined from $CMSSW_BASE, please setup a user area!'
+        sys.exit(2)
+
+    # CMSSW_VERSION
+    try:
+        cmssw_version = os.environ.get("CMSSW_VERSION")
+    except:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
+    if cmssw_version == None:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
+    
+
+    # create absolute paths
+    parameter_set = CMSSW_BASE + '/src/GutSoftConfigurations/Crab/reconstruction.cfg'
+
+    # check if input files exist
+    if not os.path.exists(parameter_set) :
+        print ''
+        print '    parameter_set:',parameter_set,'does not exist!'
+        print main.__doc__
+        sys.exit()
+
+    # check if project directory exists
+    project_dir = base_rundir + '/' + project_name
+    if os.path.exists(project_dir) :
+        print ''
+        print '    project_dir:',project_dir,'already exists!'
+        print main.__doc__
+        sys.exit()
+        
+    # header printout
+    print ''
+    print '     createCRABReconstructionProject'
+    print ''
+    print '     create project      :',project_name
+    print '     in base_rundir      :',base_rundir
+    print ''
+    print '     datasetpath         :',datasetpath
+    print '     dbs url             :',dbs
+    print '     total events        :',total
+    print '     events per job      :',events
+    print ''
+
+    # create project_dir
+    os.makedirs(project_dir)
+
+    # make entry in projects.txt
+    file = open(base_rundir+'/projects.txt','a')
+    line = 'project: %10s CMSSW: %16s datasetpath: %30s total events: %6i events %6i\n' % (project_name, cmssw_version, datasetpath, total, events)
+
+    file.write(line)
+    file.close()
+
+    # create jdl
+    file = open(project_dir+'/crab.cfg','w')
+    file.write('[CRAB]\n')
+    file.write('jobtype                = cmssw\n')
+    file.write('scheduler              = condor_g\n')
+    file.write('\n')
+    file.write('[CMSSW]\n')
+    file.write('datasetpath            = ' + datasetpath + '\n')
+    file.write('dbs_url                = ' + dbs + '\n')
+    file.write('pset                   = ' + parameter_set + '\n')
+    file.write('total_number_of_events = ' + str(total) + '\n')
+    file.write('events_per_job         = ' + str(events) + '\n')
+    file.write('output_file            = reconstruction.root,reconstruction_histograms.root\n')
+    file.write('\n')
+    file.write('[USER]\n')
+    file.write('return_data            = 0\n')
+    file.write('copy_data              = 1\n')
+    file.write('storage_element        = cmssrm.fnal.gov\n')
+    file.write('storage_path           = /srm/managerv1?SFN=/resilient/gutsche/condor/' + project_name + '\n')
+    file.write('use_central_bossDB     = 0\n')
+    file.write('use_boss_rt            = 0\n')
+    file.write('\n')
+    file.write('[EDG]\n')
+    file.write('se_white_list          = cmssrm.fnal.gov\n')
+    file.write('ce_white_list          = cmsosgce2.fnal.gov\n')
+    file.write('rb                     = CERN\n')
+    file.write('proxy_server           = myproxy.cern.ch\n')
+    file.write('virtual_organization   = cms\n')
+    file.write('retry_count            = 0\n')
+    file.write('lcg_catalog_type       = lfc\n')
+    file.write('lfc_host               = lfc-cms-test.cern.ch\n')
+    file.write('lfc_home               = /grid/cms\n')
+    file.close()
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
