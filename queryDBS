@@ -15,11 +15,13 @@ def main(argv) :
 
     optional parameters                       :
     --dbs <dbs>                               :       dbs url (default: http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet)
+    --global-dbs <dbs>                        :       global dbs (default: http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet)
     --se <se>                                 :       storage element url (default: cmssrm.fnal.gov)
     --cff                                     :       write out cff for datasetpaths, outputfilename derived from datasetpath
     --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
     --force                                   :       generate ForceMerge messages
     --twiki                                   :       generate TWiki page, outputfilename derived from CMSSW release
+    --publish                                 :       write out publish messages for merged samples not published already
     --crab                                    :       create calls to createCRABReconstructionProject for all merged datasets (requires --project_name_start) and write them in file named after project_name_start
     --project_name_start <name>               :       project name start needed by --crab
     --help (-h)                               :       help
@@ -28,15 +30,17 @@ def main(argv) :
     """
 
     # default
-    dbs   = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
-    se    = 'cmssrm.fnal.gov'
-    path  = ''
-    debug = 0
-    cff   = 0
-    unmerged_cff   = 0
-    force = 0
-    twiki = 0
-    crab  = 0
+    dbs                = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
+    global_dbs         = 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet'
+    se                 = 'cmssrm.fnal.gov'
+    path               = ''
+    debug              = 0
+    cff                = 0
+    unmerged_cff       = 0
+    force              = 0
+    twiki              = 0
+    crab               = 0
+    publish            = 0
     project_name_start = ''
 
     # samples
@@ -56,7 +60,7 @@ def main(argv) :
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start="])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","global-dbs="])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -70,6 +74,8 @@ def main(argv) :
             debug = 1
         elif opt == "--dbs" :
             dbs = arg
+        elif opt == "--global-dbs" :
+            global_dbs = arg
         elif opt == "--se" :
             se = arg
         elif opt == "--path" :
@@ -84,6 +90,8 @@ def main(argv) :
             twiki = 1
         elif opt == "--crab" :
             crab = 1
+        elif opt == "--publish" :
+            publish = 1
         elif opt == "--project_name_start" :
             project_name_start = arg
             
@@ -96,10 +104,18 @@ def main(argv) :
         print main.__doc__
         sys.exit(2)
 
+    if force == 0 and publish == 1:
+        print ''
+        print 'To avoid publishing not completely merged datasets, please set --force AND --publish'
+        print main.__doc__
+        sys.exit(2)
+
     if debug:
         print 'Parameters:'
         print 'path=',path
         print 'dbs=',dbs
+
+        
 
     # init dbs
     args = {}
@@ -377,7 +393,33 @@ def main(argv) :
                 msg += '\n'
                 crabfile.write(msg)
 
-        
+    if publish == 1 :
+
+        # init global dbs
+        global_args = {}
+        global_args['url']   = global_dbs
+        global_args['level'] = 'CRITICAL'
+        try:
+            global_api = DBSAPI.dbsApi.DbsApi(global_args)
+        except:
+            print ''
+            print 'Problem connecting to DBS:',global_dbs
+            sys.exit(1)
+
+        print ''
+        print 'following datasets stil have to be published to following DBS instance:',global_dbs
+        print ''
+
+        for sample in samples:
+            if sample in dataSets.keys() :
+                published_dataset = queryDataset(global_api,dataSets[sample]['datasetpath'],se,debug)
+                if 'datasetpath' not in published_dataset.keys():
+                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+        for dataset in dataSets.keys():
+            if dataset not in samples :
+                published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
+                if 'datasetpath' not in published_dataset.keys():
+                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
 
 def formatSize(size,format = False) :
     """
@@ -406,7 +448,10 @@ def queryDataset(api,datasetpath,se,debug):
     size      = 0
     filenames = []
 
-    blocks = api.listBlocks(dataset=datasetpath,block_name="*",storage_element_name=se);
+    try:
+        blocks = api.listBlocks(dataset=datasetpath,block_name="*",storage_element_name=se);
+    except:
+        blocks = []
     for block in blocks:
         files = api.listFiles(blockName=block['Name'])
         for file in files:
@@ -416,10 +461,11 @@ def queryDataset(api,datasetpath,se,debug):
             if debug:
                 print file['LogicalFileName'],file['NumberOfEvents'],file['FileSize']
 
-    result['datasetpath'] = datasetpath
-    result['events']      = events
-    result['size']        = size
-    result['filenames']   = filenames
+    if len(blocks) > 0 :
+        result['datasetpath'] = datasetpath
+        result['events']      = events
+        result['size']        = size
+        result['filenames']   = filenames
 
     if debug:
         print result['datasetpath'],result['events'],result['size']
@@ -451,3 +497,4 @@ def writeCff(dataset,cff):
 
 if __name__ == '__main__' :
     main(sys.argv[1:])
+
