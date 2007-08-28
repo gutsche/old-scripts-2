@@ -74,8 +74,10 @@ def main(argv) :
         index = -11
         for i in range(10) :
             index += 1
-#            print lines[index].strip()
-            timing[i].append(lines[index].strip())
+            try:
+                timing[i].append(str(float(lines[index].strip())))
+            except:
+                timing[i].append('0')
             
 
     for i in range(len(timing)) :
