@@ -200,21 +200,21 @@ def main(argv) :
         print ''
         for sample in samples:
             if sample in unmergedDataSets.keys() :
-                print "%s: events:%6d size: %s GB" % (unmergedDataSets[sample]['datasetpath'].ljust(115),unmergedDataSets[sample]['events'],formatSize(unmergedDataSets[sample]['size'],True))
+                print "%s: events: %8d size: %s GB" % (unmergedDataSets[sample]['datasetpath'].ljust(115),unmergedDataSets[sample]['events'],formatSize(unmergedDataSets[sample]['size'],True))
                 if unmerged_cff == 1 :
                     writeCff(unmergedDataSets[sample],debug)
                 if check == 1:
                     writeCheckScript(unmergedDataSets[sample],debug)
                     
             else:
-                print "%s: events:%6d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
+                print "%s: events: %8d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
         for dataset in unmergedDataSets.keys():
             found = 0
             for sample in samples :
                 if dataset.find(sample) >= 0:
                     found = 1
             if found == 0 :
-                print "%s: events:%6d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
+                print "%s: events: %8d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
                 if unmerged_cff == 1 :
                     writeCff(unmergedDataSets[dataset],debug)
                 if check == 1:
@@ -226,18 +226,18 @@ def main(argv) :
         print ''
         for sample in samples:
             if sample in dataSets.keys() :
-                print "%s: events:%6d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
+                print "%s: events: %8d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[sample],debug)
             else:
-                print "%s: events:%6d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
+                print "%s: events: %8d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
         for dataset in dataSets.keys():
             found = 0
             for sample in samples :
                 if dataset.find(sample) >= 0:
                     found = 1
             if found == 0 :
-                print "%s: events:%6d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
+                print "%s: events: %8d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[dataset],debug)
 
@@ -482,7 +482,7 @@ def formatSize(size,format = False) :
     format size
     """
     if format :
-        result = "%5.2f" % (size/1024.0/1024.0/1024.0)
+        result = "%7.2f" % (size/1024.0/1024.0/1024.0)
     else :
         result = "%.2f" % (size/1024.0/1024.0/1024.0)
     return result
