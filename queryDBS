@@ -27,7 +27,6 @@ def main(argv) :
     --check                                   :       prepare scripts to check if files of unmerged datasets have been written to dCache
     --dev                                     :       use development sample list
     --rel                                     :       use release validation sample list
-    --tmdb                                    :       generate PhEDEX TMDB injection commands
     --help (-h)                               :       help
     --debug (-d)                              :       debug statements
     
@@ -49,7 +48,6 @@ def main(argv) :
     check              = 0
     dev                = 0
     rel                = 0
-    tmdb               = 0
 
     # samples
     samples = []
@@ -66,7 +64,7 @@ def main(argv) :
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","global-dbs=","check","dev","rel","tmdb"])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","global-dbs=","check","dev","rel","unmerged-cff"])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -105,10 +103,7 @@ def main(argv) :
         elif opt == "--dev" :
             dev = 1
         elif opt == "--rel" :
-            rel = 1
-        elif opt == "--tmdb" :
-            tmdb = 1
-        
+            rel = 1        
             
     if dev == 1 :
         samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','ZMuMu_LowLumiPileup','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
@@ -241,6 +236,8 @@ def main(argv) :
                 if cff == 1 :
                     writeCff(dataSets[dataset],debug)
 
+    do_force = []
+
     if force == 1:
         print ''
         print 'Samples which have to be ForceMerge\'d'
@@ -249,6 +246,7 @@ def main(argv) :
             for unmerged in unmergedDataSets.keys():
                 if dataSets[merged]['datasetpath'] == unmergedDataSets[unmerged]['datasetpath'].replace('-unmerged','') :
                     if dataSets[merged]['events'] < unmergedDataSets[unmerged]['events'] :
+                        do_force.append(dataSets[merged]['datasetpath'])
                         print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
 
     if twiki == 1:
@@ -462,20 +460,16 @@ def main(argv) :
             if sample in dataSets.keys() :
                 published_dataset = queryDataset(global_api,dataSets[sample]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
+                    # if dataSets[sample]['datasetpath'] not in do_force :
                     print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
         for dataset in dataSets.keys():
             if dataset not in samples :
                 published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
+                    # if dataSets[dataset]['datasetpath'] not in do_force :
                     print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
-
-    if tmdb == 1 :
-        for sample in samples:
-            if sample in dataSets.keys() :
-                print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
-        for dataset in dataSets.keys():
-            if dataset not in samples :
-                print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
 
 def formatSize(size,format = False) :
     """

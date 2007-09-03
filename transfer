@@ -12,7 +12,7 @@ echo "copy analysis.txt to ~/transfer/$dir"
 cp analysis.txt ~/transfer/$dir
 echo "copy timing.txt to ~/transfer/$dir"
 cp timing.txt ~/transfer/$dir
-echo "copy *.png to ~/transfer/$dir"
-cp *.png ~/transfer/$dir
+echo "copy *.gif to ~/transfer/$dir"
+cp *.gif ~/transfer/$dir
 cd ..
 done
