@@ -24,7 +24,8 @@ def main(argv) :
     --publish                                 :       write out publish messages for merged samples not published already
     --crab                                    :       create calls to createCRABReconstructionProject for all merged datasets (requires --project_name_start) and write them in file named after project_name_start
     --project_name_start <name>               :       project name start needed by --crab
-    --check                                   :       prepare scripts to check if files of unmerged datasets have been written to dCache
+    --check                                   :       prepare scripts to check if files of datasets have been written to dCache
+    --check_unmerged                          :       prepare scripts to check if files of unmerged datasets have been written to dCache
     --dev                                     :       use development sample list
     --rel                                     :       use release validation sample list
     --help (-h)                               :       help
@@ -46,22 +47,9 @@ def main(argv) :
     publish            = 0
     project_name_start = ''
     check              = 0
+    check_unmerged     = 0
     dev                = 0
     rel                = 0
-
-    # samples
-    samples = []
-    try:
-        cmssw_version = os.environ.get("CMSSW_VERSION")
-    except:
-        print ''
-        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
-        sys.exit(2)
-
-    if cmssw_version == None:
-        print ''
-        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
-        sys.exit(2)
 
     try:
         opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","global-dbs=","check","dev","rel","unmerged-cff"])
@@ -100,18 +88,33 @@ def main(argv) :
             project_name_start = arg
         elif opt == "--check" :
             check = 1
+        elif opt == "--check-unmerged" :
+            check_unmerged = 1
         elif opt == "--dev" :
             dev = 1
         elif opt == "--rel" :
             rel = 1        
             
+    # samples
+    samples = []
+    try:
+        cmssw_version = os.environ.get("CMSSW_VERSION")
+    except:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
+    if cmssw_version == None and twiki == 1:
+        print ''
+        print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
+        sys.exit(2)
+
     if dev == 1 :
         samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','ZMuMu_LowLumiPileup','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
 
     if rel == 1:
-        samples = ['MinBias','10MuonsPt10','SingleMuPlusPt1000','SingleMuMinusPt1000','SingleMuPlusPt100','SingleMuMinusPt100','SingleMuPlusPt10','SingleMuMinusPt10','SingleEPt35','SingleTauPt35','SingleGammaPt35','SingleGammaPt10','TTbarL1','SingleMuPlusPt100L1','QCD_pt80_120L1','SingleEPt35L1','TTbar','ZPrimeDijets700','BJets50-120','CJets50-120','Z-EE','Z-MM','Z-TT','W-E','W-M','W-T','ChargedHiggsTausM200','HiggsPhotons120','Higgs-ZZ-4L','QCD_pt30_50','QCD_pt50_80','QCD_pt80_120','QCD_pt3000_3500','QCD_pt15_20','QCD_pt20_30','QCD_pt120_170','QCD_pt170_230','QCD_pt230_300']
-
-
+        samples = ['SingleMuPlusPt1000','SingleMuMinusPt1000','SingleMuPlusPt100','SingleMuMinusPt100','SingleMuPlusPt10','SingleMuMinusPt10','SingleMuPlusPt1','SingleMuMinusPt1','SinglePiPlusPt1000','SinglePiMinusPt1000','SinglePiPlusPt100','SinglePiMinusPt100','SinglePiPlusPt10','SinglePiMinusPt10','SinglePiPlusPt1','SinglePiMinusPt1','SingleElectronE1000','SingleElectronPt35','SingleElectronPt10','SingleGammaE5','SingleGammaE10','SingleGammaE1000','SingleGammaPt10','SingleGammaPt35','SinglePiZeroPt35','SinglePiZeroE20','SingleTauPt35','MinBias','WE','WM','WT','ZEE','ZMM','ZTT','BJets_Pt_50_120','CJets_Pt_50_120','TTbar','QCD_Pt_30_50','QCD_Pt_50_80','QCD_Pt_80_120','QCD_Pt_3000_3500','HiggsGammaGammaM120','HiggsChargedTausM200','HiggsZZ4LM190','RS1GravitonGammaM1500','ZPrimeEEM1000','ZPrimeEEM4000','ZPrimeJJM700']
+        
     if path == '' :
         print main.__doc__
         sys.exit(2)
@@ -170,24 +173,25 @@ def main(argv) :
     for dataset in datasets:
         for datasetpath in dataset.get('PathList') :
             temp = queryDataset(api,datasetpath,se,debug)
-            if datasetpath.find('unmerged') >= 0 :
-                found = 0
-                for sample in samples :
+            if len(temp.keys()) > 0:
+                if datasetpath.find('unmerged') >= 0 :
+                    found = 0
+                    for sample in samples :
+                        if found == 0 :
+                            if temp['datasetpath'].find(sample+'/') >= 0 :
+                                unmergedDataSets[sample] = temp
+                                found = 1
                     if found == 0 :
-                        if temp['datasetpath'].find(sample+'/') >= 0 :
-                            unmergedDataSets[sample] = temp
-                            found = 1
-                if found == 0 :
-                    unmergedDataSets[temp['datasetpath']] = temp
-            else :
-                found = 0
-                for sample in samples :
+                        unmergedDataSets[temp['datasetpath']] = temp
+                else :
+                    found = 0
+                    for sample in samples :
+                        if found == 0 :
+                            if temp['datasetpath'].find(sample+'/') >= 0 :
+                                dataSets[sample] = temp
+                                found = 1
                     if found == 0 :
-                        if temp['datasetpath'].find(sample+'/') >= 0 :
-                            dataSets[sample] = temp
-                            found = 1
-                if found == 0 :
-                    dataSets[temp['datasetpath']] = temp
+                        dataSets[temp['datasetpath']] = temp
 
     if len(unmergedDataSets) > 0 :
         print ''
@@ -198,7 +202,7 @@ def main(argv) :
                 print "%s: events: %8d size: %s GB" % (unmergedDataSets[sample]['datasetpath'].ljust(115),unmergedDataSets[sample]['events'],formatSize(unmergedDataSets[sample]['size'],True))
                 if unmerged_cff == 1 :
                     writeCff(unmergedDataSets[sample],debug)
-                if check == 1:
+                if check_unmerged == 1:
                     writeCheckScript(unmergedDataSets[sample],debug)
                     
             else:
@@ -212,7 +216,7 @@ def main(argv) :
                 print "%s: events: %8d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
                 if unmerged_cff == 1 :
                     writeCff(unmergedDataSets[dataset],debug)
-                if check == 1:
+                if check_unmerged == 1:
                     writeCheckScript(unmergedDataSets[dataset],debug)
 
     if len(dataSets) > 0 :
@@ -224,6 +228,8 @@ def main(argv) :
                 print "%s: events: %8d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[sample],debug)
+                if check == 1:
+                    writeCheckScript(dataSets[sample],debug)
             else:
                 print "%s: events: %8d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
         for dataset in dataSets.keys():
@@ -235,6 +241,8 @@ def main(argv) :
                 print "%s: events: %8d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
                 if cff == 1 :
                     writeCff(dataSets[dataset],debug)
+                if check == 1:
+                    writeCheckScript(dataSets[dataset],debug)
 
     do_force = []
 
@@ -460,16 +468,25 @@ def main(argv) :
             if sample in dataSets.keys() :
                 published_dataset = queryDataset(global_api,dataSets[sample]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
-                    # if dataSets[sample]['datasetpath'] not in do_force :
-                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+                    if dataSets[sample]['datasetpath'] not in do_force :
+                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+                elif published_dataset['events'] != dataSets[sample]['events'] :
+                    if dataSets[sample]['datasetpath'] not in do_force :
+                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+
         for dataset in dataSets.keys():
             if dataset not in samples :
                 published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
-                    # if dataSets[dataset]['datasetpath'] not in do_force :
-                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
-                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+                    if dataSets[dataset]['datasetpath'] not in do_force :
+                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
+                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+                elif published_dataset['events'] != dataSets[dataset]['events'] :
+                    if dataSets[dataset]['datasetpath'] not in do_force :
+                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
 
 def formatSize(size,format = False) :
     """
