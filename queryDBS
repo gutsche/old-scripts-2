@@ -21,11 +21,12 @@ def main(argv) :
     --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
     --force                                   :       generate ForceMerge messages
     --twiki                                   :       generate TWiki page, outputfilename derived from CMSSW release
-    --publish                                 :       write out publish messages for merged samples not published already
+    --publish                                 :       write out publish messages for merged samples not published already, requires --force
+    --publish-anyway                          :       write out publish messages for merged samples not published already without requiring --force
     --crab                                    :       create calls to createCRABReconstructionProject for all merged datasets (requires --project_name_start) and write them in file named after project_name_start
     --project_name_start <name>               :       project name start needed by --crab
     --check                                   :       prepare scripts to check if files of datasets have been written to dCache
-    --check_unmerged                          :       prepare scripts to check if files of unmerged datasets have been written to dCache
+    --check-unmerged                          :       prepare scripts to check if files of unmerged datasets have been written to dCache
     --dev                                     :       use development sample list
     --rel                                     :       use release validation sample list
     --help (-h)                               :       help
@@ -34,7 +35,7 @@ def main(argv) :
     """
 
     # default
-    dbs                = 'http://cmssrv17.fnal.gov:8989/DBS_1_0_5_STABLE/servlet/DBSServlet'
+    dbs                = 'http://cmssrv46.fnal.gov:8080/DBS/servlet/DBSServlet'
     global_dbs         = 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet'
     se                 = 'cmssrm.fnal.gov'
     path               = ''
@@ -45,6 +46,7 @@ def main(argv) :
     twiki              = 0
     crab               = 0
     publish            = 0
+    publish_anyway     = 0
     project_name_start = ''
     check              = 0
     check_unmerged     = 0
@@ -52,7 +54,7 @@ def main(argv) :
     rel                = 0
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","global-dbs=","check","dev","rel","unmerged-cff"])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","publish-anyway","global-dbs=","check","check-unmerged","dev","rel","unmerged-cff"])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -84,6 +86,8 @@ def main(argv) :
             crab = 1
         elif opt == "--publish" :
             publish = 1
+        elif opt == "--publish-anyway" :
+            publish_anyway = 1
         elif opt == "--project_name_start" :
             project_name_start = arg
         elif opt == "--check" :
@@ -195,7 +199,7 @@ def main(argv) :
 
     if len(unmergedDataSets) > 0 :
         print ''
-        print 'Unmerged DataSets: available:',len(unmergedDataSets)
+        print 'Unmerged DataSets in',dbs,':',len(unmergedDataSets)
         print ''
         for sample in samples:
             if sample in unmergedDataSets.keys() :
@@ -221,7 +225,7 @@ def main(argv) :
 
     if len(dataSets) > 0 :
         print ''
-        print 'DataSets: available:',len(dataSets)
+        print 'DataSets in',dbs,':',len(dataSets)
         print ''
         for sample in samples:
             if sample in dataSets.keys() :
@@ -447,7 +451,7 @@ def main(argv) :
                 msg += '\n'
                 crabfile.write(msg)
 
-    if publish == 1 :
+    if publish == 1 or publish_anyway == 1:
 
         # init global dbs
         global_args = {}
@@ -461,32 +465,32 @@ def main(argv) :
             sys.exit(1)
 
         print ''
-        print 'following datasets stil have to be published to following DBS instance:',global_dbs
+        print 'following datasets still have to be published to following DBS instance:',global_dbs
         print ''
 
         for sample in samples:
             if sample in dataSets.keys() :
                 published_dataset = queryDataset(global_api,dataSets[sample]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
-                    if dataSets[sample]['datasetpath'] not in do_force :
-                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+					if dataSets[sample]['datasetpath'] not in do_force :
+						print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
                 elif published_dataset['events'] != dataSets[sample]['events'] :
                     if dataSets[sample]['datasetpath'] not in do_force :
-                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+						print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
+						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
 
         for dataset in dataSets.keys():
             if dataset not in samples :
                 published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
                 if 'datasetpath' not in published_dataset.keys():
                     if dataSets[dataset]['datasetpath'] not in do_force :
-                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
-                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+                    	print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
+                    	print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
                 elif published_dataset['events'] != dataSets[dataset]['events'] :
                     if dataSets[dataset]['datasetpath'] not in do_force :
-                        print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-                        print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
+                    	print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
+						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
 
 def formatSize(size,format = False) :
     """
