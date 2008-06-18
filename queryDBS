@@ -20,15 +20,10 @@ def main(argv) :
     --cff                                     :       write out cff for datasetpaths, outputfilename derived from datasetpath
     --unmerged-cff                            :       write out cff for unmerged datasetpaths, outputfilename derived from datasetpath
     --force                                   :       generate ForceMerge messages
-    --twiki                                   :       generate TWiki page, outputfilename derived from CMSSW release
     --publish                                 :       write out publish messages for merged samples not published already, requires --force
     --publish-anyway                          :       write out publish messages for merged samples not published already without requiring --force
-    --crab                                    :       create calls to createCRABReconstructionProject for all merged datasets (requires --project_name_start) and write them in file named after project_name_start
-    --project_name_start <name>               :       project name start needed by --crab
     --check                                   :       prepare scripts to check if files of datasets have been written to dCache
     --check-unmerged                          :       prepare scripts to check if files of unmerged datasets have been written to dCache
-    --dev                                     :       use development sample list
-    --rel                                     :       use release validation sample list
     --help (-h)                               :       help
     --debug (-d)                              :       debug statements
     
@@ -43,18 +38,13 @@ def main(argv) :
     cff                = 0
     unmerged_cff       = 0
     force              = 0
-    twiki              = 0
-    crab               = 0
     publish            = 0
     publish_anyway     = 0
-    project_name_start = ''
     check              = 0
     check_unmerged     = 0
-    dev                = 0
-    rel                = 0
 
     try:
-        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "twiki", "se=", "crab", "project_name_start=","publish","publish-anyway","global-dbs=","check","check-unmerged","dev","rel","unmerged-cff"])
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "cff", "force", "se=", "publish","publish-anyway", "global-dbs=", "check", "check-unmerged", "unmerged-cff"])
     except getopt.GetoptError:
         print main.__doc__
         sys.exit(2)
@@ -80,24 +70,14 @@ def main(argv) :
             unmerged_cff = 1
         elif opt == "--force" :
             force = 1
-        elif opt == "--twiki" :
-            twiki = 1
-        elif opt == "--crab" :
-            crab = 1
         elif opt == "--publish" :
             publish = 1
         elif opt == "--publish-anyway" :
             publish_anyway = 1
-        elif opt == "--project_name_start" :
-            project_name_start = arg
         elif opt == "--check" :
             check = 1
         elif opt == "--check-unmerged" :
             check_unmerged = 1
-        elif opt == "--dev" :
-            dev = 1
-        elif opt == "--rel" :
-            rel = 1        
             
     # samples
     samples = []
@@ -113,11 +93,6 @@ def main(argv) :
         print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
         sys.exit(2)
 
-    if dev == 1 :
-        samples = ['SingleMuPt1Minus','SingleMuPt1Plus','SingleMuPt2Minus','SingleMuPt2Plus','SingleMuPt5Minus','SingleMuPt5Plus','SingleMuPt10Minus','SingleMuPt10Plus','SingleMuPt25Minus','SingleMuPt25Plus','SingleMuPt100Minus','SingleMuPt100Plus','SingleEPt1Minus','SingleEPt1Plus','SingleEPt2Minus','SingleEPt2Plus','SingleEPt5Minus','SingleEPt5Plus','SingleEPt10Minus','SingleEPt10Plus','SingleEPt25Minus','SingleEPt25Plus','SingleEPt100Minus','SingleEPt100Plus','SinglePiPt1Minus','SinglePiPt1Plus','SinglePiPt2Minus','SinglePiPt2Plus','SinglePiPt5Minus','SinglePiPt5Plus','SinglePiPt10Minus','SinglePiPt10Plus','SinglePiPt25Minus','SinglePiPt25Plus','SinglePiPt100Minus','SinglePiPt100Plus','Singlegamma_pt_5','Singlegamma_pt_10','Singlegamma_pt_55','Singlegamma_pt_100','MinBias','ZMuMu','ZMuMu_LowLumiPileup','BJets120_170','BJets120_170_LowLumiPileup','TTBar','TTBar_LowLumiPileup']
-
-    if rel == 1:
-        samples = ['SingleMuPlusPt1000','SingleMuMinusPt1000','SingleMuPlusPt100','SingleMuMinusPt100','SingleMuPlusPt10','SingleMuMinusPt10','SingleMuPlusPt1','SingleMuMinusPt1','SinglePiPlusPt1000','SinglePiMinusPt1000','SinglePiPlusPt100','SinglePiMinusPt100','SinglePiPlusPt10','SinglePiMinusPt10','SinglePiPlusPt1','SinglePiMinusPt1','SingleElectronE1000','SingleElectronPt35','SingleElectronPt10','SingleGammaE5','SingleGammaE10','SingleGammaE1000','SingleGammaPt10','SingleGammaPt35','SinglePiZeroPt35','SinglePiZeroE20','SingleTauPt35','MinBias','WE','WM','WT','ZEE','ZMM','ZTT','BJets_Pt_50_120','CJets_Pt_50_120','TTbar','QCD_Pt_30_50','QCD_Pt_50_80','QCD_Pt_80_120','QCD_Pt_3000_3500','HiggsGammaGammaM120','HiggsChargedTausM200','HiggsZZ4LM190','RS1GravitonGammaM1500','ZPrimeEEM1000','ZPrimeEEM4000','ZPrimeJJM700']
         
     if path == '' :
         print main.__doc__
@@ -179,74 +154,31 @@ def main(argv) :
             temp = queryDataset(api,datasetpath,se,debug)
             if len(temp.keys()) > 0:
                 if datasetpath.find('unmerged') >= 0 :
-                    found = 0
-                    for sample in samples :
-                        if found == 0 :
-                            if temp['datasetpath'].find(sample+'/') >= 0 :
-                                unmergedDataSets[sample] = temp
-                                found = 1
-                    if found == 0 :
-                        unmergedDataSets[temp['datasetpath']] = temp
+                    unmergedDataSets[temp['datasetpath']] = temp
                 else :
-                    found = 0
-                    for sample in samples :
-                        if found == 0 :
-                            if temp['datasetpath'].find(sample+'/') >= 0 :
-                                dataSets[sample] = temp
-                                found = 1
-                    if found == 0 :
-                        dataSets[temp['datasetpath']] = temp
+                    dataSets[temp['datasetpath']] = temp
 
     if len(unmergedDataSets) > 0 :
         print ''
         print 'Unmerged DataSets in',dbs,':',len(unmergedDataSets)
         print ''
-        for sample in samples:
-            if sample in unmergedDataSets.keys() :
-                print "%s: events: %8d size: %s GB" % (unmergedDataSets[sample]['datasetpath'].ljust(115),unmergedDataSets[sample]['events'],formatSize(unmergedDataSets[sample]['size'],True))
-                if unmerged_cff == 1 :
-                    writeCff(unmergedDataSets[sample],debug)
-                if check_unmerged == 1:
-                    writeCheckScript(unmergedDataSets[sample],debug)
-                    
-            else:
-                print "%s: events: %8d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
         for dataset in unmergedDataSets.keys():
-            found = 0
-            for sample in samples :
-                if dataset.find(sample) >= 0:
-                    found = 1
-            if found == 0 :
-                print "%s: events: %8d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
-                if unmerged_cff == 1 :
-                    writeCff(unmergedDataSets[dataset],debug)
-                if check_unmerged == 1:
-                    writeCheckScript(unmergedDataSets[dataset],debug)
+            print "%s: events: %8d size: %s GB" % (unmergedDataSets[dataset]['datasetpath'].ljust(115),unmergedDataSets[dataset]['events'],formatSize(unmergedDataSets[dataset]['size'],True))
+            if unmerged_cff == 1 :
+                writeCff(unmergedDataSets[dataset],debug)
+            if check_unmerged == 1:
+                writeCheckScript(unmergedDataSets[dataset],debug)
 
     if len(dataSets) > 0 :
         print ''
         print 'DataSets in',dbs,':',len(dataSets)
         print ''
-        for sample in samples:
-            if sample in dataSets.keys() :
-                print "%s: events: %8d size: %s GB" % (dataSets[sample]['datasetpath'].ljust(115),dataSets[sample]['events'],formatSize(dataSets[sample]['size'],True))
-                if cff == 1 :
-                    writeCff(dataSets[sample],debug)
-                if check == 1:
-                    writeCheckScript(dataSets[sample],debug)
-            else:
-                print "%s: events: %8d size: %s GB" % (sample.ljust(115),0,formatSize(0,True))
         for dataset in dataSets.keys():
-            found = 0
-            for sample in samples :
-                if dataset.find(sample) >= 0:
-                    found = 1
-            if found == 0 :
-                print "%s: events: %8d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
-                if cff == 1 :
-                    writeCff(dataSets[dataset],debug)
-                if check == 1:
-                    writeCheckScript(dataSets[dataset],debug)
+            print "%s: events: %8d size: %s GB" % (dataSets[dataset]['datasetpath'].ljust(115),dataSets[dataset]['events'],formatSize(dataSets[dataset]['size'],True))
+            if cff == 1 :
+                writeCff(dataSets[dataset],debug)
+            if check == 1:
+                writeCheckScript(dataSets[dataset],debug)
 
     do_force = []
 
@@ -260,196 +192,6 @@ def main(argv) :
                     if dataSets[merged]['events'] < unmergedDataSets[unmerged]['events'] :
                         do_force.append(dataSets[merged]['datasetpath'])
                         print 'python2.4 publish.py ForceMerge',unmergedDataSets[unmerged]['datasetpath']
-
-    if twiki == 1:
-        row_starts = {}
-        row_starts['SingleMuPt1Minus'] = '|single &mu; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_minus.cff][cff]]  |'
-        row_starts['SingleMuPt1Plus'] = '|single &mu; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_1_plus.cff][cff]]  |'
-        row_starts['SingleMuPt2Minus'] = '|single &mu; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_minus.cff][cff]]  |'
-        row_starts['SingleMuPt2Plus'] = '|single &mu; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_2_plus.cff][cff]]  |'
-        row_starts['SingleMuPt5Minus'] = '|single &mu; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_minus.cff][cff]]  |'
-        row_starts['SingleMuPt5Plus'] = '|single &mu; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_5_plus.cff][cff]]  |'
-        row_starts['SingleMuPt10Minus'] = '|single &mu; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_minus.cff][cff]]  |'
-        row_starts['SingleMuPt10Plus'] = '|single &mu; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_10_plus.cff][cff]]  |'
-        row_starts['SingleMuPt25Minus'] = '|single &mu; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_minus.cff][cff]]  |'
-        row_starts['SingleMuPt25Plus'] = '|single &mu; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_25_plus.cff][cff]]  |'
-        row_starts['SingleMuPt100Minus'] = '|single &mu; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_minus.cff][cff]]  |'
-        row_starts['SingleMuPt100Plus'] = '|single &mu; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_mu_pt_100_plus.cff][cff]]  |'
-        row_starts['SingleEPt1Minus'] = '|single e minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_minus.cff][cff]]  |'
-        row_starts['SingleEPt1Plus'] = '|single e plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_1_plus.cff][cff]]  |'
-        row_starts['SingleEPt2Minus'] = '|single e minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_minus.cff][cff]]  |'
-        row_starts['SingleEPt2Plus'] = '|single e plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_2_plus.cff][cff]]  |'
-        row_starts['SingleEPt5Minus'] = '|single e minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_minus.cff][cff]]  |'
-        row_starts['SingleEPt5Plus'] = '|single e plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_5_plus.cff][cff]]  |'
-        row_starts['SingleEPt10Minus'] = '|single e minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_minus.cff][cff]]  |'
-        row_starts['SingleEPt10Plus'] = '|single e plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_10_plus.cff][cff]]  |'
-        row_starts['SingleEPt25Minus'] = '|single e minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_minus.cff][cff]]  |'
-        row_starts['SingleEPt25Plus'] = '|single e plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_25_plus.cff][cff]]  |'
-        row_starts['SingleEPt100Minus'] = '|single e minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_minus.cff][cff]]  |'
-        row_starts['SingleEPt100Plus'] = '|single e plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_e_pt_100_plus.cff][cff]]  |'
-        row_starts['SinglePiPt1Minus'] = '|single &pi; minus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_minus.cff][cff]]  |'
-        row_starts['SinglePiPt1Plus'] = '|single &pi; plus p<sub>T</sub> 1 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_1_plus.cff][cff]]  |'
-        row_starts['SinglePiPt2Minus'] = '|single &pi; minus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_minus.cff][cff]]  |'
-        row_starts['SinglePiPt2Plus'] = '|single &pi; plus p<sub>T</sub> 2 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_2_plus.cff][cff]]  |'
-        row_starts['SinglePiPt5Minus'] = '|single &pi; minus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_minus.cff][cff]]  |'
-        row_starts['SinglePiPt5Plus'] = '|single &pi; plus p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_5_plus.cff][cff]]  |'
-        row_starts['SinglePiPt10Minus'] = '|single &pi; minus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_minus.cff][cff]]  |'
-        row_starts['SinglePiPt10Plus'] = '|single &pi; plus p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_10_plus.cff][cff]]  |'
-        row_starts['SinglePiPt25Minus'] = '|single &pi; minus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_minus.cff][cff]]  |'
-        row_starts['SinglePiPt25Plus'] = '|single &pi; plus p<sub>T</sub> 25 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_25_plus.cff][cff]]  |'
-        row_starts['SinglePiPt100Minus'] = '|single &pi; minus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_minus.cff][cff]]  |'
-        row_starts['SinglePiPt100Plus'] = '|single &pi; plus p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_pi_pt_100_plus.cff][cff]]  |'
-        row_starts['Singlegamma_pt_5'] = '|single &gamma; p<sub>T</sub> 5 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_5.cff][cff]]  |'
-        row_starts['Singlegamma_pt_10'] = '|single &gamma; p<sub>T</sub> 10 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_10.cff][cff]]  |'
-        row_starts['Singlegamma_pt_55'] = '|single &gamma; p<sub>T</sub> 55 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_55.cff][cff]]  |'
-        row_starts['Singlegamma_pt_100'] = '|single &gamma; p<sub>T</sub> 100 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/single_gamma_pt_100.cff][cff]]  |'
-        row_starts['MinBias'] = '|minbias|  [[%PUBURLPATH%/%WEB%/RoadSearch/minbias.cff][cff]]  |'
-        row_starts['ZMuMu'] = '|Z->&mu;&mu;|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
-        row_starts['ZMuMu_LowLumiPileup'] = '|Z->&mu;&mu; low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/zmumu.cff][cff]]  |'
-        row_starts['BJets120_170'] = '|b<sub>Jets</sub> 120 - 170 !GeV|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
-        row_starts['BJets120_170_LowLumiPileup'] = '|b<sub>Jets</sub> 120 - 170 !GeV low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/bjets_120_170.cff][cff]]  |'
-        row_starts['TTBar'] = '|TTbar|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
-        row_starts['TTBar_LowLumiPileup'] = '|TTbar low-lumi pileup|  [[%PUBURLPATH%/%WEB%/RoadSearch/ttbar.cff][cff]]  |'
-
-        twikifile = open(cmssw_version + '.twiki','w')
-        twikifile.write('---+ Development Samples for ' + cmssw_version + '\n')
-        twikifile.write('\n')
-        twikifile.write('*dbs_url = ' + dbs + '*\n')
-        twikifile.write('\n')
-        twikifile.write('|  *Sample*  |  *Generation cff*  |  *DatasetPath*  |  *Number of events*  |  *Size [GB]*  |  *Files at FNAL (cff)*  |\n')
-        for sample in samples:
-            if sample in dataSets.keys() :
-                twikifile.write(row_starts[sample] + dataSets[sample]['datasetpath'] + '|  ' + str(dataSets[sample]['events']) + ' |  ' + formatSize(dataSets[sample]['size']) + ' |  ' + '[[%ATTACHURL%/' + formatCFFName(dataSets[sample]['datasetpath']) + '][cff]]  |\n')
-            else :
-                twikifile.write(row_starts[sample] + ' | | | |\n')
-        twikifile.close()
-
-    if crab == 1:
-        project_name_extension = {}
-        project_name_extension['SingleMuPt1Minus']           = 10
-        project_name_extension['SingleMuPt1Plus']            = 20
-        project_name_extension['SingleMuPt2Minus']           = 11
-        project_name_extension['SingleMuPt2Plus']            = 21
-        project_name_extension['SingleMuPt5Minus']           = 12
-        project_name_extension['SingleMuPt5Plus']            = 22
-        project_name_extension['SingleMuPt10Minus']          = 13
-        project_name_extension['SingleMuPt10Plus']           = 23
-        project_name_extension['SingleMuPt25Minus']          = 14
-        project_name_extension['SingleMuPt25Plus']           = 24
-        project_name_extension['SingleMuPt100Minus']         = 15
-        project_name_extension['SingleMuPt100Plus']          = 25
-        project_name_extension['SingleEPt1Minus']            = 30
-        project_name_extension['SingleEPt1Plus']             = 40
-        project_name_extension['SingleEPt2Minus']            = 31
-        project_name_extension['SingleEPt2Plus']             = 41
-        project_name_extension['SingleEPt5Minus']            = 32
-        project_name_extension['SingleEPt5Plus']             = 42
-        project_name_extension['SingleEPt10Minus']           = 33
-        project_name_extension['SingleEPt10Plus']            = 43
-        project_name_extension['SingleEPt25Minus']           = 34
-        project_name_extension['SingleEPt25Plus']            = 44
-        project_name_extension['SingleEPt100Minus']          = 35
-        project_name_extension['SingleEPt100Plus']           = 45
-        project_name_extension['SinglePiPt1Minus']           = 50
-        project_name_extension['SinglePiPt1Plus']            = 60
-        project_name_extension['SinglePiPt2Minus']           = 51
-        project_name_extension['SinglePiPt2Plus']            = 61
-        project_name_extension['SinglePiPt5Minus']           = 52
-        project_name_extension['SinglePiPt5Plus']            = 62
-        project_name_extension['SinglePiPt10Minus']          = 53
-        project_name_extension['SinglePiPt10Plus']           = 63
-        project_name_extension['SinglePiPt25Minus']          = 54
-        project_name_extension['SinglePiPt25Plus']           = 64
-        project_name_extension['SinglePiPt100Minus']         = 55
-        project_name_extension['SinglePiPt100Plus']          = 65
-        project_name_extension['Singlegamma_pt_5']           = 70
-        project_name_extension['Singlegamma_pt_10']          = 71
-        project_name_extension['Singlegamma_pt_55']          = 72
-        project_name_extension['Singlegamma_pt_100']         = 73
-        project_name_extension['MinBias']                    = 80
-        project_name_extension['ZMuMu']                      = 81
-        project_name_extension['ZMuMu_LowLumiPileup']        = 82
-        project_name_extension['BJets120_170']               = 83
-        project_name_extension['BJets120_170_LowLumiPileup'] = 84
-        project_name_extension['TTBar']                      = 85
-        project_name_extension['TTBar_LowLumiPileup']        = 86
-
-        events = {}
-        events['SingleMuPt1Minus']           = 1000
-        events['SingleMuPt1Plus']            = 1000
-        events['SingleMuPt2Minus']           = 1000
-        events['SingleMuPt2Plus']            = 1000
-        events['SingleMuPt5Minus']           = 1000
-        events['SingleMuPt5Plus']            = 1000
-        events['SingleMuPt10Minus']          = 1000
-        events['SingleMuPt10Plus']           = 1000
-        events['SingleMuPt25Minus']          = 1000
-        events['SingleMuPt25Plus']           = 1000
-        events['SingleMuPt100Minus']         = 1000
-        events['SingleMuPt100Plus']          = 1000
-        events['SingleEPt1Minus']            = 1000
-        events['SingleEPt1Plus']             = 1000
-        events['SingleEPt2Minus']            = 1000
-        events['SingleEPt2Plus']             = 1000
-        events['SingleEPt5Minus']            = 1000
-        events['SingleEPt5Plus']             = 1000
-        events['SingleEPt10Minus']           = 1000
-        events['SingleEPt10Plus']            = 1000
-        events['SingleEPt25Minus']           = 1000
-        events['SingleEPt25Plus']            = 1000
-        events['SingleEPt100Minus']          = 1000
-        events['SingleEPt100Plus']           = 1000
-        events['SinglePiPt1Minus']           = 1000
-        events['SinglePiPt1Plus']            = 1000
-        events['SinglePiPt2Minus']           = 1000
-        events['SinglePiPt2Plus']            = 1000
-        events['SinglePiPt5Minus']           = 1000
-        events['SinglePiPt5Plus']            = 1000
-        events['SinglePiPt10Minus']          = 1000
-        events['SinglePiPt10Plus']           = 1000
-        events['SinglePiPt25Minus']          = 1000
-        events['SinglePiPt25Plus']           = 1000
-        events['SinglePiPt100Minus']         = 1000
-        events['SinglePiPt100Plus']          = 1000
-        events['Singlegamma_pt_5']           = 1000
-        events['Singlegamma_pt_10']          = 1000
-        events['Singlegamma_pt_55']          = 1000
-        events['Singlegamma_pt_100']         = 1000
-        events['MinBias']                    = 500
-        events['ZMuMu']                      = 200
-        events['ZMuMu_LowLumiPileup']        = 200
-        events['BJets120_170']               = 200
-        events['BJets120_170_LowLumiPileup'] = 200
-        events['TTBar']                      = 200
-        events['TTBar_LowLumiPileup']        = 200
-
-
-        crabfile = open(project_name_start + '.crab','w')
-        # change script permission to executable
-        os.chmod(project_name_start + '.crab',0755)
-        # write header
-        crabfile.write('#!/bin/bash\n')
-        
-        print ''
-        print 'writing out crab project creation commands to file: ' + project_name_start + '.crab'
-
-        for sample in samples :
-            if sample in dataSets.keys():
-                msg  = './createCRABReconstructionProject --project_name ' + project_name_start + '_' + str(project_name_extension[sample])
-                msg += ' --datasetpath ' + dataSets[sample]['datasetpath']
-                msg += ' --events ' + str(events[sample])
-                msg += ' --dbs ' + dbs
-                msg += '\n'
-                crabfile.write(msg)
-        counter = 90
-        for merged in dataSets.keys():
-            if merged not in samples:
-                msg  = './createCRABReconstructionProject --project_name ' + project_name_start + '_' + str(counter)
-                counter += 1
-                msg += ' --datasetpath ' + dataSets[sample]['datasetpath']
-                msg += ' --events 1000'
-                msg += '\n'
-                crabfile.write(msg)
 
     if publish == 1 or publish_anyway == 1:
 
@@ -468,29 +210,16 @@ def main(argv) :
         print 'following datasets still have to be published to following DBS instance:',global_dbs
         print ''
 
-        for sample in samples:
-            if sample in dataSets.keys() :
-                published_dataset = queryDataset(global_api,dataSets[sample]['datasetpath'],se,debug)
-                if 'datasetpath' not in published_dataset.keys():
-					if dataSets[sample]['datasetpath'] not in do_force :
-						print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
-                elif published_dataset['events'] != dataSets[sample]['events'] :
-                    if dataSets[sample]['datasetpath'] not in do_force :
-						print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[sample]['datasetpath']
-						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[sample]['datasetpath']
-
         for dataset in dataSets.keys():
-            if dataset not in samples :
-                published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
-                if 'datasetpath' not in published_dataset.keys():
-                    if dataSets[dataset]['datasetpath'] not in do_force :
-                    	print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
-                    	print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
-                elif published_dataset['events'] != dataSets[dataset]['events'] :
-                    if dataSets[dataset]['datasetpath'] not in do_force :
-                    	print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
-						print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+            published_dataset = queryDataset(global_api,dataSets[dataset]['datasetpath'],se,debug)
+            if 'datasetpath' not in published_dataset.keys():
+                if dataSets[dataset]['datasetpath'] not in do_force :
+                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
+                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
+            elif published_dataset['events'] != dataSets[dataset]['events'] :
+                if dataSets[dataset]['datasetpath'] not in do_force :
+                    print 'python2.4 publish.py DBSInterface:MigrateDatasetToGlobal',dataSets[dataset]['datasetpath']
+                    print 'python2.4 publish.py PhEDExInjectDataset',dataSets[dataset]['datasetpath']
 
 def formatSize(size,format = False) :
     """
