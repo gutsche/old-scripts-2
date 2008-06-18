@@ -1,0 +1,157 @@
+#!/usr/bin/python
+
+import sys, os, getopt, popen2, fcntl, select, string
+
+def makeNonBlocking(fd):
+    fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+    try:
+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NDELAY)
+    except AttributeError:
+            fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.FNDELAY)
+
+def runCommand(cmd, printout=0, timeout=-1):
+    """
+    Run command 'cmd'.
+    Returns command stdoutput+stderror string on success,
+    or None if an error occurred.
+    Following recipe on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52296
+    """
+
+    child = popen2.Popen3(cmd, 1) # capture stdout and stderr from command
+    child.tochild.close()             # don't need to talk to child
+    outfile = child.fromchild
+    outfd = outfile.fileno()
+    errfile = child.childerr
+    errfd = errfile.fileno()
+    makeNonBlocking(outfd)            # don't deadlock!
+    makeNonBlocking(errfd)
+    outdata = []
+    errdata = []
+    outeof = erreof = 0
+
+    if timeout > 0 :
+        maxwaittime = time.time() + timeout
+
+    err = -1
+    while (timeout == -1 or time.time() < maxwaittime):
+        ready = select.select([outfd,errfd],[],[]) # wait for input
+        if outfd in ready[0]:
+            outchunk = outfile.read()
+            if outchunk == '': outeof = 1
+            outdata.append(outchunk)
+        if errfd in ready[0]:
+            errchunk = errfile.read()
+            if errchunk == '': erreof = 1
+            errdata.append(errchunk)
+        if outeof and erreof:
+            err = child.wait()
+            break
+        select.select([],[],[],.1) # give a little time for buffers to fill
+    if err == -1:
+        # kill the pid
+        os.kill (child.pid, 9)
+        err = child.wait()
+
+    cmd_out = string.join(outdata,"")
+    cmd_err = string.join(errdata,"")
+
+    if err:
+        return None
+
+    cmd_out = cmd_out + cmd_err
+    return cmd_out
+
+
+
+def main(argv) :
+    """
+    condor_g_kill
+
+    kill condor_g job in queue if status corresponds to either
+    UNSUBMITTED, ACTIVE, PENDING of UNKNOWN
+
+    required parameters
+
+    --mode <status>                        :       status can be UNSUBMITTED, ACTIVE, PENDING of UNKNOWN
+
+    optional parameters:
+    --global                               :       use -submitter $USER, otherwise use local queue
+    --force                                :       force removing from queue
+    --help (-h)                            :       help
+    --debug (-d)                           :       debug statements
+    
+    """
+
+    # defaults
+    mode = ''
+    force = 0
+    submitter = 0
+    debug = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "global", "mode=", "force"])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt  == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--global" :
+            submitter = 1
+        elif opt == "--mode" :
+            mode = arg.upper()
+        elif opt == "--force" :
+            force = 1
+            
+    if mode == '' :
+        print ''
+        print '    Please select propper mode!'
+        print ''
+        print main.__doc__
+        sys.exit(1)
+
+    if mode != 'UNSUBMITTED' and mode != 'ACTIVE' and mode != 'PENDING' and mode != 'UNKNOWN' :
+        print ''
+        print '    Please select propper mode!'
+        print ''
+        print main.__doc__
+        sys.exit(1)
+    else :
+        print ''
+        print '    Killing all condor_g jobs in queue with status: ',mode
+
+    # counter
+    counter = 0
+        
+    # check condor queue and kill jobs
+    cmd = 'condor_q'
+    if submitter == 1:
+        cmd += ' -submitter ' + os.environ['USER']
+    cmd += '| grep -i '+mode
+    cmd_out = runCommand(cmd)
+    if cmd_out != None :
+        for line in cmd_out.splitlines() :
+            line_content = line.split()
+            cmd = 'condor_rm '+line_content[0]
+            cmd_out = runCommand(cmd)
+            if cmd_out == None :
+                print 'ERROR: problems with: ',cmd
+            if force == 1 :
+                cmd = 'condor_rm -f '+line_content[0]
+                cmd_out = runCommand(cmd)
+                if cmd_out == None :
+                    print 'ERROR: problems with: ',cmd
+                
+            counter = counter + 1
+
+    print ''
+    print '    Killed ',counter,' jobs with status: ',mode
+    print ''
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])

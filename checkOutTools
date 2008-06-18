@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cvs co -d GutSoftTools -P UserCode/Gutsche/GutSoftTools
+cvs co -d GutSoftFilters -P UserCode/Gutsche/GutSoftFilters
+cvs co -d GutSoftAnalyzers -P UserCode/Gutsche/GutSoftAnalyzers
+cvs co -d GutSoftConfigurations -P UserCode/Gutsche/GutSoftConfigurations

@@ -1,0 +1,5 @@
+#!/bin/bash
+find . -name "*~" -exec rm {} \;
+find . -name "*.pyc" -exec rm {} \;
+find . -name "*.flc" -exec rm {} \;
+find . -name "#*" -exec rm {} \;

@@ -1,0 +1,66 @@
+#!/usr/bin/env python2.4
+
+import sys, os, getopt
+import FWCore.ParameterSet.Config as cms
+import pickle
+
+def main(argv) :
+    """
+    
+    unPickle
+    
+    unPickle parameter-set object pickle and dump it to python or cfg
+    
+    required parameters
+    --pickle <file >         : pickle file holding parameter-set process object 
+
+    optional parameters      :
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+    """
+
+    # default
+    pickle_file = None
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "pickle="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--pickle" :
+            pickle_file = arg
+
+    if pickle_file == None :
+        print main.__doc__
+        sys.exit(2)
+
+    # load pickle
+    handle = open(pickle_file, 'r')
+    process = pickle.load(handle)
+    handle.close()
+
+    # dump cfg format into file
+    cfg = open(os.path.splitext(pickle_file)[0]+'.cfg','w')
+    cfg.write(process.dumpConfig())
+    cfg.close()
+
+    # dump pth format into file
+    pth = open(os.path.splitext(pickle_file)[0]+'.py','w')
+    pth.write('import FWCore.ParameterSet.Config as cms\n')
+    pth.write(process.dumpPython())
+    pth.close()
+
+    print 'Unpickled and wrote dumps to',os.path.splitext(pickle_file)[0]+'.cfg','and',os.path.splitext(pickle_file)[0]+'.py'
+
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])

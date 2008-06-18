@@ -1,0 +1,103 @@
+#!/usr/bin/env python2.4
+
+import sys, os, getopt
+import DBSAPI.dbsApi
+
+def main(argv) :
+    """
+    
+    deleteReplica
+    
+    parse ascii list of datasets and removes replica for given SE
+
+    required parameters
+    --samples <ascii filename>                :       ascii file of samples, one sample per line \"
+
+    optional parameters                       :
+    --se <se>                                 :       storage element url (default: cmssrm.fnal.gov)
+    --dbs <dbs>                               :       dbs url (default: https://cmsdbsprod.cern.ch:8443/cms_dbs_prod_global_writer/servlet/DBSServlet)
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+    """
+
+    # default
+    samples            = None
+    dbs                = 'https://cmsdbsprod.cern.ch:8443/cms_dbs_prod_global_writer/servlet/DBSServlet'
+    se                 = 'cmssrm.fnal.gov'
+    debug              = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "samples=", "dbs=", "se="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit(0)
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--dbs" :
+            dbs = arg
+        elif opt == "--se" :
+            se = arg
+        elif opt == "--samples" :
+            samples = arg
+            
+    if samples == None:
+        print main.__doc__
+        sys.exit(2)
+        
+    if debug:
+        print 'Parameters:'
+        print 'path=',path
+        print 'dbs=',dbs
+
+    # init dbs
+    args = {}
+    args['url']   = dbs
+    args['level'] = 'CRITICAL'
+
+    try:
+        api = DBSAPI.dbsApi.DbsApi(args)
+        if debug:
+            print ''
+            print 'Connected dbs:',dbs
+    except:
+        print ''
+        print 'Problem connecting DBS'
+        sys.exit(1)
+
+    try:
+        file = open(samples)
+    except:
+        print ''
+        print 'Problem opening file:',samples
+        sys.exit(1)
+
+    array = []
+    for line in file.readlines():
+        array.append(line.strip())
+
+    print array
+
+    #or block in api.listBlocks(dataset=apath):
+    #             print block['Name']
+    #             print api.deleteReplicaFromBlock(block['Name'], "srm.cern.ch")
+
+    for sample in array:
+        print sample
+        try:
+            blocks = api.listBlocks(dataset=sample);
+        except:
+            blocks = []
+        for block in blocks:
+            print block['Name']
+            #print api.deleteReplicaFromBlock(block['Name'], se)
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
+

@@ -1,0 +1,320 @@
+#!/usr/bin/env python2.4
+
+import sys, os, getopt, popen2, fcntl, select, string
+
+class Jobs:
+    def __init__(self):
+        self._jobArray = []
+        return
+
+    def report(self, held):
+        print ''
+        print ' Condor queue status'
+        print ''
+        print '    Number of jobs in queue: %4d pending: %4d running: %4d held: %4d' % (self.jobs(),self.jobs('Idle'),self.jobs('Running'),self.jobs('Held'))
+        print ''
+        cmd = "$HOME/scripts/gmetric -nIdleJobs -tuint32 -uJobs -c239.2.11.74 -l120 -v" + str(self.jobs('Idle'))
+        os.system(cmd)
+        cmd = "$HOME/scripts/gmetric -nRunningJobs -tuint32 -uJobs -c239.2.11.74 -l120 -v" + str(self.jobs('Running'))
+        os.system(cmd)
+                
+        if ( held == 1 ) :
+            if self.jobs('All','Held') > 0 :
+
+                print 'Holding Reasons for held jobs:'
+
+                print ''
+                print '    Condor holding',self.jobs('Held'),'jobs.'
+                print ''
+                for holdcode in self.holdcode('Held') :
+                    for holdsubcode in self.holdsubcode('Held',holdcode) :
+                        print '    %4d jobs hold with code: %2d subcode: %4d for reason %s' % (self.jobs('Held',holdcode,holdsubcode),holdcode,holdsubcode,self.holdreason(holdcode,holdsubcode))
+        return
+
+    def status(self):
+        array = [];
+        for job in self._jobArray :
+            if job.jobstatus() not in array:
+                array.append(job.jobstatus())
+        return array
+
+    def holdcode(self, jobstatus='All'):
+        array = [];
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if job.holdcode() not in array:
+                    array.append(job.holdcode())
+        return array
+
+    def holdreason(self, holdcode, holdsubcode) :
+        for job in self._jobArray :
+            if  job.holdcode() == holdcode :
+                if job.holdsubcode() == holdsubcode :
+                    return job.holdreason()
+        return ''
+
+    def holdsubcode(self, jobstatus='All', holdcode=-1):
+        array = [];
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if holdcode == -1 or job.holdcode() == holdcode :
+                    if job.holdsubcode() not in array:
+                        array.append(job.holdsubcode())
+        return array
+
+    def jobs(self, jobstatus='All', holdcode=-1, holdsubcode=-1):
+        counter = 0
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if holdcode == -1 or job.holdcode() == holdcode :
+                    if holdsubcode == -1 or job.holdsubcode() == holdsubcode :
+                        counter += job.counter()
+        return counter
+
+    def append(self, job):
+        for existing in self._jobArray :
+            if existing.compare(job) == 1 :
+                existing.increaseCounter()
+                return
+        self._jobArray.append(job)
+        return
+
+class Job:
+    def __init__(self, status, holdcode, holdsubcode, holdreason):
+        self._status      = status
+        self._holdcode    = holdcode
+        self._holdsubcode = holdsubcode
+        self._holdreason  = holdreason
+        self._counter     = 1
+
+        # JobStatus dictionary
+        self._jobstatus = {}
+        self._jobstatus[0] = 'Unexpanded'
+        self._jobstatus[1] = 'Idle'
+        self._jobstatus[2] = 'Running'
+        self._jobstatus[3] = 'Removed'
+        self._jobstatus[4] = 'Completed'
+        self._jobstatus[5] = 'Held'
+        self._jobstatus[6] = 'Submission_err'
+        
+        return
+
+    def jobstatus(self) :
+        return self._jobstatus[int(self._status)]
+
+    def globusstatus(self) :
+        return self._globusstatus[int(self._globus)]
+
+    def report(self) :
+        out = 'Jobs: '+str(self._counter)+' Status: '+self._jobstatus[int(self._status)]
+        if int(self._status) == 5 :
+            out += ' Code: '+str(self._holdcode)+' SubCode: '+str(self._holdsubcode)+' Reason: '+self._holdreason
+        print out
+        return
+
+    def status(self):
+        return self._status
+
+    def holdcode(self):
+        return self._holdcode
+
+    def holdsubcode(self):
+        return self._holdsubcode
+
+    def holdreason(self):
+        return self._holdreason
+
+    def counter(self):
+        return self._counter
+
+    def increaseCounter(self) :
+        self._counter += 1
+        return
+
+    def compare(self, second_job):
+        return_value = 0
+        if self._status == second_job.status() :
+            if self._holdcode == second_job.holdcode() :
+                if self._holdsubcode == second_job.holdsubcode() :
+                    if self._holdreason == second_job.holdreason() :
+                        return_value = 1
+        return return_value
+
+def makeNonBlocking(fd):
+    fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+    try:
+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NDELAY)
+    except AttributeError:
+            fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.FNDELAY)
+
+def runCommand(cmd, printout=0, timeout=-1):
+    """
+    Run command 'cmd'.
+    Returns command stdoutput+stderror string on success,
+    or None if an error occurred.
+    Following recipe on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52296
+    """
+
+    child = popen2.Popen3(cmd, 1) # capture stdout and stderr from command
+    child.tochild.close()             # don't need to talk to child
+    outfile = child.fromchild
+    outfd = outfile.fileno()
+    errfile = child.childerr
+    errfd = errfile.fileno()
+    makeNonBlocking(outfd)            # don't deadlock!
+    makeNonBlocking(errfd)
+    outdata = []
+    errdata = []
+    outeof = erreof = 0
+
+    if timeout > 0 :
+        maxwaittime = time.time() + timeout
+
+    err = -1
+    while (timeout == -1 or time.time() < maxwaittime):
+        ready = select.select([outfd,errfd],[],[]) # wait for input
+        if outfd in ready[0]:
+            outchunk = outfile.read()
+            if outchunk == '': outeof = 1
+            outdata.append(outchunk)
+        if errfd in ready[0]:
+            errchunk = errfile.read()
+            if errchunk == '': erreof = 1
+            errdata.append(errchunk)
+        if outeof and erreof:
+            err = child.wait()
+            break
+        select.select([],[],[],.1) # give a little time for buffers to fill
+    if err == -1:
+        # kill the pid
+        os.kill (child.pid, 9)
+        err = child.wait()
+
+    cmd_out = string.join(outdata,"")
+    cmd_err = string.join(errdata,"")
+
+    if err:
+        return None
+
+    cmd_out = cmd_out + cmd_err
+    return cmd_out
+
+
+
+def main(argv) :
+    """
+    condor_count
+
+    count condor jobs
+
+    optional parameters:
+    --held             :       give reasons for held jobs
+    --global           :       use -submitter $USER, otherwise use local queue
+    --help             :       help
+    --debug            :       debug statements
+    
+    """
+
+    # defaults
+    held  = 0
+    submitter = 0
+    debug = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "global", "held"])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt  == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--held" :
+            held = 1
+        elif opt == "--global" :
+            submitter = 1
+        elif opt == "--debug" :
+            debug = 1
+            
+    # initialize variables
+    id          = -1
+    status      = -1
+    holdcode    = -1
+    holdsubcode = -1
+    holdreason  = ''
+
+    # boolean
+    first = 1
+
+    # array of job objects
+    jobs = Jobs()
+
+    if held :
+        # check condor queue
+        cmd = 'condor_q -l'
+        if submitter == 1:
+            cmd += ' -submitter ' + os.environ['USER']
+        cmd_out = runCommand(cmd)
+        if cmd_out != None :
+            for line in cmd_out.splitlines() :
+                line_content = line.split()
+                if len(line_content) > 0 :
+                    # reset, marker of beginning of new job status output
+                    if line_content[0] == 'MyType' :
+                        if first == 1 :
+                            first = 0
+                        else :
+                            job = Job(int(status),int(holdcode),int(holdsubcode),holdreason)
+                            jobs.append(job)
+                        id          = -1
+                        status      = -1
+                        holdcode    = -1
+                        holdsubcode = -1
+                        holdreason  = ''
+                    if line_content[0] == 'ClusterId' :
+                        id = line_content[2].strip()
+                    if line_content[0] == 'JobStatus' :
+                        status = line_content[2].strip()
+                    if line_content[0] == 'HoldReasonCode' :
+                        holdcode = line_content[2].strip()
+                    if line_content[0] == 'HoldReasonSubCode' :
+                        holdsubcode = line_content[2].strip()
+                    if line_content[0] == 'HoldReason' :
+                        holdreason = " ".join(line_content[2:]).strip('"')
+
+        # append the last job
+        job = Job(int(status),int(holdcode),int(holdsubcode),holdreason)
+        jobs.append(job)
+    else :
+        # check condor queue
+        cmd = 'condor_q'
+        if submitter == 1:
+            cmd += ' -submitter ' + os.environ['USER']
+        cmd_out = runCommand(cmd)
+        if cmd_out != None :
+            for line in cmd_out.splitlines() :
+                if debug :
+                    print 'Condor line:',line
+                try:
+                    line_content = line.split()
+                    if os.environ['USER'] == line_content[1].strip() :
+                        status = 0;
+                        if line_content[5].strip() == 'R' :
+                            job = Job(2,0,0,'')
+                            jobs.append(job)
+                        elif line_content[5].strip() == 'I' :
+                            job = Job(1,0,0,'')
+                            jobs.append(job)
+                        elif line_content[5].strip() == 'H' :
+                            job = Job(5,0,0,'')
+                            jobs.append(job)
+                except:
+                    dummy = 1
+        
+
+    jobs.report(held)
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])

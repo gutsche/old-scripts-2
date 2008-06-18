@@ -1,0 +1,319 @@
+#!/usr/bin/python
+
+import sys, os, getopt, popen2, fcntl, select, string
+
+class Jobs:
+    def __init__(self):
+        self._jobArray = []
+        return
+
+    def report(self):
+        print ''
+        print ' PA Condor queue status'
+        print ''
+        print '    Number of jobs in queue: %4d pending: %4d running: %4d held: %4d' % (self.jobs(),self.jobs('Idle'),self.jobs('Running'),self.jobs('Held'))
+        print ''
+                
+        return
+
+    def status(self):
+        array = [];
+        for job in self._jobArray :
+            if job.jobstatus() not in array:
+                array.append(job.jobstatus())
+        return array
+
+    def holdcode(self, jobstatus='All'):
+        array = [];
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if job.holdcode() not in array:
+                    array.append(job.holdcode())
+        return array
+
+    def holdreason(self, holdcode, holdsubcode) :
+        for job in self._jobArray :
+            if  job.holdcode() == holdcode :
+                if job.holdsubcode() == holdsubcode :
+                    return job.holdreason()
+        return ''
+
+    def holdsubcode(self, jobstatus='All', holdcode=-1):
+        array = [];
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if holdcode == -1 or job.holdcode() == holdcode :
+                    if job.holdsubcode() not in array:
+                        array.append(job.holdsubcode())
+        return array
+
+    def jobs(self, jobstatus='All', holdcode=-1, holdsubcode=-1):
+        counter = 0
+        for job in self._jobArray :
+            if jobstatus == 'All' or job.jobstatus() == jobstatus :
+                if holdcode == -1 or job.holdcode() == holdcode :
+                    if holdsubcode == -1 or job.holdsubcode() == holdsubcode :
+                        counter += job.counter()
+        return counter
+
+    def append(self, job):
+        for existing in self._jobArray :
+            if existing.compare(job) == 1 :
+                existing.increaseCounter()
+                return
+        self._jobArray.append(job)
+        return
+
+class Job:
+    def __init__(self, status, holdcode, holdsubcode, holdreason):
+        self._status      = status
+        self._holdcode    = holdcode
+        self._holdsubcode = holdsubcode
+        self._holdreason  = holdreason
+        self._counter     = 1
+
+        # JobStatus dictionary
+        self._jobstatus = {}
+        self._jobstatus[0] = 'Unexpanded'
+        self._jobstatus[1] = 'Idle'
+        self._jobstatus[2] = 'Running'
+        self._jobstatus[3] = 'Removed'
+        self._jobstatus[4] = 'Completed'
+        self._jobstatus[5] = 'Held'
+        self._jobstatus[6] = 'Submission_err'
+        
+        return
+
+    def jobstatus(self) :
+        return self._jobstatus[int(self._status)]
+
+    def globusstatus(self) :
+        return self._globusstatus[int(self._globus)]
+
+    def report(self) :
+        out = 'Jobs: '+str(self._counter)+' Status: '+self._jobstatus[int(self._status)]
+        if int(self._status) == 5 :
+            out += ' Code: '+str(self._holdcode)+' SubCode: '+str(self._holdsubcode)+' Reason: '+self._holdreason
+        print out
+        return
+
+    def status(self):
+        return self._status
+
+    def holdcode(self):
+        return self._holdcode
+
+    def holdsubcode(self):
+        return self._holdsubcode
+
+    def holdreason(self):
+        return self._holdreason
+
+    def counter(self):
+        return self._counter
+
+    def increaseCounter(self) :
+        self._counter += 1
+        return
+
+    def compare(self, second_job):
+        return_value = 0
+        if self._status == second_job.status() :
+            if self._holdcode == second_job.holdcode() :
+                if self._holdsubcode == second_job.holdsubcode() :
+                    if self._holdreason == second_job.holdreason() :
+                        return_value = 1
+        return return_value
+
+def makeNonBlocking(fd):
+    fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+    try:
+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NDELAY)
+    except AttributeError:
+            fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.FNDELAY)
+
+def runCommand(cmd, printout=0, timeout=-1):
+    """
+    Run command 'cmd'.
+    Returns command stdoutput+stderror string on success,
+    or None if an error occurred.
+    Following recipe on http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/52296
+    """
+
+    child = popen2.Popen3(cmd, 1) # capture stdout and stderr from command
+    child.tochild.close()             # don't need to talk to child
+    outfile = child.fromchild
+    outfd = outfile.fileno()
+    errfile = child.childerr
+    errfd = errfile.fileno()
+    makeNonBlocking(outfd)            # don't deadlock!
+    makeNonBlocking(errfd)
+    outdata = []
+    errdata = []
+    outeof = erreof = 0
+
+    if timeout > 0 :
+        maxwaittime = time.time() + timeout
+
+    err = -1
+    while (timeout == -1 or time.time() < maxwaittime):
+        ready = select.select([outfd,errfd],[],[]) # wait for input
+        if outfd in ready[0]:
+            outchunk = outfile.read()
+            if outchunk == '': outeof = 1
+            outdata.append(outchunk)
+        if errfd in ready[0]:
+            errchunk = errfile.read()
+            if errchunk == '': erreof = 1
+            errdata.append(errchunk)
+        if outeof and erreof:
+            err = child.wait()
+            break
+        select.select([],[],[],.1) # give a little time for buffers to fill
+    if err == -1:
+        # kill the pid
+        os.kill (child.pid, 9)
+        err = child.wait()
+
+    cmd_out = string.join(outdata,"")
+    cmd_err = string.join(errdata,"")
+
+    if err:
+        return None
+
+    cmd_out = cmd_out + cmd_err
+    return cmd_out
+
+
+
+def main(argv) :
+    """
+    condor_pa_count
+
+    count condor jobs
+
+    optional parameters:
+    --name <schedd>    :       query specific schedd
+    --global           :       use -submitter $USER, otherwise use local queue
+    --help             :       help
+    --debug            :       debug statements
+    
+    """
+
+    # defaults
+    submitter = 0
+    debug = 0
+    name = None
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "global", "name="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt  == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--global" :
+            submitter = 1
+        elif opt == "--name" :
+            name = arg
+        elif opt == "--debug" :
+            debug = 1
+            
+    # initialize variables
+    processing_pending = 0
+    processing_running = 0
+    processing_tooLong = 0
+    processing_held    = 0
+    processing_unknown = 0
+    merging_pending = 0
+    merging_running = 0
+    merging_tooLong = 0
+    merging_held    = 0
+    merging_unknown = 0
+
+    cleanup_pending = 0
+    cleanup_running = 0
+    cleanup_tooLong = 0
+    cleanup_held    = 0
+    cleanup_unknown = 0
+
+    queue = 0
+
+    # check condor queue
+    cmd = 'condor_q -format "%s " Owner -format "%d " JobStatus -format "%d " EnteredCurrentStatus -format "%d " ServerTime -format "%s\n" ProdAgent_JobType'
+    if submitter == 1:
+        cmd += ' -submitter ' + os.environ['USER']
+    if name != None :
+        cmd += ' -name ' + name
+    cmd_out = runCommand(cmd)
+    if cmd_out != None :
+        for line in cmd_out.splitlines() :
+            queue += 1
+            if debug :
+                print 'Condor line:',line
+            try:
+                line_content = line.split()
+                if os.environ['USER'] == line_content[0].strip() :
+                    if line_content[4].strip() == 'Processing' :
+                        if int(line_content[1].strip()) == 1:
+                            processing_pending += 1
+                        elif int(line_content[1].strip()) == 2:
+                            processing_running += 1
+                            if (int(line_content[3].strip()) - int(line_content[2].strip())) > 8*3600:
+                                processing_tooLong += 1
+                        elif int(line_content[1].strip()) == 5:
+                            processing_held += 1
+                        else:
+                            processing_unknown += 1
+                    elif line_content[4].strip() == 'Merge' :
+                        if int(line_content[1].strip()) == 1:
+                            merging_pending += 1
+                        elif int(line_content[1].strip()) == 2:
+                            merging_running += 1
+                            if (int(line_content[3].strip()) - int(line_content[2].strip())) > 8*3600:
+                                merging_tooLong += 1
+                        elif int(line_content[1].strip()) == 5:
+                            merging_held += 1
+                        else:
+                            merging_unknown += 1
+                    elif line_content[4].strip() == 'CleanUp' :
+                        if int(line_content[1].strip()) == 1:
+                            cleanup_pending += 1
+                        elif int(line_content[1].strip()) == 2:
+                            cleanup_running += 1
+                            if (int(line_content[3].strip()) - int(line_content[2].strip())) > 8*3600:
+                                cleanup_tooLong += 1
+                        elif int(line_content[1].strip()) == 5:
+                            cleanup_held += 1
+                        else:
+                            cleanup_unknown += 1
+                    else:
+                        print 'Unknown pa jobtype:',line
+            except:
+                print 'Cannot parse line:',line
+
+        print ''
+        print ' PA Condor queue status for %4d jobs in the queue' % queue
+        print ''
+        print ' Processing jobs: pending: %4d running: %4d held: %4d' % (processing_pending,processing_running,processing_held)
+        print ' Merge      jobs: pending: %4d running: %4d held: %4d' % (merging_pending,merging_running,merging_held)
+        print ' CleanUp    jobs: pending: %4d running: %4d held: %4d' % (cleanup_pending,cleanup_running,cleanup_held)
+        print ' -------------------------------------------------------'
+        print ' All        jobs: pending: %4d running: %4d held: %4d' % (processing_pending+merging_pending+cleanup_pending,processing_running+merging_running+cleanup_running,processing_held+merging_held+cleanup_held)
+        print ''
+        if processing_tooLong > 0:
+            print ''
+            print ' Processing jobs running for more than 8 hours:     %4d' % processing_tooLong
+        if merging_tooLong > 0:
+            print ''
+            print ' Merge      jobs running for more than 8 hours:     %4d' % merging_tooLong
+        if queue != (processing_pending+merging_pending+cleanup_pending+processing_running+merging_running+cleanup_running+processing_held+merging_held+cleanup_held):
+            print ''
+            print ' ATTENTION! INCONSISTENT NUMBERS!'
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
