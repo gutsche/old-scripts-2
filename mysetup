@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# CMS general setup
+
+if [ "$1" == "cms" ]; then
+   echo "CMS software environment"
+   . /uscmst1/prod/sw/cms/shrc prod
+elif [ "$1" == "nightly" ]; then
+   echo "Nightly configuration"
+   . /uscmst1/prod/sw/cms/shrc nightly
+elif [ "$1" == "crab" ]; then
+   echo "CRAB uscmst1 configuration"
+   source /uscmst1/prod/grid/CRAB/crab.sh
+elif [ "$1" == "go" ]; then
+   echo "CMS2 CMSSW_1_6_12 configuration"
+   . /uscmst1/prod/sw/cms/shrc prod
+   cd $GUTCODEDIR/TAS/CMSSW_1_6_12/src
+   eval `scramv1 runtime -sh`
+elif [ "$1" == "dbs" ]; then
+   echo "DBS configuration"
+   cd /uscms/home/gutsche/work/software/DataCert/DBS/Clients/Python
+   source setup.sh 
+   cd /uscms/home/gutsche/work/software/DataCert
+else
+   echo "Please give configuration"
+fi
+
