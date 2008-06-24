@@ -1,0 +1,88 @@
+#!/usr/bin/env python2.4
+
+import sys, os, getopt
+import DBSAPI.dbsApi
+
+def main(argv) :
+    """
+    
+    QueryDBSForParentLFN
+    
+    query LFN for parent LFNs
+
+    required parameters
+    --lfn <lfn>                               :       input LFN
+
+    optional parameters                       :
+    --dbs <dbs>                               :       dbs url (default: http://cmssrv46.fnal.gov:8080/DBS/servlet/DBSServlet)
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+    """
+
+    # default
+    dbs                = 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet'
+    lfn                = None
+    debug              = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "lfn=", "dbs="])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--dbs" :
+            dbs = arg
+        elif opt == "--lfn" :
+            lfn = arg
+    if lfn == None :
+        print main.__doc__
+        sys.exit(2)
+
+    # init dbs
+    args = {}
+    args['url']   = dbs
+    args['level'] = 'ERROR'
+
+    api = DBSAPI.dbsApi.DbsApi(args)
+
+    try:
+        api = DBSAPI.dbsApi.DbsApi(args)
+        if debug:
+            print ''
+            print 'Connected dbs:',dbs
+    except:
+        print ''
+        print 'Problem connecting DBS'
+        sys.exit(1)
+
+    files = api.listFileParents(lfn)
+
+    if len(files) > 1 :
+        print 'source = PoolSource {'
+        print '  untracked vstring fileNames = {'
+        print '    \'' + lfn + '\' '
+        print '  }'
+        print '  untracked vstring secondaryFileNames = {'
+        for counter in range(len(files)-1):
+            print '    \'file:' + files[counter]['LogicalFileName'] + '\','
+        print '    \'file:' + files[len(files)-1]['LogicalFileName'] + '\''
+        print '  }'
+        print '}'
+    elif len(files) == 1 :
+        print '    \'file:' + files[0]['LogicalFileName'] + '\''
+        print '  }'
+        print '}'
+    else :
+        print 'No parent LFNs found for:',lfn
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
+

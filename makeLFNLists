@@ -1,0 +1,130 @@
+#!/usr/bin/env python2.4
+
+import sys, os, getopt
+import DBSAPI.dbsApi
+
+def makeLFNList(api,path,se="*",invalid=0):
+    try:
+        filename='dataset'+path.replace('/','_')+'.lfn'
+        output = open(filename,'w')
+    except IOError, (errno, strerror):
+        print "I/O error(%s): %s" % (errno, strerror)
+
+    print 'write LFNs of',path,'into:',filename
+
+    if invalid == 1 :
+        allowedRetriveValue = ['all',
+                               'retrive_invalid_files',
+                               #'retrive_status',
+                               #'retrive_type',
+                               'retrive_block',
+                               #'retrive_date',
+                               #'retrive_person',
+                               #'retrive_parent',
+                               #'retrive_child',
+                               #'retrive_algo',
+                               #'retrive_tier',
+                               #'retrive_lumi',
+                               #'retrive_run',
+                               #'retrive_branch',
+                               ]
+
+        
+    blocks = api.listBlocks(dataset=path,block_name="*",storage_element_name=se);
+    for block in blocks:
+        if invalid == 1 :
+            files = api.listFiles(blockName=block['Name'],retriveList=allowedRetriveValue)
+        else :
+            files = api.listFiles(blockName=block['Name'])            
+        for file in files:
+            output.write(file['LogicalFileName']+'\n')
+    return
+    
+
+
+def main(argv) :
+    """
+    
+    makeLFNLists
+    
+    make lfn lists of datasets
+
+    required parameters
+    --path <path>                             :       datasetpath
+    --samples <file>                          :       file with datasetpaths, one per line
+
+    optional parameters                       :
+    --dbs <dbs>                               :       dbs url (default: http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet)
+    --se <se>                                 :       storage element url (default: *)
+    --invalid                                 :       list also invalid LFN
+    --help (-h)                               :       help
+    --debug (-d)                              :       debug statements
+    
+
+
+    
+    """
+
+
+    dbs                = 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet'
+    se                 = '*'
+    path               = None
+    samplefile         = None
+    invalid            = 0
+    debug              = 0
+
+    try:
+        opts, args = getopt.getopt(argv, "", ["help", "debug", "path=", "dbs=", "samples=", "se=", "invalid"])
+    except getopt.GetoptError:
+        print main.__doc__
+        sys.exit(2)
+
+    # check command line parameter
+    for opt, arg in opts :
+        if opt == "--help" :
+            print main.__doc__
+            sys.exit()
+        elif opt == "--debug" :
+            debug = 1
+        elif opt == "--dbs" :
+            dbs = arg
+        elif opt == "--path" :
+            path = arg
+        elif opt == "--samples" :
+            samplefile = arg
+        elif opt == "--invalid" :
+            invalid = 1
+
+    if path == None and samplefile == None:
+        print main.__doc__
+        sys.exit()
+        
+    if path != None and samplefile != None:
+        print ""
+        print "Please use either --path or --samples !"
+        print main.__doc__
+        sys.exit()
+
+
+    # init dbs
+    args = {}
+    args['url']   = dbs
+    args['level'] = 'CRITICAL'
+
+    api = DBSAPI.dbsApi.DbsApi(args)
+
+    if samplefile != None :
+        try:
+            file = open(samplefile)
+        except IOError, (errno, strerror):
+            print "I/O error(%s): %s" % (errno, strerror)
+
+        for sample in file.readlines():
+            makeLFNList(api,sample.strip(),se,invalid)
+
+    if path != None:
+        makeLFNList(api,path,se,invalid)
+
+if __name__ == '__main__' :
+    main(sys.argv[1:])
+
