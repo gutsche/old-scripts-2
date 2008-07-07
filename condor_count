@@ -13,10 +13,6 @@ class Jobs:
         print ''
         print '    Number of jobs in queue: %4d pending: %4d running: %4d held: %4d' % (self.jobs(),self.jobs('Idle'),self.jobs('Running'),self.jobs('Held'))
         print ''
-        cmd = "$HOME/scripts/gmetric -nIdleJobs -tuint32 -uJobs -c239.2.11.74 -l120 -v" + str(self.jobs('Idle'))
-        os.system(cmd)
-        cmd = "$HOME/scripts/gmetric -nRunningJobs -tuint32 -uJobs -c239.2.11.74 -l120 -v" + str(self.jobs('Running'))
-        os.system(cmd)
                 
         if ( held == 1 ) :
             if self.jobs('All','Held') > 0 :

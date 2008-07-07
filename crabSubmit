@@ -1,0 +1,6 @@
+#!/bin/bash
+basename=`echo $1 | sed -e 's/.cfg//'`
+crab -create -submit -cfg $1
+project=`ls -1dtr crab_0_* | tail -1`
+rm -f $basename
+ln -s $project $basename

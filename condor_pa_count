@@ -241,6 +241,12 @@ def main(argv) :
     cleanup_held    = 0
     cleanup_unknown = 0
 
+    logcollect_pending = 0
+    logcollect_running = 0
+    logcollect_tooLong = 0
+    logcollect_held    = 0
+    logcollect_unknown = 0
+
     queue = 0
 
     # check condor queue
@@ -291,6 +297,17 @@ def main(argv) :
                             cleanup_held += 1
                         else:
                             cleanup_unknown += 1
+                    elif line_content[4].strip() == 'LogCollect' :
+                        if int(line_content[1].strip()) == 1:
+                            logcollect_pending += 1
+                        elif int(line_content[1].strip()) == 2:
+                            logcollect_running += 1
+                            if (int(line_content[3].strip()) - int(line_content[2].strip())) > 8*3600:
+                                logcollect_tooLong += 1
+                        elif int(line_content[1].strip()) == 5:
+                            logcollect_held += 1
+                        else:
+                            logcollect_unknown += 1
                     else:
                         print 'Unknown pa jobtype:',line
             except:
@@ -302,8 +319,9 @@ def main(argv) :
         print ' Processing jobs: pending: %4d running: %4d held: %4d' % (processing_pending,processing_running,processing_held)
         print ' Merge      jobs: pending: %4d running: %4d held: %4d' % (merging_pending,merging_running,merging_held)
         print ' CleanUp    jobs: pending: %4d running: %4d held: %4d' % (cleanup_pending,cleanup_running,cleanup_held)
+        print ' LogCollect jobs: pending: %4d running: %4d held: %4d' % (logcollect_pending,logcollect_running,logcollect_held)
         print ' -------------------------------------------------------'
-        print ' All        jobs: pending: %4d running: %4d held: %4d' % (processing_pending+merging_pending+cleanup_pending,processing_running+merging_running+cleanup_running,processing_held+merging_held+cleanup_held)
+        print ' All        jobs: pending: %4d running: %4d held: %4d' % (processing_pending+merging_pending+cleanup_pending+logcollect_pending,processing_running+merging_running+cleanup_running+logcollect_running,processing_held+merging_held+cleanup_held+logcollect_held)
         print ''
         if processing_tooLong > 0:
             print ''
@@ -311,7 +329,7 @@ def main(argv) :
         if merging_tooLong > 0:
             print ''
             print ' Merge      jobs running for more than 8 hours:     %4d' % merging_tooLong
-        if queue != (processing_pending+merging_pending+cleanup_pending+processing_running+merging_running+cleanup_running+processing_held+merging_held+cleanup_held):
+        if queue != (processing_pending+merging_pending+cleanup_pending+logcollect_pending+processing_running+merging_running+cleanup_running+logcollect_running+processing_held+merging_held+cleanup_held+logcollect_held):
             print ''
             print ' ATTENTION! INCONSISTENT NUMBERS!'
 
