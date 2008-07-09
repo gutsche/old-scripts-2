@@ -47,11 +47,11 @@ def main(argv) :
         sys.exit(2)
 
     if output_filename == '' :
-        output_filename = parameter_set.split('.cfg')[0] + '_resolved.cfg'
+        output_filename = parameter_set.split('.cfg')[0] + '_resolved.py'
 
     process = cms.include(parameter_set)
 
-    temp = process.dumpConfig()
+    temp = process.dumpPython()
 
     outputfile = file(output_filename,'w')
 
