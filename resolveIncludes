@@ -51,7 +51,7 @@ def main(argv) :
 
     process = cms.include(parameter_set)
 
-    temp = process.dumpPython()
+    temp = process.dumpConfig()
 
     outputfile = file(output_filename,'w')
 
