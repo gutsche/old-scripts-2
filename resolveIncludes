@@ -47,7 +47,7 @@ def main(argv) :
         sys.exit(2)
 
     if output_filename == '' :
-        output_filename = parameter_set.split('.cfg')[0] + '_resolved.py'
+        output_filename = parameter_set.split('.cfg')[0] + '_resolved.cfg'
 
     process = cms.include(parameter_set)
 

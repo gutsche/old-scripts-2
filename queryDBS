@@ -88,17 +88,13 @@ def main(argv) :
         print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
         sys.exit(2)
 
-    if cmssw_version == None and twiki == 1:
+    if cmssw_version == None:
         print ''
         print 'CMSSW version cannot be determined from $CMSSW_VERSION, please setup a user area!'
         sys.exit(2)
 
         
     if path == '' :
-        print main.__doc__
-        sys.exit(2)
-
-    if crab == 1 and project_name_start == '' :
         print main.__doc__
         sys.exit(2)
 
