@@ -16,14 +16,20 @@ elif [ "$1" == "crab_local" ]; then
    source /uscms/home/gutsche/work/software/CRAB/CRAB/crab.sh
    export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
 elif [ "$1" == "go" ]; then
-   source ~/scripts/init.sh
+   echo "CMS2 working environment"
+   . /uscmst1/prod/sw/cms/shrc prod
    cd /uscms/home/gutsche/work/software/TAS/CMSSW_1_6_12/src/CMS2/NtupleMacros/
+   eval `scramv1 runtime -sh`
+   export CMS2_LOCATION=$CMSSW_BASE/src/CMS2
 elif [ "$1" == "dbs" ]; then
    echo "DBS configuration"
    cd /uscms/home/gutsche/work/software/DataCert/DBS/Clients/Python
    source setup.sh 
-   cd /uscms/home/gutsche/work/software/DataCert
+   cd -
+elif [ "$1" == "pa" ]; then
+   cd /uscms_data/d1/gutsche/pa/0127
+   source start_prodagent.sh 0
+   cd PRODAGENT/work
 else
    echo "Please give configuration"
 fi
-

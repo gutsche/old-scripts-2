@@ -247,6 +247,9 @@ def main(argv) :
     logcollect_held    = 0
     logcollect_unknown = 0
 
+    no_pa_jobs = 0
+
+
     queue = 0
 
     # check condor queue
@@ -309,7 +312,8 @@ def main(argv) :
                         else:
                             logcollect_unknown += 1
                     else:
-                        print 'Unknown pa jobtype:',line
+                    #    print 'Unknown pa jobtype:',line
+                        no_pa_jobs += 1
             except:
                 print 'Cannot parse line:',line
 
@@ -329,7 +333,7 @@ def main(argv) :
         if merging_tooLong > 0:
             print ''
             print ' Merge      jobs running for more than 8 hours:     %4d' % merging_tooLong
-        if queue != (processing_pending+merging_pending+cleanup_pending+logcollect_pending+processing_running+merging_running+cleanup_running+logcollect_running+processing_held+merging_held+cleanup_held+logcollect_held):
+        if queue != (processing_pending+merging_pending+cleanup_pending+logcollect_pending+processing_running+merging_running+cleanup_running+logcollect_running+processing_held+merging_held+cleanup_held+logcollect_held+no_pa_jobs):
             print ''
             print ' ATTENTION! INCONSISTENT NUMBERS!'
 
