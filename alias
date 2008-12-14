@@ -12,37 +12,35 @@ alias ssh='ssh -CX'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-alias less=view
+alias psu='ps -u gutsche -o pid,etime,command'
+alias condor_s='condor_q -submitter gutsche'
+alias top='top -d.2 -u gutsche'
+
+alias less=vi
+
+alias cmsenv='eval `scramv1 runtime -sh`'
+alias cmsrel='scramv1 project CMSSW'
 alias scrrt='eval `scram runtime -sh`'
 alias scrrtv1='eval `scramv1 run -sh`'
 
 alias xterm='xterm -geometry 150x50 -cc "33:48,37:48,45-47:48,38:48" -sb -rightbar -sl 1000'
 
-alias root=root.exe
+alias root='root.exe -l'
 alias plots='root -b $CMS2_LOCATION/NtupleMacros/Tools/setup.C'
 
-alias setup_cms='source $HOME/scripts/mysetup cms'
-alias setup_nightly='source $HOME/scripts/mysetup nightly'
-alias setup_crab='source $HOME/scripts/mysetup crab'
-alias setup_crab_local='source $HOME/scripts/mysetup crab_local'
-alias setup_go='source $HOME/scripts/mysetup go'
-alias setup_dbs='source $HOME/scripts/mysetup dbs'
-alias setup_pa='source $HOME/scripts/mysetup pa'
-
-alias lpr='flpr -Pbwd'
+alias s_fnal='source $HOME/scripts/mysetup fnal'
+alias s_cern='source $HOME/scripts/mysetup cern'
+alias s_cern_ui='source $HOME/scripts/mysetup cern_ui'
+alias s_crab_fnal='source $HOME/scripts/mysetup crab_fnal'
+alias s_crab_fnal_local='source $HOME/scripts/mysetup crab_fnal_local'
+alias s_crab_cern='source $HOME/scripts/mysetup crab_cern'
+alias s_go_fnal='source $HOME/scripts/mysetup go_fnal'
+alias s_go_cern='source $HOME/scripts/mysetup go_cern'
+alias s_dbs_fnal='source $HOME/scripts/mysetup dbs_fnal'
+alias s_dbs_cern='source $HOME/scripts/mysetup dbs_cern'
+alias s_pa_fnal='source $HOME/scripts/mysetup pa_fnal'
 
 alias lxplus='ssh lxplus.cern.ch'
 alias cmspa='ssh cmsdataops@cmspa.fnal.gov'
 alias cmssrv44='ssh cmsdataops@cmssrv44.fnal.gov'
 alias cmssrv60='ssh cmsdataops@cmssrv60.fnal.gov'
-
-alias psu='ps -u gutsche -o pid,etime,command'
-
-alias condor_s='condor_q -submitter gutsche'
-
-alias top='top -d.2 -u gutsche'
-
-alias kserver_init="/uscmst1/prod/sw/cms/utils/kserver_init"
-alias project='source /uscmst1/prod/sw/cms/utils/projch.sh'
-alias cmscvsroot='source /uscmst1/prod/sw/cms/utils/cmscvsroot.sh'
-

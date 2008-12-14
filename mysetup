@@ -2,31 +2,47 @@
 
 # CMS general setup
 
-if [ "$1" == "cms" ]; then
-   echo "CMS software environment"
+if [ "$1" == "fnal" ]; then
+   echo "FNAL CMS software environment"
    . /uscmst1/prod/sw/cms/shrc prod
-elif [ "$1" == "nightly" ]; then
-   echo "Nightly configuration"
-   . /uscmst1/prod/sw/cms/shrc nightly
-elif [ "$1" == "crab" ]; then
-   echo "CRAB uscmst1 configuration"
+elif [ "$1" == "cern" ]; then
+   echo "CERN CMS software environment"
+   . /afs/cern.ch/cms/sw/cmsset_default.sh 
+elif [ "$1" == "cern_ui" ]; then
+   echo "CERN UI software environment"
+   . /afs/cern.ch/cms/sw/cmsset_default.sh
+elif [ "$1" == "crab_fnal" ]; then
+   echo "FNAL CRAB configuration"
    source /uscmst1/prod/grid/CRAB/crab.sh
-elif [ "$1" == "crab_local" ]; then
-   echo "CRAB local configuration"
+elif [ "$1" == "crab_fnal_local" ]; then
+   echo "FNAL CRAB local configuration"
    source /uscms/home/gutsche/work/software/CRAB/CRAB/crab.sh
    export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
-elif [ "$1" == "go" ]; then
-   echo "CMS2 working environment"
+elif [ "$1" == "crab_cern" ]; then
+   echo "CERN CRAB configuration"
+   source /afs/cern.ch/cms/ccs/wm/scripts/Crab/CRAB/crab.sh
+elif [ "$1" == "go_fnal" ]; then
+   echo "FNAL CMS2 working environment"
    . /uscmst1/prod/sw/cms/shrc prod
-   cd /uscms/home/gutsche/work/software/TAS/CMSSW_1_6_12/src/CMS2/NtupleMacros/
+   cd $CMS2_LOCATION/NtupleMacros/
    eval `scramv1 runtime -sh`
-   export CMS2_LOCATION=$CMSSW_BASE/src/CMS2
-elif [ "$1" == "dbs" ]; then
-   echo "DBS configuration"
+elif [ "$1" == "go_cern" ]; then
+   echo "CERN CMS2 working environment"
+   . /afs/cern.ch/cms/sw/cmsset_default.sh
+   cd $CMS2_LOCATION/NtupleMacros/
+   eval `scramv1 runtime -sh`
+elif [ "$1" == "dbs_fnal" ]; then
+   echo "FNAL DBS configuration"
    cd /uscms/home/gutsche/work/software/DataCert/DBS/Clients/Python
    source setup.sh 
    cd -
-elif [ "$1" == "pa" ]; then
+elif [ "$1" == "dbs_cern" ]; then
+   echo "CERN DBS configuration"
+   cd /afs/cern.ch/user/g/gutsche/software/DBS/Clients/Python
+   source setup.sh 
+   cd -
+elif [ "$1" == "pa_fnal" ]; then
+   echo "FNAL PA configuration"
    cd /uscms_data/d1/gutsche/pa/0127
    source start_prodagent.sh 0
    cd PRODAGENT/work
