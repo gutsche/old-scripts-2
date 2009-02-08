@@ -14,7 +14,7 @@ elif [ "$1" == "ucsd" ]; then
    export SCRAM_ARCH=slc4_ia32_gcc345
 elif [ "$1" == "cern_ui" ]; then
    echo "CERN UI software environment"
-   . /afs/cern.ch/cms/sw/cmsset_default.sh
+   source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh   
 elif [ "$1" == "crab_fnal" ]; then
    echo "FNAL CRAB configuration"
    source /uscmst1/prod/grid/CRAB/crab.sh
@@ -55,9 +55,8 @@ elif [ "$1" == "dbs_fnal" ]; then
    cd -
 elif [ "$1" == "dbs_cern" ]; then
    echo "CERN DBS configuration"
-   cd /afs/cern.ch/user/g/gutsche/software/DBS/Clients/Python
-   source setup.sh 
-   cd -
+   source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh
+   source /data/gutsche/DBS/DBS_2_0_5_RPM/setup.sh
 elif [ "$1" == "pa_fnal" ]; then
    echo "FNAL PA configuration"
    cd /uscms_data/d1/gutsche/pa/0127
