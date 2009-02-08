@@ -8,6 +8,10 @@ if [ "$1" == "fnal" ]; then
 elif [ "$1" == "cern" ]; then
    echo "CERN CMS software environment"
    . /afs/cern.ch/cms/sw/cmsset_default.sh 
+elif [ "$1" == "ucsd" ]; then 
+   echo "UCSD CMS software environment" 
+   source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12   
+   export SCRAM_ARCH=slc4_ia32_gcc345
 elif [ "$1" == "cern_ui" ]; then
    echo "CERN UI software environment"
    . /afs/cern.ch/cms/sw/cmsset_default.sh
@@ -35,6 +39,15 @@ elif [ "$1" == "go_cern" ]; then
    . /afs/cern.ch/cms/sw/cmsset_default.sh
    cd $CMS2_LOCATION/NtupleMacros/
    eval `scramv1 runtime -sh`
+elif [ "$1" == "go_ucsd" ]; then 
+   echo "UCSD CMS2 working environment" 
+   source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
+   export SCRAM_ARCH=slc4_ia32_gcc345
+   cd $HOME/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
+   eval `scramv1 runtime -sh`
+   source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
+   source /code/osgcode/ucsdt2/Crab/etc/crab.sh
+   export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
 elif [ "$1" == "dbs_fnal" ]; then
    echo "FNAL DBS configuration"
    cd /uscms/home/gutsche/work/software/DataCert/DBS/Clients/Python
