@@ -1,0 +1,74 @@
+import urllib
+
+f = urllib.urlopen('https://cmsweb.cern.ch/phedex/datasvc/xml/prod/nodes')
+
+from xml.dom import minidom
+
+xml = minidom.parse(f)
+
+sitemap = {}
+
+for node in xml.childNodes[0].childNodes :
+    #print node.attributes['name'].value,node.attributes['se'].value
+    name = node.attributes['name'].value
+    se = node.attributes['se'].value
+
+    if name[0] != 'X' :
+        #print name.replace('_Buffer','').replace('_MSS','').replace('_Export','').replace('_Disk','')
+        if se != '' :
+            sitemap[se] = name.replace('_Buffer','').replace('_MSS','').replace('_Export','').replace('_Disk','')
+
+
+
+import DBSAPI.dbsApi
+
+args = {}
+args['url']   = "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet"
+args['level'] = 'CRITICAL'
+
+try:
+    api = DBSAPI.dbsApi.DbsApi(args)
+except:
+    print ''
+    print 'Problem connecting DBS'
+    sys.exit(1)
+
+
+print "dataset events size t2events t2size sites"
+
+import sys
+
+for path in sys.argv[1:] :
+
+    events = 0
+    size = 0
+    t2events = 0
+    t2size = 0
+    sites = []
+
+
+    try:
+        blocks = api.listBlocks(dataset=path,block_name="*",storage_element_name="*");
+    except:
+        blocks = []
+    for block in blocks:
+        localevents = 0
+        localsize = 0
+        t2 = 0
+        files = api.listFiles(blockName=block['Name'])
+        for file in files:
+            localevents += file['NumberOfEvents']
+            localsize   += file['FileSize']
+        for se in block['StorageElementList'] :
+            localsite = sitemap[se['Name']]
+            if localsite not in sites:
+                sites.append(localsite)
+            if localsite[0:2] == 'T2' :
+                t2 = 1
+        size += localsize
+        events += localevents
+        if t2 == 1:
+            t2size += localsize
+            t2events += localevents
+
+    print path,events,size/1024./1024./1024./1024.,t2events,t2size/1024./1024./1024./1024.,','.join(sites)

@@ -23,9 +23,13 @@ elif [ "$1" == "crab_cern" ]; then
    source /afs/cern.ch/cms/ccs/wm/scripts/Crab/CRAB/crab.sh
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL CMS2 working environment"
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
    . /uscmst1/prod/sw/cms/shrc prod
-   cd $CMS2_LOCATION/NtupleMacros/
+   cd $CMS2_LOCATION
    eval `scramv1 runtime -sh`
+   export X509_USER_PROXY=/uscms/home/gutsche/test.txt
+   source /uscms/home/gutsche/work/software/CRAB/CRAB/crab.sh
+   export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
 elif [ "$1" == "go_cern" ]; then
    echo "CERN CMS2 working environment"
    . /afs/cern.ch/cms/sw/cmsset_default.sh
