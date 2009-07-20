@@ -24,7 +24,7 @@ elif [ "$1" == "crab_fnal_local" ]; then
    export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
 elif [ "$1" == "crab_cern" ]; then
    echo "CERN CRAB configuration"
-   source /afs/cern.ch/cms/ccs/wm/scripts/Crab/CRAB/crab.sh
+   source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL CMS2 working environment"
    export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
@@ -56,7 +56,7 @@ elif [ "$1" == "dbs_fnal" ]; then
 elif [ "$1" == "dbs_cern" ]; then
    echo "CERN DBS configuration"
    source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh
-   source /data/gutsche/DBS/DBS_2_0_5_RPM/setup.sh
+   source /data/gutsche/DBS/DBS_2_0_6_RPM/setup.sh
 elif [ "$1" == "pa_fnal" ]; then
    echo "FNAL PA configuration"
    cd /uscms_data/d1/gutsche/pa/0127
