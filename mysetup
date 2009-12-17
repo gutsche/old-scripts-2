@@ -20,20 +20,17 @@ elif [ "$1" == "crab_fnal" ]; then
    source /uscmst1/prod/grid/CRAB/crab.sh
 elif [ "$1" == "crab_fnal_local" ]; then
    echo "FNAL CRAB local configuration"
-   source /uscms/home/gutsche/work/software/CRAB/CRAB/crab.sh
-   export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
+   source /uscms/home/gutsche/work/software/CRAB/CRAB_2_6_3_patch_2/crab.sh
+   #export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
 elif [ "$1" == "crab_cern" ]; then
    echo "CERN CRAB configuration"
    source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
 elif [ "$1" == "go_fnal" ]; then
-   echo "FNAL CMS2 working environment"
-   export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
+   echo "FNAL working environment"
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_3_3_4/src/CMS2
    . /uscmst1/prod/sw/cms/shrc prod
    cd $CMS2_LOCATION
    eval `scramv1 runtime -sh`
-   export X509_USER_PROXY=/uscms/home/gutsche/test.txt
-   source /uscms/home/gutsche/work/software/CRAB/CRAB/crab.sh
-   export DBS_CLIENT_CONFIG=/uscms/home/gutsche/work/software/CRAB/CRAB/external/DBSAPI/DBSAPI/dbs.config
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
    #. /afs/cern.ch/cms/sw/cmsset_default.sh
@@ -50,7 +47,7 @@ elif [ "$1" == "go_ucsd" ]; then
    export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
 elif [ "$1" == "dbs_fnal" ]; then
    echo "FNAL DBS configuration"
-   cd /uscms/home/gutsche/work/software/DataCert/DBS/Clients/Python
+   cd /uscms/home/gutsche/work/software/DataCert/DBS_2_0_6_RPM
    source setup.sh 
    cd -
 elif [ "$1" == "dbs_cern" ]; then
