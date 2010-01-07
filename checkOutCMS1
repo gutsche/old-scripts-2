@@ -1,3 +1,0 @@
-#!/bin/bash
-
-cvs co -d CMS1 -P UserCode/JRibnik/CMS1
