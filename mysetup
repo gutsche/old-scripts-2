@@ -37,13 +37,17 @@ elif [ "$1" == "go_cern" ]; then
    eval `scramv1 runtime -sh`
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
-   source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
-   export SCRAM_ARCH=slc4_ia32_gcc345
-   cd $HOME/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
-   eval `scramv1 runtime -sh`
-   source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
-   source /code/osgcode/ucsdt2/Crab/etc/crab.sh
-   export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
+   #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
+   #export SCRAM_ARCH=slc4_ia32_gcc345
+   #cd $HOME/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
+   #eval `scramv1 runtime -sh`
+   #source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
+   #source /code/osgcode/ucsdt2/Crab/etc/crab.sh
+   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.22.00/
+   export PATH=$PATH:$ROOTSYS/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+   export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_13_WZ/src/CMS2
+   cd $CMS2_LOCATION/NtupleMacros/WZ
 elif [ "$1" == "dbs_fnal" ]; then
    echo "FNAL DBS configuration"
    cd /uscms/home/gutsche/work/software/DataCert/DBS_2_0_6_RPM
@@ -58,6 +62,11 @@ elif [ "$1" == "pa_fnal" ]; then
    cd /uscms_data/d1/gutsche/pa/0127
    source start_prodagent.sh 0
    cd PRODAGENT/work
+elif [ "$1" == "root_ucsd" ]; then
+   echo "UCSD standalone ROOT"
+   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.22.00/
+   export PATH=$PATH:$ROOTSYS/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
 else
    echo "Please give configuration"
 fi
