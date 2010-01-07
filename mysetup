@@ -33,8 +33,7 @@ elif [ "$1" == "go_fnal" ]; then
    eval `scramv1 runtime -sh`
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
-   #. /afs/cern.ch/cms/sw/cmsset_default.sh
-   cd /afs/cern.ch/user/g/gutsche/test/CMSSW_3_3_5_patch3/src
+   cd /afs/cern.ch/user/g/gutsche/software/CMSSW_3_5_0_pre2/src
    eval `scramv1 runtime -sh`
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
