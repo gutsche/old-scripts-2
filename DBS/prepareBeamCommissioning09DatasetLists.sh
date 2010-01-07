@@ -23,7 +23,16 @@ cat datasets.list | grep -iv express | grep Dec9thReReco | grep -v '/RECO' | gre
 cat datasets.list | grep -iv express | grep Dec14thReReco | grep '/RECO' > rereco_Dec14thReReco.list
 cat datasets.list | grep -iv express | grep Dec14thSkim | grep -v '/RECO' | grep SD > sd_rereco_Dec14thReReco.list
 cat datasets.list | grep -iv express | grep Dec14thSkim | grep -v '/RECO' | grep -v SD > skims_rereco_Dec14thReReco.list
-cat test.list express.list raw.list prompt_reco.list alcareco.list sd_prompt.list skims_prompt.list sd_335p3.list skims_335p3.list rereco_GR09_P_V7.list sd_rereco_GR09_P_V7.list skims_rereco_GR09_P_V7.list rereco_Dec9thReReco.list sd_rereco_Dec9thReReco.list skims_rereco_Dec9thReReco.list rereco_FIRSTCOLL.list rereco_Dec14thReReco.list sd_rereco_Dec14thReReco.list skims_rereco_Dec14thReReco.list | sort > done.list
+
+cat datasets.list | grep -iv express | grep Dec19thReReco_336p3 | grep '/RECO' > rereco_Dec19thReReco_336p3.list
+cat datasets.list | grep -iv express | grep Dec19thSkim_336p3 | grep -v '/RECO' | grep SD > sd_rereco_Dec19thReReco_336p3.list
+cat datasets.list | grep -iv express | grep Dec19thSkim_336p3 | grep -v '/RECO' | grep -v SD > skims_rereco_Dec19thReReco_336p3.list
+
+cat datasets.list | grep -iv express | grep Dec19thReReco_341 | grep '/RECO' > rereco_Dec19thReReco_341.list
+cat datasets.list | grep -iv express | grep Dec19thSkim_341 | grep -v '/RECO' | grep SD > sd_rereco_Dec19thReReco_341.list
+cat datasets.list | grep -iv express | grep Dec19thSkim_341 | grep -v '/RECO' | grep -v SD > skims_rereco_Dec19thReReco_341.list
+
+cat test.list express.list raw.list prompt_reco.list alcareco.list sd_prompt.list skims_prompt.list sd_335p3.list skims_335p3.list rereco_GR09_P_V7.list sd_rereco_GR09_P_V7.list skims_rereco_GR09_P_V7.list rereco_Dec9thReReco.list sd_rereco_Dec9thReReco.list skims_rereco_Dec9thReReco.list rereco_FIRSTCOLL.list rereco_Dec14thReReco.list sd_rereco_Dec14thReReco.list skims_rereco_Dec14thReReco.list rereco_Dec19thReReco_336p3.list sd_rereco_Dec19thReReco_336p3.list skims_rereco_Dec19thReReco_336p3.list rereco_Dec19thReReco_341.list sd_rereco_Dec19thReReco_341.list skims_rereco_Dec19thReReco_341.list | sort > done.list
 echo ""
 echo "inconsistencies"
 echo ""
