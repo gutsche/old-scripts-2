@@ -30,7 +30,8 @@ elif [ "$1" == "crab_cern" ]; then
    source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL working environment"
-   export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_3_3_4/src/CMS2
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_3_3_6/src/
+   export CMS2_NTUPLE_LOCATION=/storage/local/data2/cms1
    . /uscmst1/prod/sw/cms/shrc prod
    cd $CMS2_LOCATION
    eval `scramv1 runtime -sh`
