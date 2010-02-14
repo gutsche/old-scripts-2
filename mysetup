@@ -59,8 +59,9 @@ elif [ "$1" == "dbs_fnal" ]; then
    cd -
 elif [ "$1" == "dbs_cern" ]; then
    echo "CERN DBS configuration"
-   source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh
-   source /data/gutsche/DBS/DBS_2_0_6_RPM/setup.sh
+   cd /afs/cern.ch/user/g/gutsche/software/DBS/DBS_2_0_9_patch_5/DBS/Clients/Python
+	 source setup.sh
+	 cd -
 elif [ "$1" == "pa_fnal" ]; then
    echo "FNAL PA configuration"
    cd /uscms_data/d1/gutsche/pa/0127
@@ -68,9 +69,15 @@ elif [ "$1" == "pa_fnal" ]; then
    cd PRODAGENT/work
 elif [ "$1" == "root_fnal" ]; then
    echo "FNAL standalone ROOT"
-   export ROOTSYS=/uscmst1/prod/sw/cms/slc5_ia32_gcc434/lcg/root/5.22.00d-cms4/
+   export ROOTSYS=$VO_CMS_SW_DIR/slc5_ia32_gcc434/lcg/root/5.22.00d-cms4/
    export PATH=$PATH:$ROOTSYS/bin
-   export LD_LIBRARY_PATH=/uscmst1/prod/sw/cms/slc5_ia32_gcc434/external/python/2.4.2-cms/lib:/uscmst1/prod/sw/cms/slc5_ia32_gcc434/external/gcc/4.3.4/lib:$LD_LIBRARY_PATH:$ROOTSYS/lib
+   export LD_LIBRARY_PATH=$VO_CMS_SW_DIR/slc5_ia32_gcc434/external/python/2.4.2-cms/lib:$VO_CMS_SW_DIR/slc5_ia32_gcc434/external/gcc/4.3.4/lib:$LD_LIBRARY_PATH:$ROOTSYS/lib
+   export PYTHONPATH=$PYTHONPATH:$ROOTSYS/lib
+elif [ "$1" == "root_cern" ]; then
+   echo "CERN standalone ROOT"
+   export ROOTSYS=$VO_CMS_SW_DIR/slc5_ia32_gcc434/lcg/root/5.22.00d-cms4/
+   export PATH=$PATH:$ROOTSYS/bin
+   export LD_LIBRARY_PATH=$VO_CMS_SW_DIR/slc5_ia32_gcc434/external/python/2.4.2-cms/lib:$VO_CMS_SW_DIR/slc5_ia32_gcc434/external/gcc/4.3.4/lib:$LD_LIBRARY_PATH:$ROOTSYS/lib
    export PYTHONPATH=$PYTHONPATH:$ROOTSYS/lib
 elif [ "$1" == "root_ucsd" ]; then
    echo "UCSD standalone ROOT"
