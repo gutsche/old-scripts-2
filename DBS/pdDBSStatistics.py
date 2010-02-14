@@ -101,6 +101,8 @@ def queryDBS(datasetlist_handle):
 
     for line in datasetlist_handle.readlines():
         dataset = line.strip()
+        if len(dataset.split()) < 1: 
+            continue
         if len(dataset.split()) > 1:
             print 'Too many datasets in following line:',line
             print 'Skipping this line.'
@@ -127,26 +129,27 @@ def producePlots(filelist_handle,identifier):
     failures = []
 
     for line in filelist_handle.readlines():
-	array = line.split()
-        name = str(array[0])
-        size = float(float(array[1])/1000000000000)
-        events = int(array[2])
-        run = int(array[3])
-        lumi = int(array[4])
-        if array[-1] != 'GMT' :
-	    failures.append(line)
-        else :
-            thetime = int(time.mktime(time.strptime(' '.join(array[5:]),'%a, %d %b %Y %H:%M:%S %Z')))
-            if name in files.keys():
-                files[name]['lumi'].append(lumi)
+        array = line.split()
+        if len(array) > 3 :
+            name = str(array[0])
+            size = float(float(array[1])/1000000000000)
+            events = int(array[2])
+            run = int(array[3])
+            lumi = int(array[4])
+            if array[-1] != 'GMT' :
+                failures.append(line)
             else :
-                entry = {}
-                entry['size'] = size
-                entry['events'] = events
-                entry['run'] = [run]
-                entry['lumi'] = [lumi]
-                entry['time'] = thetime
-                files[name] = entry
+                thetime = int(time.mktime(time.strptime(' '.join(array[5:]),'%a, %d %b %Y %H:%M:%S %Z')))
+                if name in files.keys():
+                    files[name]['lumi'].append(lumi)
+                else :
+                    entry = {}
+                    entry['size'] = size
+                    entry['events'] = events
+                    entry['run'] = [run]
+                    entry['lumi'] = [lumi]
+                    entry['time'] = thetime
+                    files[name] = entry
 
         if debug == 1 :
             for name in files.keys():
