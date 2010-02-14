@@ -124,30 +124,41 @@ def producePlots(filelist_handle,identifier):
 
     files = {}
     plots = []
+    failures = []
 
     for line in filelist_handle.readlines():
-        array = line.split()
+	array = line.split()
         name = str(array[0])
         size = float(float(array[1])/1000000000000)
         events = int(array[2])
         run = int(array[3])
         lumi = int(array[4])
-        time = int(array[5])
-        if name in files.keys():
-            files[name]['lumi'].append(lumi)
+        if array[-1] != 'GMT' :
+	    failures.append(line)
         else :
-            entry = {}
-            entry['size'] = size
-            entry['events'] = events
-            entry['run'] = [run]
-            entry['lumi'] = [lumi]
-            entry['time'] = time
-            files[name] = entry
+            thetime = int(time.mktime(time.strptime(' '.join(array[5:]),'%a, %d %b %Y %H:%M:%S %Z')))
+            if name in files.keys():
+                files[name]['lumi'].append(lumi)
+            else :
+                entry = {}
+                entry['size'] = size
+                entry['events'] = events
+                entry['run'] = [run]
+                entry['lumi'] = [lumi]
+                entry['time'] = thetime
+                files[name] = entry
 
         if debug == 1 :
             for name in files.keys():
                 print name,'size:',files[name]['size'],'events:',files[name]['events'],'runs:',','.join(map(str,files[name]['run'])),'lumis:',','.join(map(str,files[name]['lumi'])),'date:',files[name]['time']
 
+
+    # print failures
+    if len(failures) > 0 :
+        print ""
+        print "failures:"
+        for line in failures :
+            print line
 
     # define time axis
     times = [ files[name]['time'] for name in files ]

@@ -42,6 +42,7 @@ alias s_go_ucsd='source $HOME/scripts/mysetup go_ucsd'
 alias s_dbs_fnal='source $HOME/scripts/mysetup dbs_fnal'
 alias s_dbs_cern='source $HOME/scripts/mysetup dbs_cern'
 alias s_pa_fnal='source $HOME/scripts/mysetup pa_fnal'
+alias s_root_fnal='source $HOME/scripts/mysetup root_fnal'
 alias s_root_ucsd='source $HOME/scripts/mysetup root_ucsd'
 
 alias lxplus='ssh lxplus.cern.ch'
