@@ -42,7 +42,12 @@ echo "custodial datasets not at IN2P3"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = ccsrm.in2p3.fr" | sort > datasets_in2p3.list
 diff datasets.list datasets_in2p3.list | grep '/TestEnables/' | grep -vi test | grep '<' | awk '{print $2}'
-#diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/AlCaP0/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/AlCaPhiSymEcal/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/FEDMonitor/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/LogMonitor/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/RPCMonitor/' | grep -vi test | grep '<' | awk '{print $2}'
 echo ""
 echo "custodial datasets not at RAL"
 echo ""
@@ -54,5 +59,5 @@ echo ""
 echo "custodial datasets not at KIT"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = cmssrm-fzk.gridka.de" | sort > datasets_kit.list
-#diff datasets.list datasets_kit.list | grep '/ZeroBiasB/' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_kit.list | grep '/ZeroBiasB/' | grep '<' | awk '{print $2}'
 #diff datasets.list datasets_kit.list | grep '/Calo/' | grep '<' | awk '{print $2}'
