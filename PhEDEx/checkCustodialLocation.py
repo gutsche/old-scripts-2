@@ -5,23 +5,26 @@ import urllib
 from xml.dom import minidom
 
 datasetpath = None
-
+allSites = 0
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "", ["dataset="])
+    opts, args = getopt.getopt(sys.argv[1:], "", ["dataset=","allSites"])
 except getopt.GetoptError:
     print 'Please specify dataset with --dataset'
+    print 'Specify --allSites to show all site location, otherwise show only T1 sites'
     sys.exit(2)
 
 # check command line parameter
 for opt, arg in opts :
     if opt == "--dataset" :
         datasetpath = arg
-
+    if opt == "--allSites" :
+        allSites = 1
+        
 if datasetpath == None:
     print 'Please specify dataset with --dataset'
     sys.exit(2)
-    
-url='http://cmsweb.cern.ch/phedex/datasvc/xml/prod/subscriptions?dataset=' + datasetpath
+
+url='http://cmsweb.cern.ch/phedex/datasvc/xml/prod/blockreplicas?block=' + datasetpath + '*'
 input = urllib.urlopen(url)
 
 xmldoc = minidom.parse(input)
@@ -30,18 +33,33 @@ custodial = []
 non_custodial = []
 
 for phedex in xmldoc.childNodes :
-    for dataset in phedex.childNodes:
-        datasetname = dataset.attributes['name'].value
-        for subscription in dataset.childNodes:
-            site = subscription.attributes['node'].value
-            if site[0:2] == 'T1' or site[0:2] == 'T0':
-                if subscription.attributes['custodial'].value == 'y':
+    for block in phedex.childNodes:
+        for replica in block.childNodes:
+            site = replica.attributes['node'].value
+            if site[-4:] == '_MSS':
+                site = site[:-4]
+            if site[-7:] == '_Buffer':
+                site = site[:-7]
+            if site[-7:] == '_Export':
+                site = site[:-7]
+            if allSites == 1 or ( site[0:2] == 'T1' or site[0:2] == 'T0') :
+                if replica.attributes['custodial'].value == 'y':
                     if site not in custodial :
                         custodial.append(site)
                 else :
                     if site not in non_custodial :
                         non_custodial.append(site)
 
+
+custodial.sort()
+non_custodial.sort()
+
 print 'dataset:',datasetpath
 print 'custodial:',','.join(custodial)
-print 'non-custodial:',','.join(non_custodial)
+sites = ''
+for site in non_custodial :
+    if site not in custodial :
+        sites = sites + site + ','
+if sites[-1:] == ',' :
+    sites = sites[:-1]
+print 'non-custodial:',sites
