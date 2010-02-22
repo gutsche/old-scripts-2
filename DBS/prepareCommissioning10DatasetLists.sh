@@ -24,7 +24,7 @@ echo ""
 echo "datasets not at FNAL"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = *fnal.gov" | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -vi express | grep -v '/Test' | grep -v '/RandomTriggersOpen' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -vi express | grep -v '/Test' | grep -v '/Cosmics-Error/' | grep -v '/RandomTriggersOpen' | grep '<' | awk '{print $2}'
 echo ""
 echo "custodial datasets not at CNAF"
 echo ""
