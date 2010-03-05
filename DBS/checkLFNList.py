@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys,os,urllib,json
+import sys,os
 
 input = open(sys.argv[1],'r')
 
