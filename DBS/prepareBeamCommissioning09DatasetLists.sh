@@ -2,9 +2,9 @@ python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset
 cat datasets.list | grep -i express > express.list
 cat datasets.list | grep -vi express | grep '/RAW' | grep -v RAW-RECO > raw.list
 cat datasets.list | grep -vi express | grep '/RECO' | grep -i prompt > prompt_reco.list
-cat datasets.list | grep -vi express | grep ALCA | grep v1 > alcareco_v1.list
-cat datasets.list | grep -vi express | grep ALCA | grep v2 > alcareco_v2.list
-cat datasets.list | grep -vi express | grep ALCA > alcareco.list
+cat datasets.list | grep -vi express | grep ALCA | grep -v 18th | grep v1 > alcareco_v1.list
+cat datasets.list | grep -vi express | grep ALCA | grep -v 18th | grep v2 > alcareco_v2.list
+cat datasets.list | grep -vi express | grep ALCA | grep -v 18th > alcareco.list
 cat datasets.list | grep -vi express | grep SD | grep v1 | grep Prompt > sd_prompt_v1.list
 cat datasets.list | grep -vi express | grep SD | grep v2 | grep Prompt > sd_prompt_v2.list
 cat datasets.list | grep -vi express | grep SD | grep Prompt > sd_prompt.list
@@ -50,7 +50,9 @@ cat datasets.list | grep -iv express | grep Feb9Skim | grep -v '/RECO' | grep SD
 cat datasets.list | grep -iv express | grep Feb9Skim | grep -v '/RECO' | grep -v SD > skims_rereco_Feb9ReReco.list
 # rereco_Feb9ReReco.list sd_rereco_Feb9ReReco.list skims_rereco_Feb9ReReco.list 
 
-cat test.list express.list raw.list prompt_reco.list alcareco.list sd_prompt.list skims_prompt.list sd_335p3.list skims_335p3.list rereco_GR09_P_V7.list sd_rereco_GR09_P_V7.list skims_rereco_GR09_P_V7.list rereco_Dec9thReReco.list sd_rereco_Dec9thReReco.list skims_rereco_Dec9thReReco.list rereco_FIRSTCOLL.list rereco_Dec14thReReco.list sd_rereco_Dec14thReReco.list skims_rereco_Dec14thReReco.list rereco_Dec19thReReco_336p3.list sd_rereco_Dec19thReReco_336p3.list skims_rereco_Dec19thReReco_336p3.list rereco_Dec19thReReco_341.list sd_rereco_Dec19thReReco_341.list skims_rereco_Dec19thReReco_341.list rereco_Jan23ReReco.list sd_rereco_Jan23ReReco.list skims_rereco_Jan23ReReco.list rereco_Jan29ReReco.list sd_rereco_Jan29ReReco.list skims_rereco_Jan29ReReco.list rereco_Feb9ReReco.list sd_rereco_Feb9ReReco.list skims_rereco_Feb9ReReco.list rereco_Jan21stPreProd_336p3.list | sort > done.list
+cat datasets.list | grep -iv express | grep 18thFebPreProd > preprod_18thFebPreProd.list #custodial at PIC
+
+cat test.list express.list raw.list prompt_reco.list alcareco.list sd_prompt.list skims_prompt.list sd_335p3.list skims_335p3.list rereco_GR09_P_V7.list sd_rereco_GR09_P_V7.list skims_rereco_GR09_P_V7.list rereco_Dec9thReReco.list sd_rereco_Dec9thReReco.list skims_rereco_Dec9thReReco.list rereco_FIRSTCOLL.list rereco_Dec14thReReco.list sd_rereco_Dec14thReReco.list skims_rereco_Dec14thReReco.list rereco_Dec19thReReco_336p3.list sd_rereco_Dec19thReReco_336p3.list skims_rereco_Dec19thReReco_336p3.list rereco_Dec19thReReco_341.list sd_rereco_Dec19thReReco_341.list skims_rereco_Dec19thReReco_341.list rereco_Jan23ReReco.list sd_rereco_Jan23ReReco.list skims_rereco_Jan23ReReco.list rereco_Jan29ReReco.list sd_rereco_Jan29ReReco.list skims_rereco_Jan29ReReco.list rereco_Feb9ReReco.list sd_rereco_Feb9ReReco.list skims_rereco_Feb9ReReco.list rereco_Jan21stPreProd_336p3.list preprod_18thFebPreProd.list | sort > done.list
 echo ""
 echo "inconsistencies"
 echo ""
@@ -72,11 +74,12 @@ python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset
 diff datasets.list datasets_pic.list | grep '/FEDMonitor/' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_pic.list | grep '/RandomTriggers/' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_pic.list | grep '/RPCMonitor/' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_pic.list | grep '/MinimumBias/' | grep '18thFebPreProd' | grep '<' | awk '{print $2}'
 echo ""
 echo "custodial datasets not at IN2P3"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/BeamCommissioning09*/* and site = ccsrm.in2p3.fr" | sort > datasets_in2p3.list
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep -vi test | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep -vi test | grep -v '18thFebPreProd' | grep '<' | awk '{print $2}'
 echo ""
 echo "custodial datasets not at RAL"
 echo ""
