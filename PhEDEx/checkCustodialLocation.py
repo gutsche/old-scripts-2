@@ -54,12 +54,20 @@ for phedex in xmldoc.childNodes :
 custodial.sort()
 non_custodial.sort()
 
-print 'dataset:',datasetpath
-print 'custodial:',','.join(custodial)
+
+if len(custodial) == 0 :
+    custodial.append('NONE')
+if len(non_custodial) == 0 :
+    custodial.append('NONE')
+if len(custodial) == 1 and custodial[0].count('T0') > 0 :
+    custodial.append('NONE')
+if len(non_custodial) == 1 and non_custodial[0].count('T0') > 0 :
+    non_custodial.append('NONE')
+
 sites = ''
 for site in non_custodial :
     if site not in custodial :
         sites = sites + site + ','
 if sites[-1:] == ',' :
     sites = sites[:-1]
-print 'non-custodial:',sites
+print 'dataset:',datasetpath,'custodial:',','.join(custodial),'non-custodial:',sites
