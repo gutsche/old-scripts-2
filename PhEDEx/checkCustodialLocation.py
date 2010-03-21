@@ -29,45 +29,60 @@ input = urllib.urlopen(url)
 
 xmldoc = minidom.parse(input)
 
-custodial = []
-non_custodial = []
+custodial = {}
+non_custodial = {}
 
 for phedex in xmldoc.childNodes :
     for block in phedex.childNodes:
+        name = block.attributes['name'].value
         for replica in block.childNodes:
             site = replica.attributes['node'].value
-            if site[-4:] == '_MSS':
-                site = site[:-4]
-            if site[-7:] == '_Buffer':
-                site = site[:-7]
-            if site[-7:] == '_Export':
-                site = site[:-7]
+            files = replica.attributes['files'].value
+##             if site[-4:] == '_MSS':
+##                 site = site[:-4]
+##             if site[-7:] == '_Buffer':
+##                 site = site[:-7]
+##             if site[-7:] == '_Export':
+##                 site = site[:-7]
             if allSites == 1 or ( site[0:2] == 'T1' or site[0:2] == 'T0') :
                 if replica.attributes['custodial'].value == 'y':
-                    if site not in custodial :
-                        custodial.append(site)
+                    if site not in custodial.keys() :
+                        custodial[site] = int(files)
+                    else :
+                        custodial[site] += int(files)
                 else :
-                    if site not in non_custodial :
-                        non_custodial.append(site)
+                    if site not in non_custodial.keys() :
+                        non_custodial[site] = int(files)
+                    else :
+                        non_custodial[site] += int(files)
 
 
-custodial.sort()
-non_custodial.sort()
+custodial_sites = custodial.keys()
+non_custodial_sites = non_custodial.keys()
+
+custodial_sites.sort()
+non_custodial_sites.sort()
 
 
-if len(custodial) == 0 :
-    custodial.append('NONE')
-if len(non_custodial) == 0 :
-    custodial.append('NONE')
-if len(custodial) == 1 and custodial[0].count('T0') > 0 :
-    custodial.append('NONE')
-if len(non_custodial) == 1 and non_custodial[0].count('T0') > 0 :
-    non_custodial.append('NONE')
+if len(custodial_sites) == 0 :
+    custodial['NONE'] = 0
+if len(non_custodial_sites) == 0 :
+    non_custodial['NONE'] = 0
+if len(custodial_sites) == 1 and custodial_sites[0].count('T0') > 0 :
+    custodial['NONE'] = 0
+if len(non_custodial_sites) == 1 and non_custodial_sites[0].count('T0') > 0 :
+    non_custodial['NONE'] = 0
 
 sites = ''
-for site in non_custodial :
-    if site not in custodial :
-        sites = sites + site + ','
+custsites = ''
+for site in non_custodial_sites :
+    if site not in custodial_sites :
+        sites = sites + site + '(' + str(non_custodial[site]) + '),'
 if sites[-1:] == ',' :
     sites = sites[:-1]
-print 'dataset:',datasetpath,'custodial:',','.join(custodial),'non-custodial:',sites
+for custsite in custodial_sites :
+    custsites = custsites + custsite + '(' + str(custodial[custsite]) + '),'
+if custsites[-1:] == ',' :
+    custsites = custsites[:-1]
+
+print 'dataset:',datasetpath,'custodial:',custsites,'non-custodial:',sites
