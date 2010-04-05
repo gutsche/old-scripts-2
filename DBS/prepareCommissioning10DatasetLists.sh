@@ -38,8 +38,11 @@ cat datasets.list | grep -vi express | grep 'CollisionRecoSequence' | grep v7 > 
 cat datasets.list | grep -vi express | grep 'CollisionRecoSequence' | grep v8 > collision_reco_sequence_v8.list
 
 cat datasets.list | grep -vi express | grep Mar1rstReReco > rereco_Mar1rstReReco.list
+cat datasets.list | grep -vi express | grep Apr1ReReco > rereco_Apr1ReReco.list
 
-cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list | sort > done.list
+cat datasets.list | grep -vi express | grep Apr1Skim > rereco_Apr1Skim.list
+
+cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list rereco_Apr1ReReco.list rereco_Apr1Skim.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
@@ -70,6 +73,8 @@ diff datasets.list datasets_cnaf.list | grep '/ZeroBias/' | grep 'RECO' | grep '
 
 diff datasets.list datasets_cnaf.list | grep '/MinimumBias/Commissioning10-v4/RAW' | grep '<' | awk '{print $2}'
 
+diff datasets.list datasets_cnaf.list | grep '/ZeroBias/' | grep 'Apr1' | grep '<' | awk '{print $2}'
+
 echo ""
 echo "datasets not at PIC"
 echo ""
@@ -89,15 +94,15 @@ diff datasets.list datasets_in2p3.list | grep '/FEDMonitor/' | grep -vi test | g
 diff datasets.list datasets_in2p3.list | grep '/LogMonitor/' | grep -vi test | grep '<' | awk '{print $2}'
 diff datasets.list datasets_in2p3.list | grep '/RPCMonitor/' | grep -vi test | grep '<' | awk '{print $2}'
 
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v2' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v3' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v2' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v3' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v4' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep '/RAW ' | grep 'v1' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep '/RAW ' | grep 'v2' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep '/RAW ' | grep 'v3' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'PromptReco' | grep 'v1' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'PromptReco' | grep 'v2' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'PromptReco' | grep 'v3' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'PromptReco' | grep 'v4' | grep '<' | awk '{print $2}'
 
-diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v4' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep '/RAW ' | grep 'v4' | grep '<' | awk '{print $2}'
 
 
 echo ""
@@ -117,13 +122,15 @@ python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset
 diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RAW' | grep 'v1' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RAW' | grep 'v2' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RAW' | grep 'v3' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RECO' | grep 'v2' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RECO' | grep 'v3' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'RECO' | grep 'v4' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'PromptReco' | grep 'v1' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'PromptReco' | grep 'v2' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'PromptReco' | grep 'v3' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep 'PromptReco' | grep 'v4' | grep '<' | awk '{print $2}'
 
 diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v4' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v5' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v6' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v7' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'RECO' | grep 'v8' | grep '<' | awk '{print $2}'
+
+diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep 'Apr1' | grep '<' | awk '{print $2}'
