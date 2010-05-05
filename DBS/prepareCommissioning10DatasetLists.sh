@@ -48,6 +48,7 @@ cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr20ReReco
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr1Skim > rereco_Apr1Skim.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Abr8Skim > rereco_Abr8Skim.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr20Skim > rereco_Apr20Skim.list
+cat datasets.list | grep -vi express | grep -vi preproduction | grep -i GR_R_35X_V7A >> rereco_Apr20Skim.list
 
 cat datasets.list | grep -i preproduction > preproduction.list
 
