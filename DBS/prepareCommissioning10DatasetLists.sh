@@ -53,7 +53,7 @@ cat datasets.list | grep -vi express | grep -vi preproduction | grep -i GR_R_35X
 cat datasets.list | grep -i preproduction > preproduction.list
 
 cat datasets.list | grep -vi express | grep -vi preproduction | grep 'SD_' | grep v1  > sd_v1.list
-cat datasets.list | grep -vi express | grep -vi preproduction | grep 'SD_' | grep v9  > sd_v1.list
+cat datasets.list | grep -vi express | grep -vi preproduction | grep 'SD_' | grep v9  > sd_v9.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep 'CS_' | grep v1  > cs_v9.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep 'CS_' | grep v8  > cs_v8.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep 'CS_' | grep v9  > cs_v9.list
