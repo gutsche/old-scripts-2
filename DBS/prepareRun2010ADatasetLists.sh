@@ -9,20 +9,25 @@ cat complete_datasets.list | grep -vi express | grep -vi preproduction | grep -v
 cat datasets.list | grep '/RAW' | grep -v RAW-RECO | grep v1 > raw_v1.list
 
 cat datasets.list | grep '/RECO' | grep -i prompt | grep v1 > prompt_reco_v1.list
+cat datasets.list | grep '/RECO' | grep -i prompt | grep v2 > prompt_reco_v2.list
 
 cat datasets.list | grep ALCA | grep v1 > alcareco_v1.list
+cat datasets.list | grep ALCA | grep v2 > alcareco_v2.list
+cat datasets.list | grep ALCA | grep v3 > alcareco_v3.list
 
-# cat datasets.list | grep '/RAW-RECO' | grep v5 > raw-reco_v5.list
+cat datasets.list | grep '/RAW-RECO' | grep v2 > dpg_skims_v2.list
 
 cat datasets.list | grep 'CollisionRecoSequence' | grep v1 > collision_reco_sequence_v1.list
+cat datasets.list | grep 'CollisionRecoSequence' | grep v2 > collision_reco_sequence_v2.list
 
 # cat datasets.list | grep 'SD_' | grep v1  > sd_v1.list
 
 cat datasets.list | grep 'CS_' | grep v1  > cs_v1.list
+cat datasets.list | grep 'CS_' | grep v2  > cs_v2.list
 
+cat datasets.list | grep -vi express | grep -vi preproduction | grep May27thReReco > rereco_May27thReReco.list
 
-
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list | sort > done.list
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list | sort > done.list
 
 echo ""
 echo "inconsistencies"

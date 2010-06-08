@@ -1,4 +1,4 @@
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/*" | grep -v 'test/' | sort > datasets.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/*" --noheader | grep -v 'test/' | sort > datasets.list
 
 cat datasets.list | grep -i express > express.list
 
@@ -45,6 +45,7 @@ cat datasets.list | grep -vi express | grep -vi preproduction | grep Mar1rstReRe
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr1ReReco > rereco_Apr1ReReco.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr20ReReco > rereco_Apr20ReReco.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep May6thReReco > rereco_May6thReReco.list
+cat datasets.list | grep -vi express | grep -vi preproduction | grep May27thReReco > rereco_May27thReReco.list
 
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Apr1Skim > rereco_Apr1Skim.list
 cat datasets.list | grep -vi express | grep -vi preproduction | grep Abr8Skim > rereco_Abr8Skim.list
@@ -63,7 +64,7 @@ cat datasets.list | grep -vi express | grep -vi preproduction | grep 'CS_' | gre
 
 
 
-cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list rereco_Apr1ReReco.list rereco_Apr1Skim.list prompt_reco_v9.list alcareco_v9.list raw-reco_v9.list collision_reco_sequence_v9.list preproduction.list sd_v1.list cs_v1.list cs_v8.list rereco_Apr20ReReco.list rereco_Abr8Skim.list rereco_Apr20Skim.list sd_v9.list cs_v9.list rereco_May6thReReco.list rereco_May6thSkim.list | sort > done.list
+cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list rereco_Apr1ReReco.list rereco_Apr1Skim.list prompt_reco_v9.list alcareco_v9.list raw-reco_v9.list collision_reco_sequence_v9.list preproduction.list sd_v1.list cs_v1.list cs_v8.list rereco_Apr20ReReco.list rereco_Abr8Skim.list rereco_Apr20Skim.list sd_v9.list cs_v9.list rereco_May6thReReco.list rereco_May6thSkim.list rereco_May27thReReco.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
@@ -78,13 +79,13 @@ cat error.list
 echo ""
 echo "datasets not at FNAL"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = *fnal.gov" | grep -v 'test/' | sort > datasets_fnal.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = *fnal.gov" --noheader | grep -v 'test/' | sort > datasets_fnal.list
 diff datasets.list datasets_fnal.list | grep -vi express | grep -vi preproduction | grep -v '/Test' | grep -vi -- '-Error' | grep '<' | awk '{print $2}'
 
 echo ""
 echo "datasets not at CNAF"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = *cnaf.infn.it" | sort > datasets_cnaf.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = *cnaf.infn.it" --noheader | sort > datasets_cnaf.list
 
 diff datasets.list datasets_cnaf.list | grep '/ZeroBias/' | grep 'RAW' | grep 'v4' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_cnaf.list | grep '/ZeroBias/' | grep 'RECO' | grep 'v5' | grep '<' | awk '{print $2}'
@@ -99,14 +100,14 @@ diff datasets.list datasets_cnaf.list | grep '/ZeroBias/' | grep 'Apr1' | grep '
 echo ""
 echo "datasets not at PIC"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = srmcms.pic.es" | sort > datasets_pic.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = srmcms.pic.es" --noheader | sort > datasets_pic.list
 
 diff datasets.list datasets_pic.list | grep '/MinimumBias/' | grep 'RAW' | grep 'v4' | grep '<' | awk '{print $2}'
 
 echo ""
 echo "datasets not at IN2P3"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = ccsrm.in2p3.fr" | sort > datasets_in2p3.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = ccsrm.in2p3.fr" --noheader | sort > datasets_in2p3.list
 
 diff datasets.list datasets_in2p3.list | grep '/TestEnables/' | grep -vi test | grep '<' | awk '{print $2}'
 diff datasets.list datasets_in2p3.list | grep '/AlCaP0/' | grep -vi test | grep '<' | awk '{print $2}'
@@ -129,7 +130,7 @@ diff datasets.list datasets_in2p3.list | grep '/MinimumBias/' | grep '/RAW ' | g
 echo ""
 echo "datasets not at RAL"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = srm-cms.gridpp.rl.ac.uk" | sort > datasets_ral.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = srm-cms.gridpp.rl.ac.uk" --noheader | sort > datasets_ral.list
 
 diff datasets.list datasets_ral.list | grep '/Cosmics/' | grep '<' | awk '{print $2}'
 
@@ -138,7 +139,7 @@ diff datasets.list datasets_ral.list | grep '/MinimumBias/' | grep 'RAW' | grep 
 echo ""
 echo "datasets not at KIT"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Commissioning10*/* and site = cmssrm-fzk.gridka.de" | sort > datasets_kit.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = cmssrm-fzk.gridka.de" --noheader | sort > datasets_kit.list
 
 diff datasets.list datasets_kit.list | grep -vi preproduction | grep '/ZeroBias/' | grep 'RAW' | grep 'v1' | grep '<' | awk '{print $2}'
 diff datasets.list datasets_kit.list | grep -vi preproduction | grep '/ZeroBias/' | grep 'RAW' | grep 'v2' | grep '<' | awk '{print $2}'
