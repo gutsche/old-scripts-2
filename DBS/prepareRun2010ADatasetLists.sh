@@ -25,9 +25,11 @@ cat datasets.list | grep 'CollisionRecoSequence' | grep v2 > collision_reco_sequ
 cat datasets.list | grep 'CS_' | grep v1  > cs_v1.list
 cat datasets.list | grep 'CS_' | grep v2  > cs_v2.list
 
-cat datasets.list | grep -vi express | grep -vi preproduction | grep May27thReReco > rereco_May27thReReco.list
+cat datasets.list | grep May27thReReco > rereco_May27thReReco.list
+cat datasets.list | grep May27thSkim > rereco_May27thSkim.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list | sort > done.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
