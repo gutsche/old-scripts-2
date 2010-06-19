@@ -10,26 +10,39 @@ cat datasets.list | grep '/RAW' | grep -v RAW-RECO | grep v1 > raw_v1.list
 
 cat datasets.list | grep '/RECO' | grep -i prompt | grep v1 > prompt_reco_v1.list
 cat datasets.list | grep '/RECO' | grep -i prompt | grep v2 > prompt_reco_v2.list
+cat datasets.list | grep '/RECO' | grep -i prompt | grep v4 > prompt_reco_v4.list
 
 cat datasets.list | grep ALCA | grep v1 > alcareco_v1.list
 cat datasets.list | grep ALCA | grep v2 > alcareco_v2.list
 cat datasets.list | grep ALCA | grep v3 > alcareco_v3.list
+cat datasets.list | grep ALCA | grep v4 > alcareco_v4.list
 
 cat datasets.list | grep '/RAW-RECO' | grep v2 > dpg_skims_v2.list
+cat datasets.list | grep '/RAW-RECO' | grep v4 > dpg_skims_v4.list
+cat datasets.list | grep '/USER' | grep v4 >> dpg_skims_v4.list
 
 cat datasets.list | grep 'CollisionRecoSequence' | grep v1 > collision_reco_sequence_v1.list
 cat datasets.list | grep 'CollisionRecoSequence' | grep v2 > collision_reco_sequence_v2.list
+cat datasets.list | grep 'CollisionRecoSequence' | grep v4 > collision_reco_sequence_v4.list
+
+cat datasets.list | grep 'HLTtest' > rereco_hltest.list
 
 # cat datasets.list | grep 'SD_' | grep v1  > sd_v1.list
 
 cat datasets.list | grep 'CS_' | grep v1  > cs_v1.list
 cat datasets.list | grep 'CS_' | grep v2  > cs_v2.list
+cat datasets.list | grep 'CS_' | grep v4  > cs_v4.list
 
 cat datasets.list | grep May27thReReco > rereco_May27thReReco.list
 cat datasets.list | grep May27thSkim > rereco_May27thSkim.list
 
+cat datasets.list | grep Jun9thReReco > rereco_Jun9thReReco.list
+cat datasets.list | grep Jun9thSkim > rereco_Jun9thSkim.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list | sort > done.list
+cat datasets.list | grep Jun14thReReco > rereco_Jun14thReReco.list
+cat datasets.list | grep Jun14thSkim > rereco_Jun14thSkim.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list prompt_reco_v4.list alcareco_v4.list collision_reco_sequence_v4.list cs_v4.list alcareco_v4.list dpg_skims_v4.list  rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_hltest.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
@@ -45,7 +58,7 @@ echo ""
 echo "datasets not at FNAL"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_US_FNAL" | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -v '/Test' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep '<' | awk '{print $2}'
 
 echo ""
 echo "datasets not at CNAF"
