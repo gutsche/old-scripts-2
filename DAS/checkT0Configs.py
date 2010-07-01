@@ -31,6 +31,8 @@ else :
 
 result = json.load(urllib.urlopen(url))
 
+print result
+
 for entry in result:
     print 'run:',entry['run']
     print 'stream:',entry['stream']
