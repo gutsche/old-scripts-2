@@ -1,8 +1,21 @@
 #!/usr/bin/env python
 
-import sys, os, datetime, subprocess, shlex, tempfile, json
+import sys, os, datetime, subprocess, shlex, tempfile, json, getopt
 
-startdate = datetime.date.today() - datetime.timedelta(days=1)
+query_days = 1
+
+opts, args = getopt.getopt(sys.argv[1:], "", ["days="])
+
+for opt, arg in opts :
+    if opt == "--days" :
+        query_days = int(arg)
+        
+if query_days != 1 :
+    print ''
+    print 'Query for',query_days,'days'
+    print ''
+
+startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 startdatestring = startdate.strftime("%Y-%m-%d")
 
 rawdataset = '/JetMETTau/Run2010A-v1/RAW'
@@ -36,7 +49,10 @@ all_runs = sorted_runs
 print ''
 print 'Runs created since',startdatestring,'in dataset',rawdataset
 print ''
-print '\n'.join(sorted_runs)
+print 'Total number of runs:',len(sorted_runs)
+print ''
+for run in sorted_runs :
+    print run,runs[run]
 
 
 # raw runs at FNAL
@@ -49,7 +65,10 @@ sorted_runs.sort()
 print ''
 print 'Runs created since',startdatestring,'in dataset',rawdataset,'at FNAL'
 print ''
-print '\n'.join(sorted_runs)
+print 'Total number of runs:',len(sorted_runs)
+print ''
+for run in sorted_runs :
+    print run,runs[run]
 
 # reco runs at FNAL
 commandline = "dbs search --query=\"find run,run.createdate where dataset = " + recodataset + " and " + run_selection_string + " and site = *fnal.gov \" --noheader"
@@ -61,7 +80,10 @@ sorted_runs.sort()
 print ''
 print 'Runs created since',startdatestring,'in dataset',recodataset,'at FNAL'
 print ''
-print '\n'.join(sorted_runs)
+print 'Total number of runs:',len(sorted_runs)
+print ''
+for run in sorted_runs :
+    print run,runs[run]
 
 # skim runs at FNAL
 for skimdataset in skimdatasets :
@@ -74,7 +96,10 @@ for skimdataset in skimdatasets :
     print ''
     print 'Runs created since',startdatestring,'in dataset',skimdataset,'at FNAL'
     print ''
-    print '\n'.join(sorted_runs)
+    print 'Total number of runs:',len(sorted_runs)
+    print ''
+    for run in sorted_runs :
+        print run,runs[run]
 
 # query for lumi
 
@@ -100,4 +125,4 @@ print ''
 print output.communicate()[0]
 print ''
     
-os.remove(tmp[1])
+# os.remove(tmp[1])
