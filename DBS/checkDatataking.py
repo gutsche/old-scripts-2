@@ -106,8 +106,7 @@ for skimdataset in skimdatasets :
 # repare lumi json for runs
 json_runs = {}
 for run in all_runs :
-    if run != 139359 :
-        json_runs[run] = [[1,999999]]
+    json_runs[run] = [[1,999999]]
     
 tmp = tempfile.mkstemp()
 tmp_handle = open(tmp[1],'w')
