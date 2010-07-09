@@ -53,6 +53,11 @@ print 'Total number of runs:',len(sorted_runs)
 print ''
 for run in sorted_runs :
     print run,runs[run]
+    
+if len(sorted_runs) == 0 :
+    print 'No runs have been taken within the last',query_days,'days!!!'
+    print ''
+    sys.exit(0)
 
 
 # raw runs at FNAL

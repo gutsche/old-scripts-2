@@ -33,16 +33,16 @@ elif [ "$1" == "go_fnal" ]; then
    export CMS2_LOCATION=/uscms/home/gutsche/work/software/TAS/CMSSW_3_8_0_pre6/src
    export CMS2_NTUPLE_LOCATION=/storage/local/data2/cms1
    source /uscmst1/prod/sw/cms/bashrc prod
-   source /uscmst1/prod/grid/gLite_SL5_CRAB_27x.sh
+   source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
    cd $CMS2_LOCATION
    cmsenv
 elif [ "$1" == "data_fnal" ]; then
    echo "FNAL working environment"
-   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_5_0/src
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_8_0_pre7/src
    export CMS2_NTUPLE_LOCATION=/storage/local/data2/cms1
    source /uscmst1/prod/sw/cms/bashrc prod
-   source /uscmst1/prod/grid/gLite_SL5_CRAB_27x.sh
+   source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
    cd $CMS2_LOCATION
    cmsenv
