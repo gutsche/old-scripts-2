@@ -57,7 +57,10 @@ cat datasets.list | grep Jun9thSkim > rereco_Jun9thSkim.list
 cat datasets.list | grep Jun14thReReco > rereco_Jun14thReReco.list
 cat datasets.list | grep Jun14thSkim > rereco_Jun14thSkim.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list prompt_reco_v4.list alcareco_v4.list collision_reco_sequence_v4.list cs_v4.list alcareco_v4.list dpg_skims_v4.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_hltest.list  prompt_reco_v5.list alcareco_v5.list collision_reco_sequence_v5.list cs_v5.list alcareco_v5.list dpg_skims_v5.list  prompt_reco_v6.list alcareco_v6.list collision_reco_sequence_v6.list cs_v6.list alcareco_v6.list dpg_skims_v6.list sd_v6.list | sort > done.list
+cat datasets.list | grep Jul6thReReco > rereco_Jul6thReReco.list
+cat datasets.list | grep Jul6thSkim > rereco_Jul6thSkim.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list prompt_reco_v4.list alcareco_v4.list collision_reco_sequence_v4.list cs_v4.list alcareco_v4.list dpg_skims_v4.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_hltest.list  prompt_reco_v5.list alcareco_v5.list collision_reco_sequence_v5.list cs_v5.list alcareco_v5.list dpg_skims_v5.list  prompt_reco_v6.list alcareco_v6.list collision_reco_sequence_v6.list cs_v6.list alcareco_v6.list dpg_skims_v6.list sd_v6.list rereco_Jul6thReReco.list rereco_Jul6thSkim.list | sort > done.list
 
 echo ""
 echo "inconsistencies"

@@ -46,6 +46,11 @@ elif [ "$1" == "data_fnal" ]; then
    source /uscmst1/prod/grid/CRAB/crab.sh
    cd $CMS2_LOCATION
    cmsenv
+elif [ "$1" == "data_cern" ]; then
+   echo "FNAL working environment"
+   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_8_0_pre7/src
+   cd $CMS2_LOCATION
+   cmsenv
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
    cd /afs/cern.ch/user/g/gutsche/software/CMSSW_3_5_6/src
