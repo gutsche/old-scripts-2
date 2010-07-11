@@ -21,6 +21,7 @@ def main(argv) :
 
     optional parameters :
 
+    --merge             : only look at merge jobs, if not set, merge jobs are excluded
     --details           : print per job information to stdout
     --report            : produce ascii report file, one job per line: events,timePerEvent,averageMemory,maxMemory
     --input-dir         : override ProdAgent success archive directory
@@ -29,13 +30,14 @@ def main(argv) :
 
     """
 
-    valid = ["help", "debug", "archives=", "report", "details", "input-dir="]
+    valid = ["help", "debug", "archives=", "report", "details", "input-dir=", "merge"]
 
     debug     = 0
     archives  = None
     input_dir = None
     report    = 0
     details   = 0
+    merge     = 0
 
     try:
         opts, args = getopt.getopt(argv, "", valid)
@@ -60,6 +62,8 @@ def main(argv) :
             archives = arg
         elif opt == "--input-dir" :
             input_dir = arg
+        elif opt == "--merge" :
+            merge = 1
 
     if archives == None :
         print main.__doc__
@@ -77,19 +81,25 @@ def main(argv) :
     ArchiveFileList = glob.glob(os.path.join(SuccessDir,archives))
 
     # clean merge archives form list
-    ArchiveFileList = [ archive for archive in ArchiveFileList if archive.count("merge") == 0 ]
-
+    if merge == 1 :
+        ArchiveFileList = [ archive for archive in ArchiveFileList if archive.count("merge") == 1 ]
+    else :
+        ArchiveFileList = [ archive for archive in ArchiveFileList if archive.count("merge") == 0 ]
+        
     # extract information from archives
     jobs = ExtractOuputPerJob(ArchiveFileList,ExtractDir,debug)
     
-    total = 0
-    for job in jobs:
-        total += job
-    average = total / len(jobs)
 
-
-    print ''
-    print 'Average output MB/s: %.3f' % average
+    if len(jobs) > 0 :
+        total   = 0   
+        for job in jobs:
+            total += job
+        average = total / len(jobs)
+        print ''
+        print 'Average output MB/s: %.3f' % average
+    else :
+        print ''
+        print 'No jobs extracted.'
  
     
     # remove temp directory
@@ -130,10 +140,15 @@ def ExtractOuputPerJob(ArchiveFileList,ExtractDir,debug):
   
   jobs = []
 
+  counter = 0
+
   for archive in ArchiveFileList :
 
       # extract the FrameworkJobReport.xml
       if os.path.isfile(archive) and tarfile.is_tarfile(archive):
+          counter += 1
+          if counter%100 == 0:
+              print 'Archive counter',counter
           jobtarfile   = tarfile.open(archive, 'r:gz')
           reportFileList = [tf for tf in jobtarfile.getnames() if tf.count("FrameworkJobReport.xml")]
           if len(reportFileList) > 0 :
