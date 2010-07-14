@@ -75,6 +75,22 @@ print ''
 for run in sorted_runs :
     print run,runs[run]
 
+# reco runs
+commandline = "dbs search --query=\"find run,run.createdate where dataset = " + recodataset + " and " + run_selection_string + "\" --noheader"
+runs = queryForRunsAndTime(commandline)
+
+sorted_runs = runs.keys()
+sorted_runs.sort()
+
+print ''
+print 'Runs created since',startdatestring,'in dataset',recodataset
+print ''
+print 'Total number of runs:',len(sorted_runs)
+print ''
+for run in sorted_runs :
+    print run,runs[run]
+
+
 # reco runs at FNAL
 commandline = "dbs search --query=\"find run,run.createdate where dataset = " + recodataset + " and " + run_selection_string + " and site = *fnal.gov \" --noheader"
 runs = queryForRunsAndTime(commandline)

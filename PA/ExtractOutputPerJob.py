@@ -159,14 +159,24 @@ def ExtractOuputPerJob(ArchiveFileList,ExtractDir,debug):
               if debug:
                   print 'Opening FrameworkJobReport:',reportfilename,'from archive:',archive
               reports = readJobReport(reportfilename)
+
+              timePerJob = 0
+              size = 0
               for report in reports:
-                  size = 0
+                  tmp_size = 0
+                  tmp_timePerJob = 0
                   for file in report.files :
-                      size += float(file['Size']) / 1024. / 1024.
-                  timePerJob = float(report.timing['AppEndTime']) - float(report.timing['AppStartTime'])
+                      tmp_size += float(file['Size']) / 1024. / 1024.
+                  tmp_timePerJob += float(report.timing['AppEndTime']) - float(report.timing['AppStartTime'])
+                  # tmp_timePerJob += float(report.timing['StageOutEnd']) - float(report.timing['StageOutStart'])
                   if debug == 1 :
-                      print timePerJob,size
-                  jobs.append(size/timePerJob)
+                      print 'report:',tmp_timePerJob,tmp_size
+                  timePerJob += tmp_timePerJob
+                  size += tmp_size
+
+              if debug == 1 :
+                  print 'total:',timePerJob,size
+              jobs.append(size/timePerJob)
           else:
               print 'Archive:',archive,'does not contain a FrameworkJobReport.xml, skipping!'          
       else:
