@@ -39,7 +39,8 @@ recodatasets = ['/CommissioningNoBeam/Run2010A-PromptReco-v4/RECO',
 '/MinimumBias/Run2010A-PromptReco-v4/RECO',
 '/MuMonitor/Run2010A-PromptReco-v4/RECO',
 '/Mu/Run2010A-PromptReco-v4/RECO',
-'/ZeroBias/Run2010A-PromptReco-v4/RECO']
+'/ZeroBias/Run2010A-PromptReco-v4/RECO',
+'/MuOnia/Run2010A-PromptReco-v4/RECO']
 
 dpgskimdatasets = ["/Commissioning/Run2010A-MuonDPG_skim-v4/RAW-RECO",
 "/Commissioning/Run2010A-MuonDPG_skim-v5/RAW-RECO",
@@ -89,7 +90,8 @@ sdcsskimdatasets = ["/JetMETTau/Run2010A-CS_DiJetAve-v4/USER",
 "/JetMETTau/Run2010A-CS_Tau-v6/RAW-RECO",
 "/Mu/Run2010A-CS_Onia-v4/RECO",
 "/Mu/Run2010A-CS_Onia-v5/RAW-RECO",
-"/Mu/Run2010A-CS_Onia-v6/RAW-RECO"]
+"/Mu/Run2010A-CS_Onia-v6/RAW-RECO",
+"/MuOnia/Run2010A-CS_Onia-v6/RAW-RECO"]
 
 recodatasets_selection_string = "(dataset = " + ' or dataset = '.join(recodatasets) + ')'
 dpgskimdatasets_selection_string = "(dataset = " + ' or dataset = '.join(dpgskimdatasets) + ')'
@@ -143,7 +145,6 @@ def queryForSize(run,dataset_selection_string):
 # collect run selection for last day
 if query_run == None :
     commandline = "dbs search --query=\"find run,run.createdate where run.createdate > " + startdatestring + "\" --noheader"
-    print commandline
     runs = queryForRunsAndTime(commandline)
 
     sorted_runs = runs.keys()
@@ -152,6 +153,10 @@ else :
     sorted_runs = [query_run]
 # run_selection_string = "(run = " + ' or run = '.join(sorted_runs) + ')'
 all_runs = sorted_runs
+
+# print runs and times
+# for run in all_runs :
+#     print run,runs[run]
 
 print ''
 print 'Query for reco datasets'
@@ -179,4 +184,4 @@ for run in all_runs:
         dpgpercentage = (dpgskimdatasets_result[run])/recodatasets_result[run]*100.
         sdscpercentage = (sdcsskimdatasets_result[run])/recodatasets_result[run]*100.
         percentage = (dpgskimdatasets_result[run] + sdcsskimdatasets_result[run])/recodatasets_result[run]*100.
-        print run,recodatasets_result[run],dpgskimdatasets_result[run],sdcsskimdatasets_result[run],dpgpercentage,sdscpercentage,percentage
+        print run,runs[run],recodatasets_result[run],dpgskimdatasets_result[run],sdcsskimdatasets_result[run],dpgpercentage,sdscpercentage,percentage
