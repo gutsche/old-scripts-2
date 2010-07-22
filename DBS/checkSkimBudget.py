@@ -150,7 +150,11 @@ if query_run == None :
     sorted_runs = runs.keys()
     sorted_runs.sort()
 else :
-    sorted_runs = [query_run]
+    commandline = "dbs search --query=\"find run,run.createdate where run = " + str(query_run) + "\" --noheader"
+    runs = queryForRunsAndTime(commandline)
+
+    sorted_runs = runs.keys()
+    sorted_runs.sort()
 # run_selection_string = "(run = " + ' or run = '.join(sorted_runs) + ')'
 all_runs = sorted_runs
 
