@@ -1,31 +1,20 @@
 #!/usr/bin/env python
 
-import sys, os, datetime, subprocess, shlex, tempfile, getopt
+import sys, os, datetime, subprocess, shlex, tempfile, getopt, json
 
-query_days = 1
-query_run = None
+jsonfilename = None
 
-opts, args = getopt.getopt(sys.argv[1:], "", ["days=","run="])
+opts, args = getopt.getopt(sys.argv[1:], "", ["json="])
 
 for opt, arg in opts :
-    if opt == "--days" :
-        query_days = int(arg)
-    if opt == "--run" :
-        query_run = arg
+    if opt == "--json" :
+        jsonfilename = arg
         
-if query_days != 1 :
+if jsonfilename == None :
     print ''
-    print 'Query for',query_days,'days'
+    print 'Please specify json filename with with run array with --json'
     print ''
-
-if query_run != None :
-    print ''
-    print 'Query for run',query_run
-    print ''
-
-
-startdate = datetime.date.today() - datetime.timedelta(days=query_days)
-startdatestring = startdate.strftime("%Y-%m-%d")
+    sys.exit(2)
 
 recodatasets = ['/CommissioningNoBeam/Run2010A-PromptReco-v4/RECO',
 '/Commissioning/Run2010A-PromptReco-v4/RECO',
@@ -93,36 +82,13 @@ sdcsskimdatasets = ["/JetMETTau/Run2010A-CS_DiJetAve-v4/USER",
 "/Mu/Run2010A-CS_Onia-v6/RAW-RECO",
 "/MuOnia/Run2010A-CS_Onia-v6/RAW-RECO"]
 
-recodatasets_selection_string = "(dataset = " + ' or dataset = '.join(recodatasets) + ')'
-dpgskimdatasets_selection_string = "(dataset = " + ' or dataset = '.join(dpgskimdatasets) + ')'
-sdcsskimdatasets_selection_string = "(dataset = " + ' or dataset = '.join(sdcsskimdatasets) + ')'
-
-
-def queryForRunsAndTime(commandline):
-    args = shlex.split(commandline)
-    output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
-
-    runs = {}
-
-    for line in output.communicate()[0].split('\n') :
-        if len(line) > 0 :
-            array = line.split()
-            run = int(array[0])
-            events = int(array[1])
-            date = ' '.join(array[2:])
-            print 'events:',events
-            if run > 99999 and run < 1000000 and events > 100:
-                runs[str(run)] = date
-    
-    return runs
-    
 def queryForSize(run,datasets):
 
     result = {}
     
     for dataset in datasets :
     
-        commandline = "dbs search --query=\"find run,sum(file.size) where run = " + run + " and dataset = " + dataset + "\" --noheader"
+        commandline = "dbs search --query=\"find run,sum(file.size) where run = " + str(run) + " and dataset = " + dataset + "\" --noheader"
         args = shlex.split(commandline)
         output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
         output_array = output.communicate()[0].split('\n')
@@ -130,7 +96,7 @@ def queryForSize(run,datasets):
         if len(output_array) >= 1 :
             array = output_array[0].split()
             if len(array) == 2 :
-                tmprun = array[0]
+                tmprun = int(array[0])
                 size = float(array[1])/1024./1024./1024.
                 if tmprun in result.keys() :
                     result[tmprun] += size 
@@ -144,21 +110,15 @@ def queryForSize(run,datasets):
         print 'Query for run',run,'resulted in: 0.'
         return 0.
 
-# collect run selection for last day
-if query_run == None :
-    commandline = "dbs search --query=\"find run,sum(file.numevents),run.createdate where run.createdate > " + startdatestring + " and file = */RAW/* \" --noheader"
-    runs = queryForRunsAndTime(commandline)
-else :
-    commandline = "dbs search --query=\"find run,sum(file.numevents),run.createdate where run = " + str(query_run) + " and file = */RAW/* \" --noheader"
-    runs = queryForRunsAndTime(commandline)
 
-sorted_runs = runs.keys()
+runs = json.load(open(jsonfilename))
+sorted_runs = runs
 sorted_runs.sort()
 all_runs = sorted_runs
 
 if len(all_runs) == 0 :
     print ''
-    print 'No runs selected with more than 100 events'
+    print 'No runs included in json file'
     print ''
     sys.exit(1)
 
@@ -188,4 +148,4 @@ for run in all_runs:
         dpgpercentage = (dpgskimdatasets_result[run])/recodatasets_result[run]*100.
         sdscpercentage = (sdcsskimdatasets_result[run])/recodatasets_result[run]*100.
         percentage = (dpgskimdatasets_result[run] + sdcsskimdatasets_result[run])/recodatasets_result[run]*100.
-        print run,runs[run],recodatasets_result[run],dpgskimdatasets_result[run],sdcsskimdatasets_result[run],dpgpercentage,sdscpercentage,percentage
+        print run,recodatasets_result[run],dpgskimdatasets_result[run],sdcsskimdatasets_result[run],dpgpercentage,sdscpercentage,percentage

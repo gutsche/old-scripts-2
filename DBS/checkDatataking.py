@@ -18,9 +18,9 @@ if query_days != 1 :
 startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 startdatestring = startdate.strftime("%Y-%m-%d")
 
-rawdataset = '/JetMETTau/Run2010A-v1/RAW'
-recodataset = '/JetMETTau/Run2010A-PromptReco-v4/RECO'
-skimdatasets = ['/JetMETTau/Run2010A-CS_DiJetAve-v6/USER','/JetMETTau/Run2010A-CS_Tau-v6/RAW-RECO']
+rawdataset = '/JetMET*/Run2010A-v*/RAW'
+recodataset = '/JetMET*/Run2010A-PromptReco-v*/RECO'
+skimdatasets = ['/JetMET*/Run2010A-CS_DiJetAve-v*/USER','/JetMET*/Run2010A-CS_Tau-v*/RAW-RECO']
 
 def queryForRunsAndTime(commandline):
     args = shlex.split(commandline)
