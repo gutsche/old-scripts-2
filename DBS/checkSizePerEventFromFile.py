@@ -22,7 +22,9 @@ rawdatasets = [
 '/MinimumBias/Run2010A-v*/RAW',
 '/Mu/Run2010A-v*/RAW',
 '/MuOnia/Run2010A-v*/RAW',
-'/ZeroBias/Run2010A-v*/RAW'
+'/ZeroBias/Run2010A-v*/RAW',
+'/JetMET/Run2010A-v*/RAW',
+'/BTau/Run2010A-v*/RAW'
 ]
 
 recodatasets = [
@@ -31,7 +33,9 @@ recodatasets = [
 '/MinimumBias/Run2010A-PromptReco-v*/RECO',
 '/Mu/Run2010A-PromptReco-v*/RECO',
 '/MuOnia/Run2010A-PromptReco-v*/RECO',
-'/ZeroBias/Run2010A-PromptReco-v*/RECO'
+'/ZeroBias/Run2010A-PromptReco-v*/RECO',
+'/JetMET/Run2010A-PromptReco-v*/RECO',
+'/BTau/Run2010A-PromptReco-v*/RECO'
 ]
 
 def queryFile(rawdict,recodict,filehandle):

@@ -90,119 +90,119 @@ echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_US_FNAL" | grep -v 'test/' | sort > datasets_fnal.list
 diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep -v '/DQM' | grep -v 'NanoDST' | grep '<' | awk '{print $2}'
 
-echo ""
-echo "datasets not at CNAF"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_IT_CNAF" | sort > datasets_cnaf.list
-
-diff datasets.list datasets_cnaf.list | grep '/MuMonitor/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep '/RandomTriggers/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep '/FEDMonitor/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_cnaf.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_cnaf.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_cnaf.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-
-echo ""
-echo "datasets not at PIC"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_ES_PIC" | sort > datasets_pic.list
-
-diff datasets.list datasets_pic.list | grep '/Mu/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep '/LogMonitor/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep '/RPCMonitor/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_pic.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_pic.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_pic.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-
-echo ""
-echo "datasets not at IN2P3"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_FR_CCIN2P3" | sort > datasets_in2p3.list
-
-diff datasets.list datasets_in2p3.list | grep '/EGMonitor/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep '/TestEnables/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_in2p3.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_in2p3.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_in2p3.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-
-echo ""
-echo "datasets not at RAL"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_UK_RAL" | sort > datasets_ral.list
-
-diff datasets.list datasets_ral.list | grep '/EG/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep '/AlCaP0/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep '/AlCaPhiSymEcal/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_ral.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_ral.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_ral.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-
-echo ""
-echo "datasets not at KIT"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_DE_KIT" | sort > datasets_kit.list
-
-diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep '/Commissioning/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_kit.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_kit.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_kit.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_kit.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_kit.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-
-echo ""
-echo "datasets not at ASGC"
-echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_TW_ASGC" | sort > datasets_asgc.list
-
-diff datasets.list datasets_asgc.list | grep '/Cosmics/' | grep '<' | awk '{print $2}'
-
-diff datasets.list datasets_asgc.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-# diff datasets.list datasets_asgc.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
-diff datasets.list datasets_asgc.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# echo ""
+# echo "datasets not at CNAF"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_IT_CNAF" | sort > datasets_cnaf.list
+# 
+# diff datasets.list datasets_cnaf.list | grep '/MuMonitor/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep '/RandomTriggers/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep '/FEDMonitor/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_cnaf.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_cnaf.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_cnaf.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# 
+# echo ""
+# echo "datasets not at PIC"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_ES_PIC" | sort > datasets_pic.list
+# 
+# diff datasets.list datasets_pic.list | grep '/Mu/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep '/LogMonitor/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep '/RPCMonitor/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_pic.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_pic.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_pic.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# 
+# echo ""
+# echo "datasets not at IN2P3"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_FR_CCIN2P3" | sort > datasets_in2p3.list
+# 
+# diff datasets.list datasets_in2p3.list | grep '/EGMonitor/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep '/TestEnables/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_in2p3.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_in2p3.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_in2p3.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# 
+# echo ""
+# echo "datasets not at RAL"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_UK_RAL" | sort > datasets_ral.list
+# 
+# diff datasets.list datasets_ral.list | grep '/EG/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep '/AlCaP0/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep '/AlCaPhiSymEcal/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_ral.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_ral.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_ral.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# 
+# echo ""
+# echo "datasets not at KIT"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_DE_KIT" | sort > datasets_kit.list
+# 
+# diff datasets.list datasets_kit.list | grep '/MinimumBias/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep '/ZeroBias/' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep '/Commissioning/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_kit.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_kit.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_kit.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_kit.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_kit.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# 
+# echo ""
+# echo "datasets not at ASGC"
+# echo ""
+# python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_TW_ASGC" | sort > datasets_asgc.list
+# 
+# diff datasets.list datasets_asgc.list | grep '/Cosmics/' | grep '<' | awk '{print $2}'
+# 
+# diff datasets.list datasets_asgc.list | grep 'JetMETTauMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'JetMETTau/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'EGMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'EG/' | grep 'RAW' | grep 'v1' | grep -v 'RAW-RECO' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'MuMonitor/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'Mu/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'MinimumBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# # diff datasets.list datasets_asgc.list | grep 'Cosmics/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'ZeroBias/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'
+# diff datasets.list datasets_asgc.list | grep 'Commissioning/' | grep 'RAW' | grep -v 'RAW-RECO' | grep 'v1' | grep '<' | awk '{print $2}'

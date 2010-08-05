@@ -29,11 +29,13 @@ if query_run != None :
 
 rawdatasets = [
 '/EG/Run2010A-v*/RAW',
-'/JetMETTau/Run2010A-v*/RAW',
+# '/JetMETTau/Run2010A-v*/RAW',
+'/JetMET/Run2010A-v*/RAW',
+'/BTau/Run2010A-v*/RAW',
 '/MinimumBias/Run2010A-v*/RAW',
 '/Mu/Run2010A-v*/RAW',
 # '/MuOnia/Run2010A-v*/RAW',
-'/ZeroBias/Run2010A-v*/RAW'
+# '/ZeroBias/Run2010A-v*/RAW'
 ]
 
 def queryCommandline(runs,commandline):
@@ -86,6 +88,7 @@ enddate = datetime.date.today()
 startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 
 output_file_name = "runs_" + startdate.strftime("%y%m%d") + "_" + enddate.strftime("%y%m%d") + ".json"
+
 tmp_handle = open(output_file_name,'w')
 
 json.dump(results,tmp_handle)

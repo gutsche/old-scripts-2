@@ -136,6 +136,7 @@ json.dump(json_runs,tmp_handle)
 tmp_handle.close()
 
 commandline = 'lumiCalc.py -c frontier://LumiProd/CMS_LUMI_PROD -i ' + tmp[1] + ' overview'
+print commandline
 args = shlex.split(commandline)
 output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
 
