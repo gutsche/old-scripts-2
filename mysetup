@@ -11,7 +11,7 @@ elif [ "$1" == "cern" ]; then
 elif [ "$1" == "ucsd" ]; then 
    echo "UCSD CMS software environment" 
    source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12   
-   export SCRAM_ARCH=slc4_ia32_gcc345
+   export SCRAM_ARCH=slc5_ia32_gcc434
 elif [ "$1" == "ucsd_ui" ]; then
    echo "UCSD UI software environment"
    source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
