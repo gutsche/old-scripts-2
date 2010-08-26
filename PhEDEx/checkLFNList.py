@@ -17,11 +17,15 @@ for file in files:
 
         nodes = []
 
-        for block in result['phedex']['block']:
-            for filelist in block['file'] :
-                for replica in filelist['replica']:
-                    if replica['node'].count('FNAL') > 0 and replica['node'] not in nodes :
-                        nodes.append(replica['node'])
+        try:
+            for block in result['phedex']['block']:
+                for filelist in block['file'] :
+                    for replica in filelist['replica']:
+                        if replica['node'].count('FNAL') > 0 and replica['node'] not in nodes :
+                            nodes.append(replica['node'])
+        except:
+            print 'problems with file:',file.strip()
+            
         if len(nodes) > 0 :
             outputstring = file.strip() + " " + ','.join(nodes) + "\n"
             phedexoutput.write(outputstring)
