@@ -87,7 +87,7 @@ print results
 enddate = datetime.date.today()
 startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 
-output_file_name = "runs_" + startdate.strftime("%y%m%d") + "_" + enddate.strftime("%y%m%d") + ".json"
+output_file_name = "runs_" + str(results[0]) + "_" + str(results[-1]) + ".json"
 
 tmp_handle = open(output_file_name,'w')
 

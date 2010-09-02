@@ -21,12 +21,12 @@ if inputfilename == None :
 
 rawdatasets = [
 '/EG/Run2010A-v*/RAW',
-'/JetMET/Run2010A-v*/RAW',
+# '/JetMET/Run2010A-v*/RAW',
 '/BTau/Run2010A-v*/RAW',
 '/MinimumBias/Run2010A-v*/RAW',
 '/Mu/Run2010A-v*/RAW',
 # '/MuOnia/Run2010A-v*/RAW',
-'/ZeroBias/Run2010A-v*/RAW'
+# '/ZeroBias/Run2010A-v*/RAW'
 ]
 
 def queryFile(runs,filename):
