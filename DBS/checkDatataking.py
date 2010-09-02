@@ -18,9 +18,9 @@ if query_days != 1 :
 startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 startdatestring = startdate.strftime("%Y-%m-%d")
 
-rawdataset = '/JetMET*/Run2010A-v*/RAW'
-recodataset = '/JetMET*/Run2010A-PromptReco-v*/RECO'
-skimdatasets = ['/JetMET*/Run2010A-CS_DiJetAve-v*/USER','/JetMET*/Run2010A-CS_Tau-v*/RAW-RECO']
+rawdataset = '/Cosmics*/Run2010B-v*/RAW'
+recodataset = '/Cosmics*/Run2010B-PromptReco-v*/RECO'
+skimdatasets = []
 
 def queryForRunsAndTime(commandline):
     args = shlex.split(commandline)
@@ -136,7 +136,10 @@ json.dump(json_runs,tmp_handle)
 tmp_handle.close()
 
 commandline = 'lumiCalc.py -c frontier://LumiProd/CMS_LUMI_PROD -i ' + tmp[1] + ' overview'
+print ''
+print 'lumiCalc commandline:'
 print commandline
+
 args = shlex.split(commandline)
 output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
 
