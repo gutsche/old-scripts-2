@@ -48,6 +48,7 @@ alias s_root_cern='source $HOME/scripts/mysetup root_cern'
 alias s_root_ucsd='source $HOME/scripts/mysetup root_ucsd'
 alias s_data_fnal='source $HOME/scripts/mysetup data_fnal'
 alias s_data_cern='source $HOME/scripts/mysetup data_cern'
+alias s_fnal_analysis='source $HOME/scripts/mysetup fnal_analysis'
 
 alias lxplus='ssh lxplus.cern.ch'
 alias f1='ssh cmsfnal01.fnal.gov'

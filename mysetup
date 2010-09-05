@@ -34,7 +34,6 @@ elif [ "$1" == "crab_cern" ]; then
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL working environment"
    export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_8_2/src
-   export CMS2_NTUPLE_LOCATION=/storage/local/data2/cms1
    source /uscmst1/prod/sw/cms/bashrc prod
    source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
@@ -44,7 +43,6 @@ elif [ "$1" == "go_fnal" ]; then
 elif [ "$1" == "data_fnal" ]; then
    echo "FNAL data environment"
    export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_8_2/src
-   export CMS2_NTUPLE_LOCATION=/storage/local/data2/cms1
    source /uscmst1/prod/sw/cms/bashrc prod
    source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
@@ -52,6 +50,13 @@ elif [ "$1" == "data_fnal" ]; then
    cmsenv
    cd
    python ~/scripts/DBS/checkDatataking.py
+elif [ "$1" == "fnal_analysis" ]; then
+   source /uscmst1/prod/sw/cms/bashrc prod
+   source /uscmst1/prod/grid/gLite_SL5.sh
+   source /uscmst1/prod/grid/CRAB/crab.sh
+   echo "Analysis environment"
+   cd $CMS2_LOCATION
+   cmsenv
 elif [ "$1" == "data_cern" ]; then
    echo "CERN data environment"
    export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_8_0_pre7/src
@@ -61,8 +66,9 @@ elif [ "$1" == "data_cern" ]; then
    python ~/scripts/DBS/checkDatataking.py
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
-   cd /afs/cern.ch/user/g/gutsche/software/CMSSW_3_5_6/src
-   eval `scramv1 runtime -sh`
+   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_8_0_pre7/src
+   cd $CMS2_LOCATION
+   cmsenv
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
    #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
