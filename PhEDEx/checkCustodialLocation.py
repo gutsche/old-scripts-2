@@ -57,28 +57,26 @@ else:
         url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + lfn
         result = json.load(urllib.urlopen(url))
         for outerblock in result['phedex']['block']:
-            blockname = outerblock['name']
-            datasetname = blockname.split('#')[0]
-            url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + datasetname + '*'
+            blockname = outerblock['name'].split('#')[0] + "%23" + outerblock['name'].split('#')[1]
+            url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + blockname
             result = json.load(urllib.urlopen(url))
             for block in result['phedex']['block']:
                 name = block['name']
-                if name == blockname :
-                    for replica in block['replica']:
-                        files = replica['files']
-                        site = str(replica['node'])
-                        is_custodial = replica['custodial']
-                        if allSites == 1 or ( site[0:2] == 'T1' or site[0:2] == 'T0') :
-                            if is_custodial == 'y' :
-                                if site not in custodial.keys() :
-                                    custodial[site] = int(files)
-                                else :
-                                    custodial[site] += int(files)
+                for replica in block['replica']:
+                    files = replica['files']
+                    site = str(replica['node'])
+                    is_custodial = replica['custodial']
+                    if allSites == 1 or ( site[0:2] == 'T1' or site[0:2] == 'T0') :
+                        if is_custodial == 'y' :
+                            if site not in custodial.keys() :
+                                custodial[site] = int(files)
                             else :
-                                if site not in non_custodial.keys() :
-                                    non_custodial[site] = int(files)
-                                else :
-                                    non_custodial[site] += int(files)
+                                custodial[site] += int(files)
+                        else :
+                            if site not in non_custodial.keys() :
+                                non_custodial[site] = int(files)
+                            else :
+                                non_custodial[site] += int(files)
 
             # files = block['files']
             # for fileinstance in block['file'] :
