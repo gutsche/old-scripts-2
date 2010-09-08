@@ -139,10 +139,12 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 	    my $custodialMCTB = 0;
 
 
-	    my $sql_findBlocks = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME, T_DPS_BLOCK_REPLICA.IS_CUSTODIAL from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE where 
+	    my $sql_findBlocks = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME, T_DPS_BLOCK_REPLICA.IS_CUSTODIAL from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE, T_DPS_SUBSCRIPTION where 
 					 T_ADM_NODE.NAME = '@sites[$siteIndex]' 
 					 and T_DPS_BLOCK_REPLICA.NODE = T_ADM_NODE.ID 
 					 and T_DPS_BLOCK_REPLICA.BLOCK = T_DPS_BLOCK.ID 
+					 and (T_DPS_SUBSCRIPTION.DATASET = T_DPS_BLOCK.DATASET or T_DPS_SUBSCRIPTION.BLOCK = T_DPS_BLOCK.ID)
+					 and T_DPS_SUBSCRIPTION.DESTINATION = T_ADM_NODE.ID
 					 and T_DPS_BLOCK.NAME like '%$releaseCycles[$releaseCycleIndex]%$datatierList[$datatierIndex]%' };
 
 	    my $q = &dbprep($dbh, $sql_findBlocks);
