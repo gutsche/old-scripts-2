@@ -18,25 +18,25 @@ if jsonfilename == None :
     sys.exit(2)
 
 rawdatasets = [
-'/EG/Run2010A-v*/RAW',
-'/JetMETTau/Run2010A-v*/RAW',
-'/MinimumBias/Run2010A-v*/RAW',
-'/Mu/Run2010A-v*/RAW',
-'/MuOnia/Run2010A-v*/RAW',
-'/ZeroBias/Run2010A-v*/RAW',
-'/JetMET/Run2010A-v*/RAW',
-'/BTau/Run2010A-v*/RAW'
+'/EG/Run2010A-v1/RAW',
+'/JetMETTau/Run2010A-v1/RAW',
+'/MinimumBias/Run2010A-v1/RAW',
+'/Mu/Run2010A-v1/RAW',
+'/MuOnia/Run2010A-v1/RAW',
+'/ZeroBias/Run2010A-v1/RAW',
+'/JetMET/Run2010A-v1/RAW',
+'/BTau/Run2010A-v1/RAW'
 ]
 
 recodatasets = [
-'/EG/Run2010A-PromptReco-v*/RECO',
-'/JetMETTau/Run2010A-PromptReco-v*/RECO',
-'/MinimumBias/Run2010A-PromptReco-v*/RECO',
-'/Mu/Run2010A-PromptReco-v*/RECO',
-'/MuOnia/Run2010A-PromptReco-v*/RECO',
-'/ZeroBias/Run2010A-PromptReco-v*/RECO',
-'/JetMET/Run2010A-PromptReco-v*/RECO',
-'/BTau/Run2010A-PromptReco-v*/RECO'
+'/EG/Run2010A-PromptReco-v4/RECO',
+'/JetMETTau/Run2010A-PromptReco-v4/RECO',
+'/MinimumBias/Run2010A-PromptReco-v4/RECO',
+'/Mu/Run2010A-PromptReco-v4/RECO',
+'/MuOnia/Run2010A-PromptReco-v4/RECO',
+'/ZeroBias/Run2010A-PromptReco-v4/RECO',
+'/JetMET/Run2010A-PromptReco-v4/RECO',
+'/BTau/Run2010A-PromptReco-v4/RECO'
 ]
 
 
