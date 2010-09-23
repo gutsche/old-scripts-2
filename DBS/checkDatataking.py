@@ -18,9 +18,9 @@ if query_days != 1 :
 startdate = datetime.date.today() - datetime.timedelta(days=query_days)
 startdatestring = startdate.strftime("%Y-%m-%d")
 
-rawdataset = '/Cosmics*/Run2010B-v*/RAW'
-recodataset = '/Cosmics*/Run2010B-PromptReco-v*/RECO'
-skimdatasets = []
+rawdataset = '/Electron/Run2010B-v*/RAW'
+recodataset = '/Electron/Run2010B-PromptReco-v*/RECO'
+skimdatasets = ['/Electron/Run2010B-Skim_logerror-v*/RAW-RECO']
 
 def queryForRunsAndTime(commandline):
     args = shlex.split(commandline)

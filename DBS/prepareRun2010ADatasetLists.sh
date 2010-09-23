@@ -1,7 +1,7 @@
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/*" | grep -v 'test/' | sort > complete_datasets.list
 
 cat complete_datasets.list | grep -i express > express.list
-cat complete_datasets.list | grep -i preproduction > preproduction.list
+cat complete_datasets.list | grep -i preprod > preproduction.list
 cat complete_datasets.list | grep -- '-Error' > error.list
 
 cat complete_datasets.list | grep -vi express | grep -vi preproduction | grep -v -- '-Error' > datasets.list
@@ -88,7 +88,7 @@ echo ""
 echo "datasets not at FNAL"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_US_FNAL" | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep -v '/DQM' | grep -v 'NanoDST' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep -v '/DQM' | grep -v 'NanoDST' | grep -vi preprod | grep -v L1Accept | grep -v ALCARECO | grep '<' | awk '{print $2}'
 
 # echo ""
 # echo "datasets not at CNAF"
