@@ -59,6 +59,8 @@ cat datasets.list | grep -vi express | grep -vi preprod | grep May27thSkim > rer
 cat datasets.list | grep -vi express | grep -vi preprod | grep Jun9thSkim > rereco_Jun9thSkim.list
 cat datasets.list | grep -vi express | grep -vi preprod | grep Jun14thSkim > rereco_Jun14thSkim.list
 
+cat datasets.list | grep -vi express | grep -vi preprod | grep -i Sep17ReReco | grep v2 > rereco_Sep17_v2.list
+
 
 
 cat datasets.list | grep -i preprod > preprod.list
@@ -69,7 +71,7 @@ cat datasets.list | grep -vi express | grep -vi preprod | grep 'CS_' | grep v1  
 cat datasets.list | grep -vi express | grep -vi preprod | grep 'CS_' | grep v8  > cs_v8.list
 cat datasets.list | grep -vi express | grep -vi preprod | grep 'CS_' | grep v9  > cs_v9.list
 
-cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list rereco_Apr1ReReco.list rereco_Apr1Skim.list prompt_reco_v9.list alcareco_v9.list raw-reco_v9.list collision_reco_sequence_v9.list preprod.list sd_v1.list cs_v1.list cs_v8.list rereco_Apr20ReReco.list rereco_Abr8Skim.list rereco_Apr20Skim.list sd_v9.list cs_v9.list rereco_May6thReReco.list rereco_May6thSkim.list rereco_May27thReReco.list rereco_May27thSkim.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list | sort > done.list
+cat express.list error.list raw_v1.list raw_v2.list raw_v3.list raw_v4.list prompt_reco_v1.list prompt_reco_v2.list prompt_reco_v3.list prompt_reco_v4.list prompt_reco_v5.list prompt_reco_v6.list prompt_reco_v7.list prompt_reco_v8.list alcareco_v1.list alcareco_v2.list alcareco_v3.list alcareco_v4.list alcareco_v5.list alcareco_v6.list alcareco_v7.list alcareco_v8.list rereco_Mar1rstReReco.list raw-reco_v5.list raw-reco_v6.list raw-reco_v7.list raw-reco_v8.list collision_reco_sequence_v5.list collision_reco_sequence_v6.list collision_reco_sequence_v7.list collision_reco_sequence_v8.list rereco_Apr1ReReco.list rereco_Apr1Skim.list prompt_reco_v9.list alcareco_v9.list raw-reco_v9.list collision_reco_sequence_v9.list preprod.list sd_v1.list cs_v8.list rereco_Apr20ReReco.list rereco_Abr8Skim.list rereco_Apr20Skim.list sd_v9.list cs_v9.list rereco_May6thReReco.list rereco_May6thSkim.list rereco_May27thReReco.list rereco_May27thSkim.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_Sep17_v2.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
@@ -85,7 +87,7 @@ echo ""
 echo "datasets not at FNAL"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = *fnal.gov" --noheader | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -vi express | grep -vi preprod | grep -v '/Test' | grep -vi -- '-Error' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -vi express | grep -vi preprod | grep -v '/Test' | grep -vi -- '-Error' | grep -v '/EG/Commissioning10-v4/RAW' | grep -v '/EGMonitor/Commissioning10-v4/RAW' | grep -v '/JetMETTau/Commissioning10-v4/RAW' | grep -v '/JetMETTauMonitor/Commissioning10-v4/RAW' | grep -v '/Mu/Commissioning10-v4/RAW' | grep -v '/MuMonitor/Commissioning10-v4/RAW' | grep '<' | awk '{print $2}'
 
 # echo ""
 # echo "datasets not at CNAF"

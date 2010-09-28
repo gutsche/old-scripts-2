@@ -25,29 +25,29 @@ print 'EXPRESS'
 print ''
 
 if run == None:
-    url = 'http://vocms52.cern.ch:8889/tier0/express_config?run=&stream=Express&return_type=application/json'
+    url = 'http://vocms115.cern.ch:8304/tier0/express_config?run=&stream=Express&return_type=application/json'
 else :
-    url = 'http://vocms52.cern.ch:8889/tier0/express_config?run='+run+'&stream=Express&return_type=application/json'
+    url = 'http://vocms115.cern.ch:8304/tier0/express_config?run='+run+'&stream=Express&return_type=application/json'
 
 result = json.load(urllib.urlopen(url))
 
-print result
+# print result
 
 for entry in result:
-    print 'run:',entry['run']
+    print 'run:',entry['run_id']
     print 'stream:',entry['stream']
     print 'proc_version:',entry['proc_version']
     print 'global_tag:',entry['global_tag']
-    print 'processing_config_url:',entry['processing_config_url']
+    print 'config_url:',entry['config_url']
     print ''
 
 print 'Prompt'
 print ''
 
 if run == None:
-    url = 'http://vocms52.cern.ch:8889/tier0/reco_config?run=&dataset=&return_type=application/json'
+    url = 'http://vocms115.cern.ch:8304/tier0/reco_config?run=&dataset=&return_type=application/json'
 else :
-    url = 'http://vocms52.cern.ch:8889/tier0/reco_config?run='+run+'&dataset=&return_type=application/json'
+    url = 'http://vocms115.cern.ch:8304/tier0/reco_config?run='+run+'&dataset=&return_type=application/json'
 
 result = json.load(urllib.urlopen(url))
 
