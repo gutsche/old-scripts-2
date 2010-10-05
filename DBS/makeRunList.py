@@ -28,14 +28,15 @@ if query_run != None :
 
 
 rawdatasets = [
-'/EG/Run2010A-v*/RAW',
-# '/JetMETTau/Run2010A-v*/RAW',
-'/JetMET/Run2010A-v*/RAW',
-'/BTau/Run2010A-v*/RAW',
-'/MinimumBias/Run2010A-v*/RAW',
-'/Mu/Run2010A-v*/RAW',
-# '/MuOnia/Run2010A-v*/RAW',
-# '/ZeroBias/Run2010A-v*/RAW'
+'/BTau/Run2010B-v1/RAW',
+'/Electron/Run2010B-v1/RAW',
+'/Jet/Run2010B-v1/RAW',
+'/METFwd/Run2010B-v1/RAW',
+'/MinimumBias/Run2010B-v1/RAW',
+'/Mu/Run2010B-v1/RAW',
+'/MuOnia/Run2010B-v1/RAW',
+#'/MultiJet/Run2010B-v1/RAW',
+'/Photon/Run2010B-v1/RAW',
 ]
 
 def queryCommandline(runs,commandline):

@@ -24,6 +24,7 @@ cat datasets.list | grep -i skim | grep v1 > dpg_skims_v1.list
 cat datasets.list | grep '/RAW-RECO' | grep v1 >> dpg_skims_v1.list
 cat datasets.list | grep -i skim | grep v2 > dpg_skims_v2.list
 cat datasets.list | grep '/RAW-RECO' | grep v2 >> dpg_skims_v2.list
+cat datasets.list | grep '/USER' | grep v2 >> dpg_skims_v2.list
 
 
 cat datasets.list | grep 'SD_' | grep v1  > sd_v1.list
