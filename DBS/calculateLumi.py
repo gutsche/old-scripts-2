@@ -51,7 +51,7 @@ all_runs = sorted_runs
 # repare lumi json for runs
 json_runs = {}
 for run in all_runs :
-    json_runs[run] = [[1,999999]]
+    json_runs[run] = [[1,7500]]
     
 tmp = tempfile.mkstemp()
 tmp_handle = open(tmp[1],'w')
