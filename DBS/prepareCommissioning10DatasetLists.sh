@@ -87,7 +87,7 @@ echo ""
 echo "datasets not at FNAL"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --query="find dataset where dataset = /*/Commissioning10*/* and site = *fnal.gov" --noheader | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -vi express | grep -vi preprod | grep -v '/Test' | grep -vi -- '-Error' | grep -v '/EG/Commissioning10-v4/RAW' | grep -v '/EGMonitor/Commissioning10-v4/RAW' | grep -v '/JetMETTau/Commissioning10-v4/RAW' | grep -v '/JetMETTauMonitor/Commissioning10-v4/RAW' | grep -v '/Mu/Commissioning10-v4/RAW' | grep -v '/MuMonitor/Commissioning10-v4/RAW' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -vi express | grep -vi preprod | grep -v '/Test' | grep -vi -- '-Error' | grep -v '/EG/Commissioning10-v4/RAW' | grep -v '/EGMonitor/Commissioning10-v4/RAW' | grep -v '/JetMETTau/Commissioning10-v4/RAW' | grep -v '/JetMETTauMonitor/Commissioning10-v4/RAW' | grep -v '/Mu/Commissioning10-v4/RAW' | grep -v '/MuMonitor/Commissioning10-v4/RAW' | grep -v '/DQM' | grep -v 'ALCARECO' | grep '<' | awk '{print $2}'
 
 # echo ""
 # echo "datasets not at CNAF"

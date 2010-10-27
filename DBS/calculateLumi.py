@@ -2,13 +2,17 @@
 
 import sys, os, datetime, subprocess, shlex, tempfile, json, getopt
 
-opts, args = getopt.getopt(sys.argv[1:], "", ["dataset="])
+opts, args = getopt.getopt(sys.argv[1:], "", ["dataset=","storejson"])
 
 dataset = None
+storejson = False
 
 for opt, arg in opts :
     if opt == "--dataset" :
         dataset = arg
+    if opt == "--storejson" :
+        storejson = True
+    
         
 if dataset == None :
     print ''
@@ -53,8 +57,22 @@ json_runs = {}
 for run in all_runs :
     json_runs[run] = [[1,7500]]
     
-tmp = tempfile.mkstemp()
-tmp_handle = open(tmp[1],'w')
+if storejson == False :
+    tmp = tempfile.mkstemp()
+    tmp_handle = open(tmp[1],'w')
+else :
+    tmpname = dataset
+    tmpname = tmpname.replace('*','_STAR_',99)
+    tmpname = tmpname.replace('/','_',99)
+    tmpname = tmpname.replace('__','_',99)
+    if tmpname[0] == '_' :
+        tmpname = tmpname[1:]
+    if tmpname[-1] == '_' :
+        tmpname = tmpname[:-2]
+    tmpname += '.json'
+    print tmpname
+    tmp = ['',tmpname]
+    tmp_handle = open(tmp[1],'w')
 
 json.dump(json_runs,tmp_handle)
 tmp_handle.close()
