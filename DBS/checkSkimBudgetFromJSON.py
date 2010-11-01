@@ -26,6 +26,7 @@ recodatasets = [
 '/ForwardTriggers/Run2010B-PromptReco-v2/RECO',
 '/HcalNZS/Run2010B-PromptReco-v2/RECO',
 '/HeavyIonTest/Run2010B-PromptReco-v2/RECO',
+'/HeavyIonTestPlayback/Run2010B-PromptReco-v2/RECO',
 '/Jet/Run2010B-PromptReco-v2/RECO',
 '/JetMETTauMonitor/Run2010B-PromptReco-v2/RECO',
 '/METFwd/Run2010B-PromptReco-v2/RECO',
@@ -34,6 +35,7 @@ recodatasets = [
 '/Mu/Run2010B-PromptReco-v2/RECO',
 '/MuMonitor/Run2010B-PromptReco-v2/RECO',
 '/MuOnia/Run2010B-PromptReco-v2/RECO',
+'/MultiJet/Run2010B-PromptReco-v2/RECO',
 '/Photon/Run2010B-PromptReco-v2/RECO',
 '/RandomTriggers/Run2010B-PromptReco-v2/RECO',
 '/ZeroBias/Run2010B-PromptReco-v2/RECO',
@@ -44,10 +46,7 @@ dpgskimdatasets = [
 '/BTau/Run2010B-Skim_logerror-v2/RAW-RECO',
 '/Commissioning/Run2010B-MuonDPG_skim-v2/RAW-RECO',
 '/Commissioning/Run2010B-Skim_logerror-v2/RAW-RECO',
-'/Cosmics/Run2010B-CSC-Sep17Skim_v2/RAW-RECO',
 '/Cosmics/Run2010B-CSCSkim_BeamHalo_Cosmics-v2/RAW-RECO',
-'/Cosmics/Run2010B-CosmicSP-Sep17Skim_v2/RAW-RECO',
-'/Cosmics/Run2010B-LogError-Sep17Skim_v2/RAW-RECO',
 '/Cosmics/Run2010B-Skim_logerror-v2/RAW-RECO',
 '/Cosmics/Run2010B-SuperPointing-v2/RAW-RECO',
 '/EGMonitor/Run2010B-ECALRECHIT-v2/RAW-RECO',
@@ -55,7 +54,6 @@ dpgskimdatasets = [
 '/EGMonitor/Run2010B-TPGSkim-v2/USER',
 '/Electron/Run2010B-LogError-v2/RAW-RECO',
 '/Electron/Run2010B-Skim_logerror-v2/RAW-RECO',
-'/Electron/Run2010B-WZEG-v2/RAW-RECO',
 '/Jet/Run2010B-LogError-v2/RAW-RECO',
 '/Jet/Run2010B-Skim_logerror-v2/RAW-RECO',
 '/METFwd/Run2010B-Skim_logerror-v2/RAW-RECO',
@@ -68,18 +66,22 @@ dpgskimdatasets = [
 '/MinimumBias/Run2010B-valskim-v2/RAW-RECO',
 '/Mu/Run2010B-LogError-v2/RAW-RECO',
 '/Mu/Run2010B-Skim_logerror-v2/RAW-RECO',
+'/Mu/Run2010B-TPGSkim-v2/USER',
 '/Photon/Run2010B-LogError-v2/RAW-RECO',
 '/Photon/Run2010B-Skim_logerror-v2/RAW-RECO',
 '/ZeroBias/Run2010B-GOODVERTEX-v2/RAW-RECO',
-'/ZeroBias/Run2010B-Skim_logerror-v2/RAW-RECO'
-]
+'/ZeroBias/Run2010B-Skim_logerror-v2/RAW-RECO',]
 
 sdcsskimdatasets = [
 '/CommissioningNoBeam/Run2010B-SD_StoppedHSCP-v2/RECO',
 '/Jet/Run2010B-DiJet-v2/USER',
 '/Jet/Run2010B-HTSD-v2/RAW-RECO',
 '/Mu/Run2010B-WZMu-v2/RAW-RECO',
+'/Mu/Run2010B-WZMuFilter-v2/RAW-RECO',
 '/Photon/Run2010B-WZEG-v2/RAW-RECO',
+'/Photon/Run2010B-EGMWZFilter-v2/RAW-RECO',
+'/Electron/Run2010B-WZEG-v2/RAW-RECO',
+'/Electron/Run2010B-EGMWZFilter-v2/RAW-RECO',
 ]
 
 def queryForSize(run,datasets):

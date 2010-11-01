@@ -45,6 +45,7 @@ recodatasets = [
 
 def queryForRunsAndTime(commandline):
     args = shlex.split(commandline)
+    print args
     output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
 
     runs = {}

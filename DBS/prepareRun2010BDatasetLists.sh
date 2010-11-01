@@ -53,4 +53,4 @@ echo "datasets not at FNAL"
 echo "FNAL custodial for: EGMonitor, Electron, MinimumBias, Cosmics, HCALHPDNoise, HCALNZS, ForwardTest, HeavyIonTest"
 echo ""
 python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010B*/* and site = T1_US_FNAL" | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -v '/DQM' | grep -v '/ALCARECO' | grep -v '/MiniDaq/' | grep -v 'L1Accept' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep -v '/DQM' | grep -v '/ALCARECO' | grep -v '/MiniDaq/' | grep -v 'L1Accept' | grep -v 'HeavyIonTestPlayback' | grep -v 'EcalHcalCalibrationHI' | grep '<' | awk '{print $2}'
