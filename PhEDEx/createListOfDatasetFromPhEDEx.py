@@ -21,7 +21,7 @@ if site == None:
     print 'Please give site (e.g. T1_US_FNAL_MSS)'
     sys.exit(2)
     
-url='http://cmsweb.cern.ch/phedex/datasvc/xml/prod/blockreplicas?node=' + site
+url='https://cmsweb.cern.ch/phedex/datasvc/xml/prod/blockreplicas?node=' + site
 input = urllib.urlopen(url)
 
 xmldoc = minidom.parse(input)

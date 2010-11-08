@@ -30,7 +30,7 @@ custodial = {}
 non_custodial = {}
 
 if lfn == None :
-    url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + datasetpath + '*'
+    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + datasetpath + '*'
     result = json.load(urllib.urlopen(url))
     try:
         for block in result['phedex']['block']:
@@ -54,11 +54,11 @@ if lfn == None :
         print 'problems with dataset:',dataset
 else:
     try:
-        url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + lfn
+        url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + lfn
         result = json.load(urllib.urlopen(url))
         for outerblock in result['phedex']['block']:
             blockname = outerblock['name'].split('#')[0] + "%23" + outerblock['name'].split('#')[1]
-            url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + blockname
+            url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + blockname
             result = json.load(urllib.urlopen(url))
             for block in result['phedex']['block']:
                 name = block['name']

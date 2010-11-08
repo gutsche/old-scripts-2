@@ -18,7 +18,7 @@ if datasetpath == None:
     print 'Please specify dataset with --dataset'
     sys.exit(2)
             
-url = 'http://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?block=' + datasetpath + '*'
+url = 'https://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?block=' + datasetpath + '*'
 result = json.load(urllib.urlopen(url))
 
 for block in result['phedex']['block']:

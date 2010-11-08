@@ -21,12 +21,13 @@ if requestID == None:
 
 datasets = []
 
-url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/transferrequests?request=' + requestID
+url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/deleterequests?request=' + requestID
 result = json.load(urllib.urlopen(url))
+
 for item in result['phedex']['request']:
     for dataset in item['data']['dbs']['dataset']:
         datasets.append(dataset['name'])
-
+        
 for dataset in datasets:
     custodial = {}
     non_custodial = {}

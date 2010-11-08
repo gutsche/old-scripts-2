@@ -26,7 +26,7 @@ if site == None:
 site.replace('_MSS','')
 site.replace('_Buffer','')
 
-url='http://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?node=' + site + '_*'
+url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?node=' + site + '_*'
 result = json.load(urllib.urlopen(url))
 
 only_on_buffer = {}

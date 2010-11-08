@@ -50,7 +50,7 @@ for index in range(10):
 ##             command = 'python $DBSCMD_HOME/dbsCommandLine.py -c search --query=\"find dataset,dataset.status,file where file = ' + file.strip() + ' and site=*.fnal.gov\" --noheader > ' + dbslist
 ##             os.system(command)
 
-##             url = 'http://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + file.strip()
+##             url = 'https://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + file.strip()
 ##             result = json.load(urllib.urlopen(url))
 
 ##             nodes = []

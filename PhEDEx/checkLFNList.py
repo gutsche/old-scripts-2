@@ -12,7 +12,7 @@ files = input.readlines()
 for file in files:
     if file.count('/store/') > 0 :
             
-        url = 'http://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + file.strip()
+        url = 'https://cmsweb.cern.ch/phedex/datasvc/json/prod/filereplicas?lfn=' + file.strip()
         result = json.load(urllib.urlopen(url))
 
         nodes = []
