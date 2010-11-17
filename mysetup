@@ -59,14 +59,14 @@ elif [ "$1" == "fnal_analysis" ]; then
    cmsenv
 elif [ "$1" == "data_cern" ]; then
    echo "CERN data environment"
-   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_8_5/src
+   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_10_0_pre4/src
    cd $CMS2_LOCATION
    cmsenv
    cd
    python ~/scripts/DBS/checkDatataking.py
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
-   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_8_5/src
+   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_10_0_pre4/src
    cd $CMS2_LOCATION
    cmsenv
 elif [ "$1" == "go_ucsd" ]; then 

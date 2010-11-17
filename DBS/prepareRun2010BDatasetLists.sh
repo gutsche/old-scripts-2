@@ -34,9 +34,14 @@ cat datasets.list | grep 'SD_' | grep v2  > sd_v2.list
 
 cat datasets.list | grep 'Sep17ReReco' | grep v2 > rereco_sep17_v2.list
 
+cat datasets.list | grep 'Nov4ReReco' | grep v1 > rereco_nov4_v1.list
+cat datasets.list | grep 'Nov4Skim' | grep v1 > skim_nov4_v1.list
+
+cat dataset.list | grep 'preprod' > preprod.list
+
 cat datasets.list | grep 'TRKFailureScenario' | grep v1 > trkfailurescenario_v1.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list sd_v1.list dpg_skims_v1.list prompt_reco_v2.list prompt_aod_v2.list prompt_dqm_v2.list alcareco_v2.list sd_v2.list dpg_skims_v2.list rereco_sep17_v2.list trkfailurescenario_v1.list | sort > done.list
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list sd_v1.list dpg_skims_v1.list prompt_reco_v2.list prompt_aod_v2.list prompt_dqm_v2.list alcareco_v2.list sd_v2.list dpg_skims_v2.list rereco_sep17_v2.list trkfailurescenario_v1.list rereco_nov4_v1.list skim_nov4_v1.list preprod.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
