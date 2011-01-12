@@ -90,7 +90,7 @@ def queryForSize(run,datasets):
     
     for dataset in datasets :
     
-        commandline = "dbs search --query=\"find run,sum(file.size) where run = " + str(run) + " and dataset = " + dataset + "\" --noheader"
+        commandline = "dbs search --query=\"find run,sum(block.size) where run = " + str(run) + " and dataset = " + dataset + "\" --noheader"
         args = shlex.split(commandline)
         output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
         output_array = output.communicate()[0].split('\n')

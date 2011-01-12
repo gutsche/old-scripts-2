@@ -46,7 +46,7 @@ def queryForRunsAndSizeAndEvents(runs,dict,dataset):
 
     for run in runs :
 
-        commandline = "dbs search --query=\"find sum(file.size),sum(file.numevents) where dataset = " + dataset + " and run = " + str(run) + "\" --noheader"
+        commandline = "dbs search --query=\"find sum(block.size),sum(block.numevents) where dataset = " + dataset + " and run = " + str(run) + "\" --noheader"
         args = shlex.split(commandline)
         output = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE)
 
