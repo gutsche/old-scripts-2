@@ -100,11 +100,45 @@ cat error.list
 
 echo ""
 echo "datasets not at FNAL"
+python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_US_FNAL" | grep -vi 'test/' | sort > datasets_fnal.list
+echo ""
 echo "FNAL custodial for: JetMETTauMonitor, JetMETTau, JetMET, CastorTest, HcalHPDNoise, HcalNZS"
+echo ""
+echo "missing:"
+diff datasets.list datasets_fnal.list | grep '/JetMETTauMonitor/' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/JetMETTau/' | grep -vi 'preprod' | grep -v '/JetMETTau/Run2010A-CS_DiJetAve-Jun14thSkim_v1/USER' | grep -v '/JetMETTau/Run2010A-CS_Tau-Jun14thSkim_v1/RAW-RECO' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/JetMET/' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/CastorTest/' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/HcalHPDNoise/' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/HcalNZS/' | grep -vi 'preprod' | grep '<' | awk '{print $2}'
+echo ""
 echo "non-custodial kept at FNAL for BTau, EG, EGMonitor. MinimumBias, Mu, MuOnia, ZeroBias: currently only Nov4 and Dec22"
 echo ""
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/* and site = T1_US_FNAL" | grep -v 'test/' | sort > datasets_fnal.list
-diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep -v '/DQM' | grep -v 'NanoDST' | grep -vi preprod | grep -v L1Accept | grep -v ALCARECO | grep -v Dec4 | grep -v Jul15 | grep -v Jul26 | grep -v Jul6 | grep -v Jun9 | grep -v May27 | grep -v CollisionRecoSequence | grep -v '/Commissioning' | grep '<' | awk '{print $2}'
+echo "missing:"
+diff datasets.list datasets_fnal.list | grep '/BTau/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/EG/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/EGMonitor/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/MinimumBias/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/Mu/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/MuOnia/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/ZeroBias/' | grep Nov4 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+
+diff datasets.list datasets_fnal.list | grep '/BTau/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/EG/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/EGMonitor/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/MinimumBias/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/Mu/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/MuOnia/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+diff datasets.list datasets_fnal.list | grep '/ZeroBias/' | grep Dec22 | grep -v '/DQM' | grep -v '/ALCARECO' | grep '<' | awk '{print $2}'
+
+
+
+
+
+
+
+
+# diff datasets.list datasets_fnal.list | grep -v '/Test' | grep -v 'HeavyIonTest' | grep -v '/DQM' | grep -v 'NanoDST' | grep -vi preprod | grep -v L1Accept | grep -v ALCARECO | grep -v Dec4 | grep -v Jul15 | grep -v Jul26 | grep -v Jul6 | grep -v Jun9 | grep -v May27 | grep -v CollisionRecoSequence | grep -v '/Commissioning' | grep '<' | awk '{print $2}'
 
 # echo ""
 # echo "datasets not at CNAF"
