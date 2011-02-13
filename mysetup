@@ -8,6 +8,9 @@ if [ "$1" == "fnal" ]; then
 elif [ "$1" == "fnal_ui" ]; then
    echo "FNAL UI environment"
    source /uscmst1/prod/grid/gLite_SL5.sh
+elif [ "$1" == "fnal_wmc" ]; then
+   echo "FNAL WMClient environment"
+   source /uscms_data/d1/gutsche/WMAgent/Client/projects/wmclient/etc/wmclient.sh
 elif [ "$1" == "cern" ]; then
    echo "CERN CMS software environment"
    . /afs/cern.ch/cms/sw/cmsset_default.sh 
