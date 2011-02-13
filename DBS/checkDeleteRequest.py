@@ -43,12 +43,19 @@ if len(datasets) > 0 :
         output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
     
         lines = output.communicate()[0].split('\n')
-        if len(lines) != 2 :
+        if len(lines) > 2 :
+            print ''
             print 'Dataset:',dataset,'with multiple status entries, aborting'
+            print ''
+            print 'Output of dbs command:',commandline
+            print ''
+            for line in lines:
+                print line
             sys.exit(1)
-        for line in lines:
-            if len(line) > 0 :
-                 status = line.strip()
+        if len(lines) > 1 :
+            status = lines[0].strip()
+        else :
+            status = 'UNKNOWN'
 
         url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + dataset + '*'
         result = json.load(urllib.urlopen(url))
@@ -114,12 +121,20 @@ if len(blocks) > 0 :
         output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
 
         lines = output.communicate()[0].split('\n')
-        if len(lines) != 2 :
-            print 'Dataset:',dataset,'with multiple status entries, aborting'
+        if len(lines) > 1 :
+            print ''
+            print 'Block:',block,'with multiple status entries, aborting'
+            print ''
+            print 'Output of dbs command:',commandline
+            print ''
+            for line in lines:
+                print line
             sys.exit(1)
         for line in lines:
             if len(line) > 0 :
-                 status = line.strip()
+                status = line.strip()
+            else :
+                status = 'UNKNOWN'
 
         url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + block
         url = url.replace('#','%23')

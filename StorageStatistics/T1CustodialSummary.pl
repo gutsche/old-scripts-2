@@ -53,6 +53,8 @@ push(@releaseCycles,"Summer09");
 push(@releaseCycles,"Spring10");
 push(@releaseCycles,"Summer10");
 push(@releaseCycles,"Fall10");
+push(@releaseCycles,"Winter10");
+push(@releaseCycles,"Spring11");
 push(@releaseCycles,"StoreResults");
 push(@releaseCycles,"JobRobot");
 
@@ -74,6 +76,7 @@ push(@releaseCycles,"Commissioning09");
 push(@releaseCycles,"Commissioning10");
 push(@releaseCycles,"Run2010A");
 push(@releaseCycles,"Run2010B");
+push(@releaseCycles,"HIRun2010");
 
 
 
@@ -89,13 +92,15 @@ if ($datatier eq "") {
     push(@datatierList, "RAW");
     push(@datatierList, "RECO");
     push(@datatierList, "ALCARECO");
+    push(@datatierList, "DQM");
     push(@datatierList, "RAW-RECO");
     push(@datatierList, "USER");
+    push(@datatierList, "GEN-SIM");
     push(@datatierList, "GEN-SIM-RAW");
     push(@datatierList, "GEN-SIM-RECO");
     push(@datatierList, "AODSIM");
-    push(@datatierList, "GEN-SIM_RAWDEBUG");
-    push(@datatierList, "GEN-SIM_RECODEBUG");
+    push(@datatierList, "GEN-SIM-RAWDEBUG");
+    push(@datatierList, "GEN-SIM-RECODEBUG");
 } else {
     push(@datatierList, $datatier);
 }
@@ -139,15 +144,21 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 	    my $custodialMCTB = 0;
 
 
+	    my $regExpression = '%' . $releaseCycles[$releaseCycleIndex] . '%/' . $datatierList[$datatierIndex] . '#%';
+
 	    my $sql_findBlocks = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME, T_DPS_BLOCK_REPLICA.IS_CUSTODIAL from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE, T_DPS_SUBSCRIPTION where 
-					 T_ADM_NODE.NAME = '@sites[$siteIndex]' 
+					 T_ADM_NODE.NAME = ? 
 					 and T_DPS_BLOCK_REPLICA.NODE = T_ADM_NODE.ID 
 					 and T_DPS_BLOCK_REPLICA.BLOCK = T_DPS_BLOCK.ID 
 					 and (T_DPS_SUBSCRIPTION.DATASET = T_DPS_BLOCK.DATASET or T_DPS_SUBSCRIPTION.BLOCK = T_DPS_BLOCK.ID)
 					 and T_DPS_SUBSCRIPTION.DESTINATION = T_ADM_NODE.ID
-					 and T_DPS_BLOCK.NAME like '%$releaseCycles[$releaseCycleIndex]%$datatierList[$datatierIndex]%' };
+					 and T_DPS_BLOCK.NAME like ? };
 
 	    my $q = &dbprep($dbh, $sql_findBlocks);
+
+	    $q->bind_param(1 , @sites[$siteIndex]);
+	    $q->bind_param(2 , $regExpression);
+
 	    chomp;
 	    &dbbindexec($q);
 
@@ -167,7 +178,7 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 		my $class = -1;	    
 		while ($result = $q1->fetchrow_array()) {
 		    #print "MATCH : $result \n";
-		    if ($result =~ "/store/data/") {
+		    if ($result =~ "/store/data/" || $result =~ "/store/hidata/") {
 			$class = 1;
 		    } elsif ($result =~ "/store/mc/") {
 			$class = 2;
