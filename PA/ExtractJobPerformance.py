@@ -107,6 +107,10 @@ def main(argv) :
         file = open('performance_report.txt','w')
         
     # prepare tables
+    appTimeHeader1 = ''
+    appTimeHeader2 = ''
+    appTimeRow    = ''
+
     timeHeader1 = ''
     timeHeader2 = ''
     timeRow    = ''
@@ -124,6 +128,8 @@ def main(argv) :
     for key in keys :
 
         # detailed output and calculate averages
+        appTime       = 0.
+        appTimeError  = 0.
         events             = 0
         timePerEvent       = 0.
         timePerEventError  = 0.
@@ -137,10 +143,14 @@ def main(argv) :
             print ''
         for job in jobs[key]:
             if details == 1 :
-                print 'Job: Number of events: %d Time per Event: %.2f s Average Memory: %.2f MB Max. Memory: %.2f MB' % (job['Events'],
+                print 'Job: Number of events: %d Time per Event: %.2f s Average Memory: %.2f MB Max. Memory: %.2f MB AppTime: %.2f' % (job['Events'],
                                                                                                                          job['TimePerEvent'],
                                                                                                                          job['AverageMemory']/1024.,
-                                                                                                                         job['MaxMemory']/1024.)
+                                                                                                                         job['MaxMemory']/1024.,
+                                                                                                                         job['AppTime'])
+
+            appTime    += job['AppTime']
+            appTimeError  += job['AppTime']*job['AppTime']
             timePerEvent       += job['TimePerEvent']
             timePerEventError  += job['TimePerEvent']*job['TimePerEvent']
             averageMemory      += job['AverageMemory']/1024.
@@ -149,6 +159,8 @@ def main(argv) :
             maxMemoryError     += job['MaxMemory']/1024.*job['MaxMemory']/1024.
             events             += job['Events']
 
+        appTime       /= len(jobs[key])
+        appTimeError  /= len(jobs[key])
         timePerEvent       /= len(jobs[key])
         timePerEventError  /= len(jobs[key])
         averageMemory      /= len(jobs[key])
@@ -156,10 +168,15 @@ def main(argv) :
         maxMemory          /= len(jobs[key])
         maxMemoryError     /= len(jobs[key])
         
+        appTimeError  = math.sqrt(appTimeError - appTime*appTime)
         timePerEventError  = math.sqrt(timePerEventError - timePerEvent*timePerEvent)
         averageMemoryError = math.sqrt(averageMemoryError - averageMemory*averageMemory)
         maxMemoryError     = math.sqrt(maxMemoryError - maxMemory*maxMemory)
         
+        appTimeHeader1 += ' ' + key + ' \" \"'
+        appTimeHeader2 += ' \"Time [h]\" \"Error [h]\"'
+        appTimeRow += ' %f %f' % (appTime,appTimeError)
+
         timeHeader1 += ' ' + key + ' \" \"'
         timeHeader2 += ' \"Time/Event [s]\" \"Error [s]\"'
         timeRow += ' %f %f' % (timePerEvent,timePerEventError)
@@ -174,32 +191,39 @@ def main(argv) :
         
         print ''
         print 'Average performance of:',key
-        print 'Tot. Number of events: %d Time per Event: %.2f +- %.2f s Average Memory: %.2f +- %.2f MB Max. Memory: %.2f +- %.2f MB' % (events,
+        print 'Tot. Number of events: %d Time per Event: %.2f +- %.2f s Average Memory: %.2f +- %.2f MB Max. Memory: %.2f +- %.2f MB App time: %.2f +- %.2f h' % (events,
         timePerEvent,timePerEventError,
         averageMemory,averageMemoryError,
-        maxMemory,maxMemoryError)
+        maxMemory,maxMemoryError,
+        appTime,appTimeError)
 
         if report == 1 :
-            line = '%s %d %f %f %f %f %f %f\n' % (key,
+            line = '%s %d %f %f %f %f %f %f %f %f\n' % (key,
             events,
             timePerEvent,timePerEventError,
             averageMemory,averageMemoryError,
-            maxMemory,maxMemoryError)
+            maxMemory,maxMemoryError,
+            appTime,appTimeError)
             file.write(line)
 
         if details == 1 :
             detailfile = open(key+'.txt','w')
             for job in jobs[key]:
-                line = '%d %f %f %f\n' % (job['Events'],
+                line = '%d %f %f %f %f\n' % (job['Events'],
                                           job['TimePerEvent'],
                                           job['AverageMemory']/1024.,
-                                          job['MaxMemory']/1024.)
+                                          job['MaxMemory']/1024.,
+                                           job['AppTime'])
                 detailfile.write(line)
             detailfile.close()
 
     if report == 1 :
         file.close()
 
+    print ''
+    print appTimeHeader1
+    print appTimeHeader2
+    print appTimeRow
     print ''
     print timeHeader1
     print timeHeader2
@@ -266,6 +290,13 @@ def ExtractPerformanceInformation(archive,ExtractDir,debug):
               reports = readJobReport(reportfilename)
               for report in reports:
                   performanceReport = report.performance
+                  # app time
+                  try:
+                      time = float(report.timing['AppEndTime']) - float(report.timing['AppStartTime'])
+                      result['AppTime'] = time/3600.
+                  except:
+                      print 'Cannot read AppEndTime and AppStartTime from FrameworkJobReport.xml from',archive
+                      result['AppTime'] = 0.
 
                   # average physical memory
                   try:
