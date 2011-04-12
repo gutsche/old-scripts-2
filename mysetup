@@ -72,6 +72,7 @@ elif [ "$1" == "go_cern" ]; then
    export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_10_0_pre4/src
    cd $CMS2_LOCATION
    cmsenv
+   cd
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
    #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12

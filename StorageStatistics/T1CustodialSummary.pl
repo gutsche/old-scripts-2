@@ -77,6 +77,7 @@ push(@releaseCycles,"Commissioning10");
 push(@releaseCycles,"Run2010A");
 push(@releaseCycles,"Run2010B");
 push(@releaseCycles,"HIRun2010");
+push(@releaseCycles,"Run2011A");
 
 
 
@@ -146,15 +147,15 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 
 	    my $regExpression = '%' . $releaseCycles[$releaseCycleIndex] . '%/' . $datatierList[$datatierIndex] . '#%';
 
-	    my $sql_findBlocks = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME, T_DPS_BLOCK_REPLICA.IS_CUSTODIAL from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE, T_DPS_SUBSCRIPTION where 
+	    my $sql_findBlockSubscriptions = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME, T_DPS_BLOCK_REPLICA.IS_CUSTODIAL from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE, T_DPS_SUBS_BLOCK where 
 					 T_ADM_NODE.NAME = ? 
 					 and T_DPS_BLOCK_REPLICA.NODE = T_ADM_NODE.ID 
 					 and T_DPS_BLOCK_REPLICA.BLOCK = T_DPS_BLOCK.ID 
-					 and (T_DPS_SUBSCRIPTION.DATASET = T_DPS_BLOCK.DATASET or T_DPS_SUBSCRIPTION.BLOCK = T_DPS_BLOCK.ID)
-					 and T_DPS_SUBSCRIPTION.DESTINATION = T_ADM_NODE.ID
+					 and T_DPS_SUBS_BLOCK.BLOCK = T_DPS_BLOCK.ID
+					 and T_DPS_SUBS_BLOCK.DESTINATION = T_ADM_NODE.ID
 					 and T_DPS_BLOCK.NAME like ? };
 
-	    my $q = &dbprep($dbh, $sql_findBlocks);
+	    my $q = &dbprep($dbh, $sql_findBlockSubscriptions);
 
 	    $q->bind_param(1 , @sites[$siteIndex]);
 	    $q->bind_param(2 , $regExpression);
@@ -164,7 +165,7 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 
 	    
 	    while (@data = $q->fetchrow_array()) {
-		#$totalTB = $totalTB + $data[0] / (1024*1024*1024*1024);
+		#$totalTB = $totalTB + $data[0] / (1000*1000*1000*1000);
 		#print "$pass : BLOCK : $data[0] : $data[1] , custodial : $data[2]      ,  $totalTB \n";
 		my $sql_matchLFN = qq{ select T_DPS_FILE.LOGICAL_NAME from T_DPS_BLOCK, T_DPS_FILE where 
 					   T_DPS_FILE.INBLOCK = T_DPS_BLOCK.ID  
@@ -186,19 +187,21 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 		    last;
 		}
 		if ($class == 1) {
-		    $totalDataTB = $totalDataTB + $data[0] / (1024*1024*1024*1024);
+		    $totalDataTB = $totalDataTB + $data[0] / (1000*1000*1000*1000);
 		    if ($data[2] eq "y") {
-			$custodialDataTB = $custodialDataTB + $data[0] / (1024*1024*1024*1024);
+			$custodialDataTB = $custodialDataTB + $data[0] / (1000*1000*1000*1000);
 		    }
 		    #print "Data : BLOCK : $data[0] : $data[1] \n";
 		} elsif ($class == 2) {
-		    $totalMCTB = $totalMCTB + $data[0] / (1024*1024*1024*1024);
+		    $totalMCTB = $totalMCTB + $data[0] / (1000*1000*1000*1000);
 		    if ($data[2] eq "y") {
-			$custodialMCTB = $custodialMCTB + $data[0] / (1024*1024*1024*1024);
+			$custodialMCTB = $custodialMCTB + $data[0] / (1000*1000*1000*1000);
 		    }
 		    #print "MC : BLOCK : $data[0] : $data[1] \n";
 		}
 	    }
+
+
 
 # 	    my $sql_findCustodialBlocks = qq{ select T_DPS_BLOCK.BYTES, T_DPS_BLOCK.NAME from T_DPS_BLOCK, T_DPS_BLOCK_REPLICA, T_ADM_NODE where 
 # 						  T_ADM_NODE.NAME = '@sites[$siteIndex]' 
@@ -213,7 +216,7 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 
 	    
 # 	    while (@data = $q->fetchrow_array()) {
-# 		#$custodialTB = $custodialTB + $data[0] / (1024*1024*1024*1024);
+# 		#$custodialTB = $custodialTB + $data[0] / (1000*1000*1000*1000);
 # 		#print "$pass : BLOCK : $data[0] : $data[1]         ,  $custodialTB \n";
 # 		my $sql_matchLFN2 = qq{ select T_DPS_FILE.LOGICAL_NAME from T_DPS_BLOCK, T_DPS_FILE where 
 # 					    T_DPS_FILE.INBLOCK = T_DPS_BLOCK.ID
@@ -237,10 +240,10 @@ for ($siteIndex=0; $siteIndex < scalar(@sites); $siteIndex++) {
 # 		    last;
 # 		}
 # 		if ($class == 1) {
-# 		    $custodialDataTB = $custodialDataTB + $data[0] / (1024*1024*1024*1024);
+# 		    $custodialDataTB = $custodialDataTB + $data[0] / (1000*1000*1000*1000);
 # 		    #print "Data : BLOCK : $data[0] : $data[1] \n";
 # 		} elsif ($class == 2) {
-# 		    $custodialMCTB = $custodialMCTB + $data[0] / (1024*1024*1024*1024);
+# 		    $custodialMCTB = $custodialMCTB + $data[0] / (1000*1000*1000*1000);
 # 		    #print "MC : BLOCK : $data[0] : $data[1] \n";
 # 		}	    
 # 	    }

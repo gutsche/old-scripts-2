@@ -119,7 +119,7 @@ if len(blocks) > 0 :
         output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
 
         lines = output.communicate()[0].split('\n')
-        if len(lines) > 1 :
+        if len(lines) > 2 :
             print ''
             print 'Block:',block,'with multiple status entries, aborting'
             print ''
