@@ -2,6 +2,7 @@ alias l='ls -lh --color=always'
 alias ll='ls -lha --color=always'
 
 alias dbs='dbs search --production --noheader'
+alias das='~/scripts/DAS/das'
 
 alias cp='cp -vi'
 alias mv='mv -vi'
