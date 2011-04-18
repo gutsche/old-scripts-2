@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys,os,urllib,json,getopt
+import sys,os,urllib2,json,getopt
 
 run = None
 url = ''
@@ -25,13 +25,16 @@ print 'EXPRESS'
 print ''
 
 if run == None:
-    url = 'http://vocms115.cern.ch:8304/tier0/express_config?run=&stream=Express&return_type=application/json'
+    url = 'https://cmsweb.cern.ch/tier0/express_config?run=&stream=Express'
 else :
-    url = 'http://vocms115.cern.ch:8304/tier0/express_config?run='+run+'&stream=Express&return_type=application/json'
+    url = 'https://cmsweb.cern.ch/tier0/express_config?run='+run+'&stream=Express'
 
-result = json.load(urllib.urlopen(url))
-
-# print result
+req = urllib2.Request(url)
+req.add_header("User-Agent","ConditionOfflineDropBox/1.0 python/%d.%d.%d" % sys.version_info[:3])
+req.add_header("Accept","application/json")
+jsonCall = urllib2.urlopen(req)
+jsonText = jsonCall.read()
+result = json.loads(jsonText)
 
 for entry in result:
     print 'run:',entry['run_id']
@@ -45,11 +48,16 @@ print 'Prompt'
 print ''
 
 if run == None:
-    url = 'http://vocms115.cern.ch:8304/tier0/reco_config?run=&dataset=&return_type=application/json'
+    url = 'https://cmsweb.cern.ch/tier0/reco_config?run=&dataset='
 else :
-    url = 'http://vocms115.cern.ch:8304/tier0/reco_config?run='+run+'&dataset=&return_type=application/json'
+    url = 'https://cmsweb.cern.ch/tier0/reco_config?run='+run+'&dataset='
 
-result = json.load(urllib.urlopen(url))
+req = urllib2.Request(url)
+req.add_header("User-Agent","ConditionOfflineDropBox/1.0 python/%d.%d.%d" % sys.version_info[:3])
+req.add_header("Accept","application/json")
+jsonCall = urllib2.urlopen(req)
+jsonText = jsonCall.read()
+result = json.loads(jsonText)
 
 for entry in result:
     if entry['cmssw_version'] != 'Undefined':
