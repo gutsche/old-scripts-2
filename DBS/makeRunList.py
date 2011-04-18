@@ -28,15 +28,24 @@ if query_run != None :
 
 
 rawdatasets = [
-'/BTau/Run2010B-v1/RAW',
-'/Electron/Run2010B-v1/RAW',
-'/Jet/Run2010B-v1/RAW',
-'/METFwd/Run2010B-v1/RAW',
-'/MinimumBias/Run2010B-v1/RAW',
-'/Mu/Run2010B-v1/RAW',
-'/MuOnia/Run2010B-v1/RAW',
-#'/MultiJet/Run2010B-v1/RAW',
-'/Photon/Run2010B-v1/RAW',
+'/DoubleElectron/Run2011A-v1/RAW',
+'/DoubleMu/Run2011A-v1/RAW',
+'/ElectronHad/Run2011A-v1/RAW',
+# '/ForwardTriggers/Run2011A-v1/RAW',
+'/HT/Run2011A-v1/RAW',
+'/Jet/Run2011A-v1/RAW',
+'/METBTag/Run2011A-v1/RAW',
+'/MinimumBias/Run2011A-v1/RAW',
+'/MuEG/Run2011A-v1/RAW',
+'/MuHad/Run2011A-v1/RAW',
+'/MuOnia/Run2011A-v1/RAW',
+'/MultiJet/Run2011A-v1/RAW',
+'/Photon/Run2011A-v1/RAW',
+'/PhotonHad/Run2011A-v1/RAW',
+'/SingleElectron/Run2011A-v1/RAW',
+'/SingleMu/Run2011A-v1/RAW',
+'/Tau/Run2011A-v1/RAW',
+'/TauPlusX/Run2011A-v1/RAW',
 ]
 
 def queryCommandline(runs,commandline):
@@ -67,10 +76,10 @@ for dataset in rawdatasets :
             enddatestring = enddate.strftime("%Y-%m-%d")
             startdate = datetime.date.today() - datetime.timedelta(days=day+1)
             startdatestring = startdate.strftime("%Y-%m-%d")
-            commandline = "dbs search --query=\"find run,sum(file.numevents),run.createdate where run.createdate >= " + startdatestring + " and run.createdate < " + enddatestring + " and dataset = " + dataset + "\" --noheader"
+            commandline = "dbs search --query=\"find run,sum(block.numevents),run.createdate where run.createdate >= " + startdatestring + " and run.createdate < " + enddatestring + " and dataset = " + dataset + "\" --noheader"
             queryCommandline(runs,commandline)
     else :
-        commandline = "dbs search --query=\"find run,sum(file.numevents),run.createdate where run = " + str(query_run) + " and dataset = " + dataset + "\" --noheader"
+        commandline = "dbs search --query=\"find run,sum(block.numevents),run.createdate where run = " + str(query_run) + " and dataset = " + dataset + "\" --noheader"
         queryCommandline(runs,commandline)
 
 # check that all RAW datasets have events > min_events for a run

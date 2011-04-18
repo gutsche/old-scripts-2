@@ -7,12 +7,12 @@ dbs search --noheader --production --query="find block,block.size,block.numevent
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM and block.createdate >= 2011-02-01 and block.createdate < 2011-03-01" >> mc_2011_feb_raw.blocks
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RECO* and block.createdate >= 2011-02-01 and block.createdate < 2011-03-01" > mc_2011_feb_reco.blocks
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2011-02-01 and block.createdate < 2011-03-01" > mc_2011_feb_aod.blocks
-# 
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RAW* and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_raw.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" >> mc_2011_mar_raw.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RECO* and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_reco.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_aod.blocks
-# 
+ 
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RAW* and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_raw.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" >> mc_2011_mar_raw.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RECO* and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_reco.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2011-03-01 and block.createdate < 2011-04-01" > mc_2011_mar_aod.blocks
+
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RAW* and block.createdate >= 2011-04-01 and block.createdate < 2011-05-01" > mc_2011_apr_raw.blocks
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM and block.createdate >= 2011-04-01 and block.createdate < 2011-05-01" >> mc_2011_apr_raw.blocks
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM-RECO* and block.createdate >= 2011-04-01 and block.createdate < 2011-05-01" > mc_2011_apr_reco.blocks
@@ -67,9 +67,17 @@ cat mc_2011_jan_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi prepr
 cat mc_2011_jan_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v START39 | grep -v ProbDist | grep -v TSG_PU | awk '{SUM1+=$2} {SUM2+=$3} END {print "January 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
 
 # cat mc_2011_feb_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk -F\/ '{print $3}' | sort -u
-# cat mc_2011_feb_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk -F\/ '{print $3}' | sort -u
-# cat mc_2011_feb_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk -F\/ '{print $3}' | sort -u
+# cat mc_2011_feb_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | grep -v START311_V1G1  | awk -F\/ '{print $3}' | sort -u
+# cat mc_2011_feb_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | grep -v START311_V1G1  | awk -F\/ '{print $3}' | sort -u
 
 cat mc_2011_feb_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2011 GEN-SIM-RAW: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
-cat mc_2011_feb_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
-cat mc_2011_feb_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_feb_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | grep -v START311_V1G1 | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_feb_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v ProbDist | grep -v START311_V1G1  | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+
+# cat mc_2011_mar_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0 | awk -F\/ '{print $3}' | sort -u
+# cat mc_2011_mar_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0 | awk -F\/ '{print $3}' | sort -u
+# cat mc_2011_mar_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0| grep -v START311_V1G1  | awk -F\/ '{print $3}' | sort -u
+
+cat mc_2011_mar_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0 | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2011 GEN-SIM-RAW: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_mar_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0 | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_mar_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -v START39_V8 | grep -v START311_V1 | grep -v L1HLTST311_V0 | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'

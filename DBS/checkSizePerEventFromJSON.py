@@ -18,27 +18,63 @@ if jsonfilename == None :
     sys.exit(2)
 
 rawdatasets = [
-'/BTau/Run2010B-v1/RAW',
-'/Electron/Run2010B-v1/RAW',
-'/Jet/Run2010B-v1/RAW',
-'/METFwd/Run2010B-v1/RAW',
-'/MinimumBias/Run2010B-v1/RAW',
-'/Mu/Run2010B-v1/RAW',
-'/MuOnia/Run2010B-v1/RAW',
-'/MultiJet/Run2010B-v1/RAW',
-'/Photon/Run2010B-v1/RAW',
+'/DoubleElectron/Run2011A-v1/RAW',
+'/DoubleMu/Run2011A-v1/RAW',
+'/ElectronHad/Run2011A-v1/RAW',
+'/HT/Run2011A-v1/RAW',
+'/Jet/Run2011A-v1/RAW',
+'/METBTag/Run2011A-v1/RAW',
+'/MinimumBias/Run2011A-v1/RAW',
+'/MuEG/Run2011A-v1/RAW',
+'/MuHad/Run2011A-v1/RAW',
+'/MuOnia/Run2011A-v1/RAW',
+'/MultiJet/Run2011A-v1/RAW',
+'/Photon/Run2011A-v1/RAW',
+'/PhotonHad/Run2011A-v1/RAW',
+'/SingleElectron/Run2011A-v1/RAW',
+'/SingleMu/Run2011A-v1/RAW',
+'/Tau/Run2011A-v1/RAW',
+'/TauPlusX/Run2011A-v1/RAW',
 ]
 
 recodatasets = [
-'/BTau/Run2010B-PromptReco-v2/RECO',
-'/Electron/Run2010B-PromptReco-v2/RECO',
-'/Jet/Run2010B-PromptReco-v2/RECO',
-'/METFwd/Run2010B-PromptReco-v2/RECO',
-'/MinimumBias/Run2010B-PromptReco-v2/RECO',
-'/Mu/Run2010B-PromptReco-v2/RECO',
-'/MuOnia/Run2010B-PromptReco-v2/RECO',
-'/MultiJet/Run2010B-PromptReco-v2/RECO',
-'/Photon/Run2010B-PromptReco-v2/RECO',
+'/DoubleElectron/Run2011A-PromptReco-v1/RECO',
+'/DoubleMu/Run2011A-PromptReco-v1/RECO',
+'/ElectronHad/Run2011A-PromptReco-v1/RECO',
+'/HT/Run2011A-PromptReco-v1/RECO',
+'/Jet/Run2011A-PromptReco-v1/RECO',
+'/METBTag/Run2011A-PromptReco-v1/RECO',
+'/MinimumBias/Run2011A-PromptReco-v1/RECO',
+'/MuEG/Run2011A-PromptReco-v1/RECO',
+'/MuHad/Run2011A-PromptReco-v1/RECO',
+'/MuOnia/Run2011A-PromptReco-v1/RECO',
+'/MultiJet/Run2011A-PromptReco-v1/RECO',
+'/Photon/Run2011A-PromptReco-v1/RECO',
+'/PhotonHad/Run2011A-PromptReco-v1/RECO',
+'/SingleElectron/Run2011A-PromptReco-v1/RECO',
+'/SingleMu/Run2011A-PromptReco-v1/RECO',
+'/Tau/Run2011A-PromptReco-v1/RECO',
+'/TauPlusX/Run2011A-PromptReco-v1/RECO',
+]
+
+aoddatasets = [
+'/DoubleElectron/Run2011A-PromptReco-v1/AOD',
+'/DoubleMu/Run2011A-PromptReco-v1/AOD',
+'/ElectronHad/Run2011A-PromptReco-v1/AOD',
+'/HT/Run2011A-PromptReco-v1/AOD',
+'/Jet/Run2011A-PromptReco-v1/AOD',
+'/METBTag/Run2011A-PromptReco-v1/AOD',
+'/MinimumBias/Run2011A-PromptReco-v1/AOD',
+'/MuEG/Run2011A-PromptReco-v1/AOD',
+'/MuHad/Run2011A-PromptReco-v1/AOD',
+'/MuOnia/Run2011A-PromptReco-v1/AOD',
+'/MultiJet/Run2011A-PromptReco-v1/AOD',
+'/Photon/Run2011A-PromptReco-v1/AOD',
+'/PhotonHad/Run2011A-PromptReco-v1/AOD',
+'/SingleElectron/Run2011A-PromptReco-v1/AOD',
+'/SingleMu/Run2011A-PromptReco-v1/AOD',
+'/Tau/Run2011A-PromptReco-v1/AOD',
+'/TauPlusX/Run2011A-PromptReco-v1/AOD',
 ]
 
 
@@ -81,6 +117,13 @@ print ""
 reco = {}
 for dataset in recodatasets:
     queryForRunsAndSizeAndEvents(sorted_runs,reco,dataset)
+
+print ""
+print "Query for aod datasets:"
+print ""
+aod = {}
+for dataset in aoddatasets:
+    queryForRunsAndSizeAndEvents(sorted_runs,aod,dataset)
     
 print ""
 print "Raw datasets:"
@@ -154,6 +197,44 @@ for run in sorted_runs :
         result += "%.3f " % total_sizePerEvent
     else :
         for dataset in recodatasets:
+            result += "0.000 "
+        result += "0.000 "    
+    print result
+
+print ""
+print "AOD datasets:"
+
+result = "run "
+for dataset in aoddatasets:
+    result += dataset + " "
+result += "total"
+print ""
+print result
+print ""
+
+for run in sorted_runs :
+    result = str(run) + " "
+    if run in aod.keys() :
+        total_size = 0.
+        total_events = 0
+        for dataset in aoddatasets:
+            if dataset in aod[run].keys() :
+                total_size += aod[run][dataset]['size']
+                total_events += aod[run][dataset]['events']
+                if aod[run][dataset]['events'] > 0 :
+                    sizePerEvent =  aod[run][dataset]['size']/aod[run][dataset]['events']
+                else:
+                    sizePerEvent = 0.
+                result += "%.3f " % sizePerEvent
+            else :
+                result += "0.000 "
+        if total_events > 0 :
+            total_sizePerEvent = total_size / total_events
+        else :
+            total_sizePerEvent = 0.
+        result += "%.3f " % total_sizePerEvent
+    else :
+        for dataset in aoddatasets:
             result += "0.000 "
         result += "0.000 "    
     print result

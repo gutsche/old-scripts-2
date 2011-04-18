@@ -20,13 +20,24 @@ if inputfilename == None :
     sys.exit(2)
 
 rawdatasets = [
-'/EG/Run2010A-v*/RAW',
-# '/JetMET/Run2010A-v*/RAW',
-'/BTau/Run2010A-v*/RAW',
-'/MinimumBias/Run2010A-v*/RAW',
-'/Mu/Run2010A-v*/RAW',
-# '/MuOnia/Run2010A-v*/RAW',
-# '/ZeroBias/Run2010A-v*/RAW'
+'/DoubleElectron/Run2011A-v1/RAW',
+'/DoubleMu/Run2011A-v1/RAW',
+'/ElectronHad/Run2011A-v1/RAW',
+# '/ForwardTriggers/Run2011A-v1/RAW',
+'/HT/Run2011A-v1/RAW',
+'/Jet/Run2011A-v1/RAW',
+'/METBTag/Run2011A-v1/RAW',
+'/MinimumBias/Run2011A-v1/RAW',
+'/MuEG/Run2011A-v1/RAW',
+'/MuHad/Run2011A-v1/RAW',
+'/MuOnia/Run2011A-v1/RAW',
+'/MultiJet/Run2011A-v1/RAW',
+'/Photon/Run2011A-v1/RAW',
+'/PhotonHad/Run2011A-v1/RAW',
+'/SingleElectron/Run2011A-v1/RAW',
+'/SingleMu/Run2011A-v1/RAW',
+'/Tau/Run2011A-v1/RAW',
+'/TauPlusX/Run2011A-v1/RAW',
 ]
 
 def queryFile(runs,filename):
@@ -38,6 +49,7 @@ def queryFile(runs,filename):
                 dataset = array[1]
                 run = int(array[3])
                 events = int (array[5])
+                # if run > 99999 and run < 1000000 and events > min_events:
                 if run in runs.keys():
                     runs[run][dataset] = events
                 else:

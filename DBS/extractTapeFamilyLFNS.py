@@ -53,7 +53,9 @@ if len(datasets) > 0 :
             if tmplfn not in LFNs:
                 LFNs.append(tmplfn)
         else :
-            print 'Problem with query for dataset:',dataset
+            array = dataset.split('/')
+            array2 = array[2].split('-')
+            print 'Problem with query for dataset: ' + dataset + ' possible LFN structure from parsing the dataset name: /store/data/%s/%s/%s/%s' % (array2[0],array[1],array[3],''.join(array2[1:]))
 
 if len(blocks) > 0 :
     for block in blocks:
