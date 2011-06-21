@@ -3,7 +3,8 @@
 import sys,os,urllib2,json,getopt
 
 run = None
-url = ''
+# baseurl = 'https://cmsweb.cern.ch/'
+baseurl = 'https://cmsweb-testbed.cern.ch/'
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "", ["run="])
@@ -25,9 +26,9 @@ print 'EXPRESS'
 print ''
 
 if run == None:
-    url = 'https://cmsweb.cern.ch/tier0/express_config?run=&stream=Express'
+    url = baseurl + 'tier0/express_config?run=&stream=Express'
 else :
-    url = 'https://cmsweb.cern.ch/tier0/express_config?run='+run+'&stream=Express'
+    url = baseurl + 'tier0/express_config?run='+run+'&stream=Express'
 
 req = urllib2.Request(url)
 req.add_header("User-Agent","ConditionOfflineDropBox/1.0 python/%d.%d.%d" % sys.version_info[:3])
@@ -41,6 +42,7 @@ for entry in result:
     print 'stream:',entry['stream']
     print 'proc_version:',entry['proc_version']
     print 'global_tag:',entry['global_tag']
+    print 'scenario:',entry['scenario']
     print 'config_url:',entry['config_url']
     print ''
 
@@ -48,9 +50,9 @@ print 'Prompt'
 print ''
 
 if run == None:
-    url = 'https://cmsweb.cern.ch/tier0/reco_config?run=&dataset='
+    url = baseurl + 'tier0/reco_config?run=&dataset='
 else :
-    url = 'https://cmsweb.cern.ch/tier0/reco_config?run='+run+'&dataset='
+    url = baseurl + 'tier0/reco_config?run='+run+'&dataset='
 
 req = urllib2.Request(url)
 req.add_header("User-Agent","ConditionOfflineDropBox/1.0 python/%d.%d.%d" % sys.version_info[:3])
@@ -66,4 +68,6 @@ for entry in result:
         print 'proc_version:',entry['proc_version']
         print 'cmssw_version:',entry['cmssw_version']
         print 'global_tag:',entry['global_tag']
+        print 'scenario:',entry['scenario']
+        print 'config_url:',entry['config_url']
         print ''

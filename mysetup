@@ -70,8 +70,7 @@ elif [ "$1" == "data_cern" ]; then
    python ~/scripts/DBS/checkDatataking.py
 elif [ "$1" == "go_cern" ]; then
    echo "CERN working environment"
-   export CMS2_LOCATION=/afs/cern.ch/user/g/gutsche/software/CMSSW_3_10_0_pre4/src
-   cd $CMS2_LOCATION
+   cd /afs/cern.ch/user/g/gutsche/software/CMSSW_4_2_2/src
    cmsenv
    cd
    export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
