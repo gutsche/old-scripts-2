@@ -36,16 +36,17 @@ elif [ "$1" == "crab_cern" ]; then
    source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL working environment"
-   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_8_5/src
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_4_2_2/src
    source /uscmst1/prod/sw/cms/bashrc prod
    source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
    cd $CMS2_LOCATION
    cmsenv
    cd
+   #export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
 elif [ "$1" == "data_fnal" ]; then
    echo "FNAL data environment"
-   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_3_8_5/src
+   export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_4_2_2/src
    source /uscmst1/prod/sw/cms/bashrc prod
    source /uscmst1/prod/grid/gLite_SL5.sh
    source /uscmst1/prod/grid/CRAB/crab.sh
@@ -73,6 +74,7 @@ elif [ "$1" == "go_cern" ]; then
    cd $CMS2_LOCATION
    cmsenv
    cd
+   export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
    #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
@@ -86,6 +88,7 @@ elif [ "$1" == "go_ucsd" ]; then
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
    export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_13_WZ/src/CMS2
    cd $CMS2_LOCATION/NtupleMacros/WZ
+   export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
 elif [ "$1" == "dbs_fnal" ]; then
    echo "FNAL DBS configuration"
    cd /uscms/home/gutsche/work/software/DBS/DBS_2_0_9_patch_5/DBS/Clients/Python
