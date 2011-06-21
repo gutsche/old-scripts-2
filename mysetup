@@ -17,7 +17,7 @@ elif [ "$1" == "cern" ]; then
 elif [ "$1" == "ucsd" ]; then 
    echo "UCSD CMS software environment" 
    source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12   
-   export SCRAM_ARCH=slc5_ia32_gcc434
+   export SCRAM_ARCH=slc5_amd64_gcc434
 elif [ "$1" == "ucsd_ui" ]; then
    echo "UCSD UI environment"
    source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
@@ -82,9 +82,15 @@ elif [ "$1" == "go_ucsd" ]; then
    #eval `scramv1 runtime -sh`
    #source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
    #source /code/osgcode/ucsdt2/Crab/etc/crab.sh
-   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.22.00/
+   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.28.00/
    export PATH=$PATH:$ROOTSYS/bin
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+elif [ "$1" == "ucsd_analysis" ]; then
+   source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
+   export SCRAM_ARCH=slc5_ia32_gcc434
+   echo "Analysis environment"
+   cd $CMS2_LOCATION
+   cmsenv
    export CMS2_LOCATION=/home/users/gutsche/software/TAS/CMSSW_2_2_13_WZ/src/CMS2
    cd $CMS2_LOCATION/NtupleMacros/WZ
    export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
@@ -117,7 +123,7 @@ elif [ "$1" == "root_cern" ]; then
    export PYTHONPATH=$PYTHONPATH:$ROOTSYS/lib
 elif [ "$1" == "root_ucsd" ]; then
    echo "UCSD standalone ROOT"
-   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.22.00/
+   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.28.00/
    export PATH=$PATH:$ROOTSYS/bin
    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
    export PYTHONPATH=$ROOTSYS/lib
