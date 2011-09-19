@@ -86,7 +86,14 @@ cat datasets.list | grep 'Dec4Skim' | grep v1 > skim_dec4_v1.list
 cat datasets.list | grep 'Dec22ReReco' | grep v1 > rereco_dec22_v1.list
 cat datasets.list | grep 'Dec22Skim' | grep v2 > skim_dec22_v2.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list prompt_reco_v4.list alcareco_v4.list collision_reco_sequence_v4.list cs_v4.list alcareco_v4.list dpg_skims_v4.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_hltest.list  prompt_reco_v5.list alcareco_v5.list collision_reco_sequence_v5.list cs_v5.list alcareco_v5.list dpg_skims_v5.list  prompt_reco_v6.list alcareco_v6.list collision_reco_sequence_v6.list cs_v6.list alcareco_v6.list dpg_skims_v6.list sd_v6.list rereco_Jul6thReReco.list rereco_Jul6thSkim.list rereco_Jul15thReReco.list rereco_Jul15thSkim.list rereco_Jul16thReReco.list rereco_Jul16thSkim.list rereco_Jul23ReReco.list rereco_Jul23Skim.list rereco_Jul26thReReco.list rereco_Jul26thSkim.list rereco_sep17_v2.list skim_sep17_v1.list skim_sep17_v2.list rereco_nov4_v1.list skim_nov4_v1.list rereco_dec4_v1.list skim_dec4_v1.list rereco_dec22_v1.list skim_dec22_v2.list | sort > done.list
+cat datasets.list | grep 'Apr21ReReco' | grep v1 > rereco_apr21_v1.list
+cat datasets.list | grep 'Apr21ReReco' | grep v3 > rereco_apr21_v3.list
+
+cat datasets.list | grep '399_Cosmic' | grep v1 > rereco_399_Cosmic_v1.list
+
+cat datasets.list | grep 'PromptReco_multilepton' | grep v1 > rereco_PromptReco_multilepton_v1.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list alcareco_v1.list collision_reco_sequence_v1.list cs_v1.list prompt_reco_v2.list alcareco_v2.list collision_reco_sequence_v2.list cs_v2.list alcareco_v3.list dpg_skims_v2.list rereco_May27thReReco.list rereco_May27thSkim.list prompt_reco_v4.list alcareco_v4.list collision_reco_sequence_v4.list cs_v4.list alcareco_v4.list dpg_skims_v4.list rereco_Jun9thReReco.list rereco_Jun9thSkim.list rereco_Jun14thReReco.list rereco_Jun14thSkim.list rereco_hltest.list  prompt_reco_v5.list alcareco_v5.list collision_reco_sequence_v5.list cs_v5.list alcareco_v5.list dpg_skims_v5.list  prompt_reco_v6.list alcareco_v6.list collision_reco_sequence_v6.list cs_v6.list alcareco_v6.list dpg_skims_v6.list sd_v6.list rereco_Jul6thReReco.list rereco_Jul6thSkim.list rereco_Jul15thReReco.list rereco_Jul15thSkim.list rereco_Jul16thReReco.list rereco_Jul16thSkim.list rereco_Jul23ReReco.list rereco_Jul23Skim.list rereco_Jul26thReReco.list rereco_Jul26thSkim.list rereco_sep17_v2.list skim_sep17_v1.list skim_sep17_v2.list rereco_nov4_v1.list skim_nov4_v1.list rereco_dec4_v1.list skim_dec4_v1.list rereco_dec22_v1.list skim_dec22_v2.list rereco_apr21_v1.list rereco_apr21_v3.list rereco_399_Cosmic_v1.list rereco_PromptReco_multilepton_v1.list | sort > done.list
 
 echo ""
 echo "inconsistencies"

@@ -30,22 +30,22 @@ if query_run != None :
 rawdatasets = [
 '/DoubleElectron/Run2011A-v1/RAW',
 '/DoubleMu/Run2011A-v1/RAW',
-'/ElectronHad/Run2011A-v1/RAW',
+# '/ElectronHad/Run2011A-v1/RAW',
 # '/ForwardTriggers/Run2011A-v1/RAW',
-'/HT/Run2011A-v1/RAW',
+# '/HT/Run2011A-v1/RAW',
 '/Jet/Run2011A-v1/RAW',
-'/METBTag/Run2011A-v1/RAW',
-'/MinimumBias/Run2011A-v1/RAW',
-'/MuEG/Run2011A-v1/RAW',
-'/MuHad/Run2011A-v1/RAW',
-'/MuOnia/Run2011A-v1/RAW',
-'/MultiJet/Run2011A-v1/RAW',
-'/Photon/Run2011A-v1/RAW',
-'/PhotonHad/Run2011A-v1/RAW',
+# '/METBTag/Run2011A-v1/RAW',
+# '/MinimumBias/Run2011A-v1/RAW',
+# '/MuEG/Run2011A-v1/RAW',
+# '/MuHad/Run2011A-v1/RAW',
+# '/MuOnia/Run2011A-v1/RAW',
+# '/MultiJet/Run2011A-v1/RAW',
+# '/Photon/Run2011A-v1/RAW',
+# '/PhotonHad/Run2011A-v1/RAW',
 '/SingleElectron/Run2011A-v1/RAW',
 '/SingleMu/Run2011A-v1/RAW',
-'/Tau/Run2011A-v1/RAW',
-'/TauPlusX/Run2011A-v1/RAW',
+# '/Tau/Run2011A-v1/RAW',
+# '/TauPlusX/Run2011A-v1/RAW',
 ]
 
 def queryCommandline(runs,commandline):
@@ -92,6 +92,8 @@ for run in runs.keys():
     if enough_events == True :
         results.append(run)
         
+results.sort()
+
 print results
 
 enddate = datetime.date.today()

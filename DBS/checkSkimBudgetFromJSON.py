@@ -39,11 +39,13 @@ recodatasets = [
 ]
 
 dpgskimdatasets = [
+'/BTag/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
+'/Commissioning/Run2011A-DT-PromptSkim-v4/RAW-RECO',
 '/Commissioning/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
 '/Commissioning/Run2011A-MuonDPG-PromptSkim-v4/RAW-RECO',
-'/DoubleElectron/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
 '/Cosmics/Run2011A-CosmicSP-PromptSkim-v4/RAW-RECO',
 '/Cosmics/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
+'/DoubleElectron/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
 '/DoubleMu/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
 '/ElectronHad/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
 '/HT/Run2011A-LogError-PromptSkim-v4/RAW-RECO',
@@ -67,9 +69,11 @@ dpgskimdatasets = [
 ]
 
 sdcsskimdatasets = [
+'/BTag/Run2011A-EXOHSCP-PromptSkim-v4/USER',
 '/DoubleElectron/Run2011A-HWW-PromptSkim-v4/AOD',
 '/DoubleElectron/Run2011A-HZZ-PromptSkim-v4/AOD',
 '/DoubleElectron/Run2011A-ZElectron-PromptSkim-v4/RAW-RECO',
+'/DoubleMu/Run2011A-EXOHSCP-PromptSkim-v4/USER',
 '/DoubleMu/Run2011A-HWW-PromptSkim-v4/AOD',
 '/DoubleMu/Run2011A-HZZ-PromptSkim-v4/AOD',
 '/DoubleMu/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',
@@ -78,6 +82,7 @@ sdcsskimdatasets = [
 '/HT/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',
 '/Jet/Run2011A-DiJet-PromptSkim-v4/USER',
 '/Jet/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',
+'/MET/Run2011A-EXOHSCP-PromptSkim-v4/USER',
 '/MET/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',
 '/MuEG/Run2011A-HWW-PromptSkim-v4/AOD',
 '/MuEG/Run2011A-HZZ-PromptSkim-v4/AOD',
@@ -91,6 +96,7 @@ sdcsskimdatasets = [
 '/SingleElectron/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',
 '/SingleElectron/Run2011A-Tau-PromptSkim-v4/RAW-RECO',
 '/SingleElectron/Run2011A-WElectron-PromptSkim-v4/RAW-RECO',
+'/SingleMu/Run2011A-EXOHSCP-PromptSkim-v4/USER',
 '/SingleMu/Run2011A-HWW-PromptSkim-v4/AOD',
 '/SingleMu/Run2011A-HZZ-PromptSkim-v4/AOD',
 '/SingleMu/Run2011A-HighMET-PromptSkim-v4/RAW-RECO',

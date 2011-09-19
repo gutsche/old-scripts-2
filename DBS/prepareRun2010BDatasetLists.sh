@@ -47,7 +47,17 @@ cat datasets.list | grep 'Dec22Skim' | grep v2 > skim_dec22_v2.list
 
 cat datasets.list | grep 'TRKFailureScenario' | grep v1 > trkfailurescenario_v1.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list sd_v1.list dpg_skims_v1.list prompt_reco_v2.list prompt_aod_v2.list prompt_dqm_v2.list alcareco_v2.list sd_v2.list dpg_skims_v2.list rereco_sep17_v2.list trkfailurescenario_v1.list rereco_nov4_v1.list skim_nov4_v1.list rereco_nov4_v2.list rereco_dec4_v1.list skim_dec4_v1.list rereco_dec22_v1.list rereco_dec22_v2.list skim_dec22_v2.list | sort > done.list
+cat datasets.list | grep 'Apr21ReReco' | grep v1 > rereco_apr21_v1.list
+cat datasets.list | grep 'Apr21ReReco' | grep v3 > rereco_apr21_v3.list
+
+cat datasets.list | grep '399_Cosmic' | grep v1 > rereco_399_Cosmic_v1.list
+
+cat datasets.list | grep 'PromptReco_multilepton' | grep v1 > rereco_PromptReco_multilepton_v1.list
+
+cat datasets.list | grep 'WMAgent' | grep v2 > rereco_WMAgent_v2.list
+cat datasets.list | grep 'WMAgent' | grep v5 > rereco_WMAgent_v5.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list sd_v1.list dpg_skims_v1.list prompt_reco_v2.list prompt_aod_v2.list prompt_dqm_v2.list alcareco_v2.list sd_v2.list dpg_skims_v2.list rereco_sep17_v2.list trkfailurescenario_v1.list rereco_nov4_v1.list skim_nov4_v1.list rereco_nov4_v2.list rereco_dec4_v1.list skim_dec4_v1.list rereco_dec22_v1.list rereco_dec22_v2.list skim_dec22_v2.list rereco_apr21_v1.list rereco_apr21_v3.list rereco_399_Cosmic_v1.list rereco_PromptReco_multilepton_v1.list rereco_WMAgent_v2.list rereco_WMAgent_v5.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
