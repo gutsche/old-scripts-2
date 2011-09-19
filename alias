@@ -67,3 +67,4 @@ alias u5='ssh uaf-5.t2.ucsd.edu'
 alias u6='ssh uaf-6.t2.ucsd.edu'
 
 alias checkDatataking='python ~/scripts/DBS/checkDatataking.py'
+alias c="tr '\n' ' '"
