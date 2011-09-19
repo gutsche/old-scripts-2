@@ -187,3 +187,49 @@ if len(blocks) > 0 :
             custsites = custsites[:-1]
 
         print 'block:',block,'DBS status:',status,'custodial:',custsites,'non-custodial:',sites
+
+LFNs = []
+
+if len(datasets) > 0 :
+    for dataset in datasets:
+
+        commandline = "dbs search --query=\"find file where dataset = " + str(dataset) + "\" --noheader --production"
+        localargs = shlex.split(commandline)
+        output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
+        lines = output.communicate()[0].split('\n')
+        if lines[0].count('/store/') > 0:
+            tmplfn = '/'+'/'.join(lines[0].split('/')[1:7])
+            if tmplfn not in LFNs:
+                LFNs.append(tmplfn)
+        else :
+            array = dataset.split('/')
+            array2 = array[2].split('-')
+            print 'Problem with query for dataset: ' + dataset + ' possible LFN structure from parsing the dataset name: \n/store/data/%s/%s/%s/%s' % (array2[0],array[1],array[3],'-'.join(array2[1:]))
+
+if len(blocks) > 0 :
+    for block in blocks:
+
+        commandline = "dbs search --query=\"find file where block = " + str(block) + "\" --noheader --production"
+        localargs = shlex.split(commandline)
+        output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
+        lines = output.communicate()[0].split('\n')
+        if lines[0].count('/store/') > 0:
+            tmplfn = '/'+'/'.join(lines[0].split('/')[1:7])
+            if tmplfn not in LFNs:
+                LFNs.append(tmplfn)
+        else :
+            print 'Problem with query for block:',block
+
+LFNs.sort()
+print ''
+print 'Tape families needed for:'
+print ''
+print 'cat(4):'
+for item in LFNs:
+    if item.count('/GEN-SIM/') > 0 or item.count('/GEN-SIM-RAW') > 0:
+        print item  
+print ''
+print 'cat(5):'
+for item in LFNs:
+    if item.count('/GEN-SIM/') <= 0 and item.count('/GEN-SIM-RAW') <= 0:
+        print item  
