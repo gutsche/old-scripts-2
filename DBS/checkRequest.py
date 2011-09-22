@@ -128,11 +128,10 @@ if len(blocks) > 0 :
             for line in lines:
                 print line
             sys.exit(1)
-        for line in lines:
-            if len(line) > 0 :
-                status = line.strip()
-            else :
-                status = 'UNKNOWN'
+        if len(lines) > 1 :
+            status = lines[0].strip()
+        else :
+            status = 'UNKNOWN'
 
         url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + block
         url = url.replace('#','%23')
