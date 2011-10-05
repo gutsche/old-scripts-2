@@ -159,19 +159,37 @@
 # cat mc_2011_jul_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL   | grep -v NoPU | awk '{SUM1+=$2} {SUM2+=$3} END {print "July 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
 # cat mc_2011_jul_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL | grep -v NoPU | grep -v Spring11 | awk '{SUM1+=$2} {SUM2+=$3} END {print "July 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
 
+# echo ""
+# echo "RAW categories:"
+# echo ""
+# cat mc_2011_aug_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk -F\/ '{print $3}' | sort -u
+# echo ""
+# echo "RECO categories:"
+# echo ""
+# cat mc_2011_aug_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | awk -F\/ '{print $3}' | sort -u
+# echo ""
+# echo "AOD categories:"
+# echo ""
+# cat mc_2011_aug_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | grep -v Spring11 | awk -F\/ '{print $3}' | sort -u
+# 
+# cat mc_2011_aug_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 GEN-SIM-RAW: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+# cat mc_2011_aug_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL   | grep -v NoPU | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+# cat mc_2011_aug_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL | grep -v NoPU | grep -v Spring11 | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+
 echo ""
 echo "RAW categories:"
 echo ""
-cat mc_2011_aug_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk -F\/ '{print $3}' | sort -u
+cat mc_2011_sep_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk -F\/ '{print $3}' | sort -u
 echo ""
 echo "RECO categories:"
 echo ""
-cat mc_2011_aug_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | awk -F\/ '{print $3}' | sort -u
+cat mc_2011_sep_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v Fall11 | grep -v CSCFail | grep -v STARTHI42 | grep -v PUpythia8 | grep -v FastSim | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | awk -F\/ '{print $3}' | sort -u
 echo ""
 echo "AOD categories:"
 echo ""
-cat mc_2011_aug_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | grep -v Spring11 | awk -F\/ '{print $3}' | sort -u
+cat mc_2011_sep_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v Fall11 | grep -v CSCFail | grep -v STARTHI42 | grep -v PUpythia8 | grep -v FastSim | grep -v HCal | grep -v Flat | grep -v IDEAL  | grep -v NoPU | grep -v Spring11 | awk -F\/ '{print $3}' | sort -u
 
-cat mc_2011_aug_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 GEN-SIM-RAW: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
-cat mc_2011_aug_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL   | grep -v NoPU | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
-cat mc_2011_aug_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v HCal | grep -v Flat | grep -v IDEAL | grep -v NoPU | grep -v Spring11 | awk '{SUM1+=$2} {SUM2+=$3} END {print "August 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+echo ""
+cat mc_2011_sep_raw.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v GEN-SIM-RAW | awk '{SUM1+=$2} {SUM2+=$3} END {print "September 2011 GEN-SIM-RAW: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_sep_reco.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v Fall11 | grep -v CSCFail | grep -v STARTHI42 | grep -v PUpythia8 | grep -v FastSim | grep -v HCal | grep -v Flat | grep -v IDEAL   | grep -v NoPU | awk '{SUM1+=$2} {SUM2+=$3} END {print "September 2011 GEN-SIM-RECO: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'
+cat mc_2011_sep_aod.blocks | grep -v '/CMSSW_' | grep -vi test | grep -vi preprod | grep -v Backfill | grep -vi jobrobot | grep -vi sam | grep -v X0M | grep -v Fall11 | grep -v CSCFail | grep -v STARTHI42 | grep -v PUpythia8 | grep -v FastSim | grep -v HCal | grep -v Flat | grep -v IDEAL | grep -v NoPU | grep -v Spring11 | awk '{SUM1+=$2} {SUM2+=$3} END {print "September 2011 AODSIM: Size [TiB]: "SUM1/1024/1024/1024/1024" Events: "SUM2}'

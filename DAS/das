@@ -6,16 +6,16 @@ DAS command line tool
 """
 __author__ = "Valentin Kuznetsov"
 
-import re
 import sys
+if  sys.version_info < (2, 6):
+    raise Exception("DAS requires python 2.6 or greater")
+
+import re
 import time
 import json
 import urllib
 import urllib2
 from   optparse import OptionParser
-
-if  sys.version_info < (2, 6):
-    raise Exception("DAS requires python 2.6 or greater")
 
 class DASOptionParser: 
     """
@@ -30,14 +30,14 @@ class DASOptionParser:
                                default=False, dest="query",
              help="specify query for your request")
         self.parser.add_option("--host", action="store", type="string", 
-                               default='https://dastest.cern.ch', dest="host",
-             help="specify host name of DAS cache server, default https://dastest.cern.ch")
+                               default='https://cmsweb.cern.ch', dest="host",
+             help="specify host name of DAS cache server, default https://cmsweb.cern.ch")
         self.parser.add_option("--idx", action="store", type="int", 
                                default=0, dest="idx",
-             help="start index for returned result set, aka pagination, use w/ limit")
+             help="start index for returned result set, aka pagination, use w/ limit (default is 0)")
         self.parser.add_option("--limit", action="store", type="int", 
                                default=10, dest="limit",
-             help="number of returned results (results per page)")
+             help="number of returned results (results per page), 10 by default")
         self.parser.add_option("--format", action="store", type="string", 
                                default="json", dest="format",
              help="specify return data format (json or plain), default json")
@@ -101,8 +101,8 @@ def get_data(host, query, idx, limit, debug):
             fdesc = opener.open(req)
             data = fdesc.read()
             fdesc.close()
-        except urllib2.HTTPError, err:
-            print err
+        except urllib2.HTTPError as err:
+            print str(err)
             return ""
         if  data and isinstance(data, str) and pat.match(data) and len(data) == 32:
             pid = data
@@ -129,6 +129,10 @@ def main():
     data    = get_data(host, query, idx, limit, debug)
     if  opts.format == 'plain':
         jsondict = json.loads(data)
+        nres = jsondict['nresults']
+        msg  = "\nShowing %s-%s out of %s results" % (idx+1, idx+limit, nres)
+        msg += ", for more results use --idx/--limit options\n"
+        print msg
         mongo_query = jsondict['mongo_query']
         if  mongo_query.has_key('filters'):
             filters = mongo_query['filters']
