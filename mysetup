@@ -73,7 +73,7 @@ elif [ "$1" == "go_cern" ]; then
    cd /afs/cern.ch/user/g/gutsche/software/CMSSW_4_2_2/src
    cmsenv
    cd
-   export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
+   #export DBS_CLIENT_CONFIG=$HOME/scripts/dbs.config
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
    #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12

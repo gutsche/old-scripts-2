@@ -55,6 +55,8 @@ push(@releaseCycles,"Summer10");
 push(@releaseCycles,"Fall10");
 push(@releaseCycles,"Winter10");
 push(@releaseCycles,"Spring11");
+push(@releaseCycles,"Summer11");
+push(@releaseCycles,"Fall11");
 push(@releaseCycles,"StoreResults");
 push(@releaseCycles,"JobRobot");
 
@@ -78,7 +80,7 @@ push(@releaseCycles,"Run2010A");
 push(@releaseCycles,"Run2010B");
 push(@releaseCycles,"HIRun2010");
 push(@releaseCycles,"Run2011A");
-
+push(@releaseCycles,"Run2011B");
 
 
 for($releaseCycleIndex=0; $releaseCycleIndex < scalar(@releaseCycles); $releaseCycleIndex++) {
@@ -97,6 +99,7 @@ if ($datatier eq "") {
     push(@datatierList, "RAW-RECO");
     push(@datatierList, "USER");
     push(@datatierList, "GEN-SIM");
+    push(@datatierList, "GEN-RAW");
     push(@datatierList, "GEN-SIM-RAW");
     push(@datatierList, "GEN-SIM-RECO");
     push(@datatierList, "AODSIM");
