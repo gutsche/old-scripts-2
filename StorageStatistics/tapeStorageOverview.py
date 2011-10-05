@@ -55,11 +55,14 @@ eras_data  = [
 'Commissioning10',
 'Run2010A',
 'Run2010B',
-'HIRun2010'
+'HIRun2010',
+'Run2011A',
+'Run2011B'
 ]
 
 tiers_mc   = [
 'GEN-SIM',
+'GEN-RAW',
 'GEN-SIM-RAW',
 'GEN-SIM-RECO',
 'AODSIM',
@@ -78,6 +81,8 @@ eras_mc    = [
 'Fall10',
 'Winter10',
 'Spring11',
+'Summer11',
+'Fall11'
 ]
 
 ignore_eras = [
@@ -504,7 +509,7 @@ def createEraDictNonCustData(input):
 		for site in sites:
 			value = 0
 			for tier in tiers_data:
-				value += input[site][era][tier]['data']['cust']
+				value += input[site][era][tier]['data']['non_cust']
 			result[era][site] = value
 
     print 'Created era dict for non-cust data'
@@ -520,8 +525,8 @@ def createDetailedArrayData(input):
     line.append('Data Tier')
     line.append('Cust./Non-Cust.')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -575,8 +580,8 @@ def createEraCustArrayData(input):
     line.append('Acquisition era')
     line.append('Cust./Non-Cust.')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -626,8 +631,8 @@ def createEraTierArrayData(input):
     line.append('Acquisition era')
     line.append('Data Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -666,8 +671,8 @@ def createTierArrayData(input):
 	line = []
 	line.append('Data Tier')
 	for site in sites:
-		line.append(site+' [TiB]')
-	line.append('All sites [TiB]')
+		line.append(site+' [TB]')
+	line.append('All sites [TB]')
 	result.append(line)
 	total = {}
 	for site in sites:
@@ -703,8 +708,8 @@ def createTierArrayCustData(input):
     line = []
     line.append('Data Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -740,8 +745,8 @@ def createTierArrayNonCustData(input):
     line = []
     line.append('Data Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -777,8 +782,8 @@ def createEraArrayData(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -814,8 +819,8 @@ def createEraArrayCustData(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -851,8 +856,8 @@ def createEraArrayNonCustData(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1064,8 +1069,8 @@ def createDetailedArrayMC(input):
     line.append('MC Tier')
     line.append('Cust./Non-Cust.')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1119,8 +1124,8 @@ def createEraCustArrayMC(input):
     line.append('Acquisition era')
     line.append('Cust./Non-Cust.')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1170,8 +1175,8 @@ def createEraTierArrayMC(input):
     line.append('Acquisition era')
     line.append('MC Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1210,8 +1215,8 @@ def createTierArrayMC(input):
 	line = []
 	line.append('MC Tier')
 	for site in sites:
-		line.append(site+' [TiB]')
-	line.append('All sites [TiB]')
+		line.append(site+' [TB]')
+	line.append('All sites [TB]')
 	result.append(line)
 	total = {}
 	for site in sites:
@@ -1247,8 +1252,8 @@ def createTierArrayCustMC(input):
     line = []
     line.append('MC Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1284,8 +1289,8 @@ def createTierArrayNonCustMC(input):
     line = []
     line.append('MC Tier')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1321,8 +1326,8 @@ def createEraArrayMC(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1358,8 +1363,8 @@ def createEraArrayCustMC(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1395,8 +1400,8 @@ def createEraArrayNonCustMC(input):
     line = []
     line.append('Acquisition era')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1466,8 +1471,8 @@ def createOverviewArray(input):
     line = []
     line.append('')
     for site in sites:
-        line.append(site+' [TiB]')
-    line.append('All sites [TiB]')
+        line.append(site+' [TB]')
+    line.append('All sites [TB]')
     result.append(line)
     total = {}
     for site in sites:
@@ -1551,12 +1556,12 @@ def createSiteOverviewArray(currentInput,deltaInput,site):
 
     line = []
     line.append('Overview for: ' + site)
-    line.append('Custodial Delta [TiB]')
-    line.append('Custodial Total [TiB]')
-    line.append('Non-Custodial Delta [TiB]')
-    line.append('Non-Custodial Total [TiB]')
-    line.append('Total Delta [TiB]')
-    line.append('Total Total [TiB]')
+    line.append('Custodial Delta [TB]')
+    line.append('Custodial Total [TB]')
+    line.append('Non-Custodial Delta [TB]')
+    line.append('Non-Custodial Total [TB]')
+    line.append('Total Delta [TB]')
+    line.append('Total Total [TB]')
     result.append(line)
 
     data_delta_total = 0
@@ -1861,7 +1866,7 @@ def createHorizontalStackedBarPlot(filename,title,labels,legends,data) :
     fontsize = 20
     plt.title(title,fontsize=fontsize)
     plt.yticks(ind, labels)
-    plt.xlabel('TiB',fontsize=fontsize)
+    plt.xlabel('TB',fontsize=fontsize)
     plt.legend( [ plot[0] for plot in plots], legends, loc='center left', bbox_to_anchor=(1.05, .5) )
     plt.grid(True)
     ax = plt.gca()
