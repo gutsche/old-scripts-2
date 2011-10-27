@@ -1,4 +1,4 @@
-python $DBSCMD_HOME/dbsCommandLine.py -c search --noheader --query="find dataset where dataset = /*/Run2010A*/*" | grep -v 'test/' | sort > complete_datasets.list
+python $DBSCMD_HOME/dbsCommandLine.py -c search --production --noheader --query="find dataset where dataset = /*/Run2010A*/*" | grep -v 'test/' | sort > complete_datasets.list
 
 cat complete_datasets.list | grep -i express > express.list
 cat complete_datasets.list | grep -i preprod > preproduction.list
