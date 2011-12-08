@@ -36,7 +36,7 @@ for line in datasets_file.readlines() :
     in_buffer = 0
     in_mss = 0
 
-    url = 'https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + dataset + '*'
+    url = 'https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + dataset + '%23*'
     result = json.load(urllib.urlopen(url))
     for block in result['phedex']['block']:
         for replica in block['replica'] :

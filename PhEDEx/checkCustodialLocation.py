@@ -30,7 +30,7 @@ custodial = {}
 non_custodial = {}
 
 if lfn == None :
-    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + datasetpath + '*'
+    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + datasetpath + '%23*'
     result = json.load(urllib.urlopen(url))
     try:
         for block in result['phedex']['block']:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys,getopt,urllib,json,os,datetime,subprocess,shlex
+import sys,getopt,urllib2,json,os,datetime,subprocess,shlex
 
 requestId = None
 allSites = 1
@@ -24,7 +24,9 @@ blocks = []
 
 
 url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/deleterequests?request=' + requestID
-result = json.load(urllib.urlopen(url))
+jstr = urllib2.urlopen(url).read()
+jstr = jstr.replace("\n", " ")
+result = json.loads(jstr)
 
 for item in result['phedex']['request']:
     for dataset in item['data']['dbs']['dataset']:
@@ -57,8 +59,10 @@ if len(datasets) > 0 :
         else :
             status = 'UNKNOWN'
 
-        url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + dataset + '*'
-        result = json.load(urllib.urlopen(url))
+        url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + dataset + '%23*'
+        jstr = urllib2.urlopen(url).read()
+        jstr = jstr.replace("\n", " ")
+        result = json.loads(jstr)
         try:
             for block in result['phedex']['block']:
                 name = block['name']
@@ -138,7 +142,9 @@ if len(blocks) > 0 :
 
         url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/blockreplicas?block=' + block
         url = url.replace('#','%23')
-        result = json.load(urllib.urlopen(url))
+        jstr = urllib2.urlopen(url).read()
+        jstr = jstr.replace("\n", " ")
+        result = json.loads(jstr)
         try:
             for item in result['phedex']['block']:
                 name = item['name']
