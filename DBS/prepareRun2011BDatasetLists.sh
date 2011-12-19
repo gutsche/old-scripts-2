@@ -15,15 +15,119 @@ cat datasets.list | grep -i promptskim | grep v1 > prompt_skim_v1.list
 cat datasets.list | grep ALCA | grep v1 > alcareco_v1.list
 # prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list prompt_skim_v1.list
 
-# cat datasets.list | grep '/RECO' | grep -i 20Sep2011 | grep v1 > 20Sep2011_reco_v1.list
-# cat datasets.list | grep '/AOD' | grep -i 20Sep2011 | grep v1 > 20Sep2011_aod_v1.list
-# cat datasets.list | grep '/DQM' | grep -i 20Sep2011 | grep v1 > 20Sep2011_dqm_v1.list
-# cat datasets.list | grep '/ALCARECO' | grep -i 20Sep2011 | grep v1 > 20Sep2011_alcareco_v1.list
-# cat datasets.list | grep '/RAW-RECO' | grep -i 20Sep2011 | grep v1 > 20Sep2011_skims_v1.list
-# cat datasets.list | grep '/USER' | grep -i 20Sep2011 | grep v1 >> 20Sep2011_skims_v1.list
-# 20Sep2011_reco_v1.list 20Sep2011_aod_v1.list 20Sep2011_dqm_v1.list 20Sep2011_alcareco_v1.list 20Sep2011_skims_v1.list 20Sep2011_skims_v1.list
+cat datasets.list | grep '/RECO' | grep -i 14Oct2011 | grep v1 > 14Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 14Oct2011 | grep v1 > 14Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 14Oct2011 | grep v1 > 14Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 14Oct2011 | grep v1 > 14Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 14Oct2011 | grep v1 > 14Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 14Oct2011 | grep v1 >> 14Oct2011_skims_v1.list
+# 14Oct2011_reco_v1.list 14Oct2011_aod_v1.list 14Oct2011_dqm_v1.list 14Oct2011_alcareco_v1.list 14Oct2011_skims_v1.list 14Oct2011_skims_v1.list
 
-cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list prompt_skim_v1.list | sort > done.list
+cat datasets.list | grep '/RECO' | grep -i 17Oct2011 | grep v1 > 17Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 17Oct2011 | grep v1 > 17Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 17Oct2011 | grep v1 > 17Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 17Oct2011 | grep v1 > 17Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 17Oct2011 | grep v1 > 17Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 17Oct2011 | grep v1 >> 17Oct2011_skims_v1.list
+# 17Oct2011_reco_v1.list 17Oct2011_aod_v1.list 17Oct2011_dqm_v1.list 17Oct2011_alcareco_v1.list 17Oct2011_skims_v1.list 17Oct2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 18Oct2011 | grep v1 > 18Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 18Oct2011 | grep v1 > 18Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 18Oct2011 | grep v1 > 18Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 18Oct2011 | grep v1 > 18Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 18Oct2011 | grep v1 > 18Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 18Oct2011 | grep v1 >> 18Oct2011_skims_v1.list
+# 18Oct2011_reco_v1.list 18Oct2011_aod_v1.list 18Oct2011_dqm_v1.list 18Oct2011_alcareco_v1.list 18Oct2011_skims_v1.list 18Oct2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 19Oct2011 | grep v1 > 19Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 19Oct2011 | grep v1 > 19Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 19Oct2011 | grep v1 > 19Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 19Oct2011 | grep v1 > 19Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 19Oct2011 | grep v1 > 19Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 19Oct2011 | grep v1 >> 19Oct2011_skims_v1.list
+# 19Oct2011_reco_v1.list 19Oct2011_aod_v1.list 19Oct2011_dqm_v1.list 19Oct2011_alcareco_v1.list 19Oct2011_skims_v1.list 19Oct2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 20Oct2011 | grep v1 > 20Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 20Oct2011 | grep v1 > 20Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 20Oct2011 | grep v1 > 20Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 20Oct2011 | grep v1 > 20Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 20Oct2011 | grep v1 > 20Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 20Oct2011 | grep v1 >> 20Oct2011_skims_v1.list
+# 20Oct2011_reco_v1.list 20Oct2011_aod_v1.list 20Oct2011_dqm_v1.list 20Oct2011_alcareco_v1.list 20Oct2011_skims_v1.list 20Oct2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 21Oct2011 | grep v1 > 21Oct2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 21Oct2011 | grep v1 > 21Oct2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 21Oct2011 | grep v1 > 21Oct2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 21Oct2011 | grep v1 > 21Oct2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 21Oct2011 | grep v1 > 21Oct2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 21Oct2011 | grep v1 >> 21Oct2011_skims_v1.list
+# 21Oct2011_reco_v1.list 21Oct2011_aod_v1.list 21Oct2011_dqm_v1.list 21Oct2011_alcareco_v1.list 21Oct2011_skims_v1.list 21Oct2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 02Nov2010 | grep v1 > 02Nov2010_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 02Nov2010 | grep v1 > 02Nov2010_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 02Nov2010 | grep v1 > 02Nov2010_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 02Nov2010 | grep v1 > 02Nov2010_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 02Nov2010 | grep v1 > 02Nov2010_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 02Nov2010 | grep v1 >> 02Nov2010_skims_v1.list
+# 02Nov2010_reco_v1.list 02Nov2010_aod_v1.list 02Nov2010_dqm_v1.list 02Nov2010_alcareco_v1.list 02Nov2010_skims_v1.list 02Nov2010_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 08Nov2011 | grep v1 > 08Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 08Nov2011 | grep v1 > 08Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 08Nov2011 | grep v1 > 08Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 08Nov2011 | grep v1 > 08Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 08Nov2011 | grep v1 > 08Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 08Nov2011 | grep v1 >> 08Nov2011_skims_v1.list
+# 08Nov2011_reco_v1.list 08Nov2011_aod_v1.list 08Nov2011_dqm_v1.list 08Nov2011_alcareco_v1.list 08Nov2011_skims_v1.list 08Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 15Nov2011 | grep v1 > 15Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 15Nov2011 | grep v1 > 15Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 15Nov2011 | grep v1 > 15Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 15Nov2011 | grep v1 > 15Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 15Nov2011 | grep v1 > 15Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 15Nov2011 | grep v1 >> 15Nov2011_skims_v1.list
+# 15Nov2011_reco_v1.list 15Nov2011_aod_v1.list 15Nov2011_dqm_v1.list 15Nov2011_alcareco_v1.list 15Nov2011_skims_v1.list 15Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 18Nov2011 | grep v1 > 18Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 18Nov2011 | grep v1 > 18Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 18Nov2011 | grep v1 > 18Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 18Nov2011 | grep v1 > 18Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 18Nov2011 | grep v1 > 18Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 18Nov2011 | grep v1 >> 18Nov2011_skims_v1.list
+# 18Nov2011_reco_v1.list 18Nov2011_aod_v1.list 18Nov2011_dqm_v1.list 18Nov2011_alcareco_v1.list 18Nov2011_skims_v1.list 18Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 19Nov2011 | grep v1 > 19Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 19Nov2011 | grep v1 > 19Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 19Nov2011 | grep v1 > 19Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 19Nov2011 | grep v1 > 19Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 19Nov2011 | grep v1 > 19Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 19Nov2011 | grep v1 >> 19Nov2011_skims_v1.list
+# 19Nov2011_reco_v1.list 19Nov2011_aod_v1.list 19Nov2011_dqm_v1.list 19Nov2011_alcareco_v1.list 19Nov2011_skims_v1.list 19Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 26Nov2011 | grep v1 > 26Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 26Nov2011 | grep v1 > 26Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 26Nov2011 | grep v1 > 26Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 26Nov2011 | grep v1 > 26Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 26Nov2011 | grep v1 > 26Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 26Nov2011 | grep v1 >> 26Nov2011_skims_v1.list
+# 26Nov2011_reco_v1.list 26Nov2011_aod_v1.list 26Nov2011_dqm_v1.list 26Nov2011_alcareco_v1.list 26Nov2011_skims_v1.list 26Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 30Nov2011 | grep v1 > 30Nov2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 30Nov2011 | grep v1 > 30Nov2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 30Nov2011 | grep v1 > 30Nov2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 30Nov2011 | grep v1 > 30Nov2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 30Nov2011 | grep v1 > 30Nov2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 30Nov2011 | grep v1 >> 30Nov2011_skims_v1.list
+# 30Nov2011_reco_v1.list 30Nov2011_aod_v1.list 30Nov2011_dqm_v1.list 30Nov2011_alcareco_v1.list 30Nov2011_skims_v1.list 30Nov2011_skims_v1.list
+
+cat datasets.list | grep '/RECO' | grep -i 09Dec2011 | grep v1 > 09Dec2011_reco_v1.list
+cat datasets.list | grep '/AOD' | grep -i 09Dec2011 | grep v1 > 09Dec2011_aod_v1.list
+cat datasets.list | grep '/DQM' | grep -i 09Dec2011 | grep v1 > 09Dec2011_dqm_v1.list
+cat datasets.list | grep '/ALCARECO' | grep -i 09Dec2011 | grep v1 > 09Dec2011_alcareco_v1.list
+cat datasets.list | grep '/RAW-RECO' | grep -i 09Dec2011 | grep v1 > 09Dec2011_skims_v1.list
+cat datasets.list | grep '/USER' | grep -i 09Dec2011 | grep v1 >> 09Dec2011_skims_v1.list
+# 09Dec2011_reco_v1.list 09Dec2011_aod_v1.list 09Dec2011_dqm_v1.list 09Dec2011_alcareco_v1.list 09Dec2011_skims_v1.list 09Dec2011_skims_v1.list
+
+cat express.list error.list preproduction.list raw_v1.list prompt_reco_v1.list prompt_aod_v1.list prompt_dqm_v1.list alcareco_v1.list prompt_skim_v1.list 14Oct2011_reco_v1.list 14Oct2011_aod_v1.list 14Oct2011_dqm_v1.list 14Oct2011_alcareco_v1.list 14Oct2011_skims_v1.list 14Oct2011_skims_v1.list 18Oct2011_reco_v1.list 18Oct2011_aod_v1.list 18Oct2011_dqm_v1.list 18Oct2011_alcareco_v1.list 18Oct2011_skims_v1.list 18Oct2011_skims_v1.list 19Oct2011_reco_v1.list 19Oct2011_aod_v1.list 19Oct2011_dqm_v1.list 19Oct2011_alcareco_v1.list 19Oct2011_skims_v1.list 19Oct2011_skims_v1.list 08Nov2011_reco_v1.list 08Nov2011_aod_v1.list 08Nov2011_dqm_v1.list 08Nov2011_alcareco_v1.list 08Nov2011_skims_v1.list 08Nov2011_skims_v1.list 15Nov2011_reco_v1.list 15Nov2011_aod_v1.list 15Nov2011_dqm_v1.list 15Nov2011_alcareco_v1.list 15Nov2011_skims_v1.list 15Nov2011_skims_v1.list 09Dec2011_reco_v1.list 09Dec2011_aod_v1.list 09Dec2011_dqm_v1.list 09Dec2011_alcareco_v1.list 09Dec2011_skims_v1.list 09Dec2011_skims_v1.list 21Oct2011_reco_v1.list 21Oct2011_aod_v1.list 21Oct2011_dqm_v1.list 21Oct2011_alcareco_v1.list 21Oct2011_skims_v1.list 21Oct2011_skims_v1.list 19Nov2011_reco_v1.list 19Nov2011_aod_v1.list 19Nov2011_dqm_v1.list 19Nov2011_alcareco_v1.list 19Nov2011_skims_v1.list 19Nov2011_skims_v1.list 26Nov2011_reco_v1.list 26Nov2011_aod_v1.list 26Nov2011_dqm_v1.list 26Nov2011_alcareco_v1.list 26Nov2011_skims_v1.list 26Nov2011_skims_v1.list 30Nov2011_reco_v1.list 30Nov2011_aod_v1.list 30Nov2011_dqm_v1.list 30Nov2011_alcareco_v1.list 30Nov2011_skims_v1.list 30Nov2011_skims_v1.list 17Oct2011_reco_v1.list 17Oct2011_aod_v1.list 17Oct2011_dqm_v1.list 17Oct2011_alcareco_v1.list 17Oct2011_skims_v1.list 17Oct2011_skims_v1.list 20Oct2011_reco_v1.list 20Oct2011_aod_v1.list 20Oct2011_dqm_v1.list 20Oct2011_alcareco_v1.list 20Oct2011_skims_v1.list 20Oct2011_skims_v1.list 02Nov2010_reco_v1.list 02Nov2010_aod_v1.list 02Nov2010_dqm_v1.list 02Nov2010_alcareco_v1.list 02Nov2010_skims_v1.list 02Nov2010_skims_v1.list 18Nov2011_reco_v1.list 18Nov2011_aod_v1.list 18Nov2011_dqm_v1.list 18Nov2011_alcareco_v1.list 18Nov2011_skims_v1.list 18Nov2011_skims_v1.list | sort > done.list
 
 echo ""
 echo "inconsistencies"
