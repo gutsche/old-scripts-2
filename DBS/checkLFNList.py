@@ -15,7 +15,7 @@ for line in input.readlines():
     if line.count('/store/results') :
         base = '/'.join(array[:6])
     if base not in files.keys(): files[base] = {'files':[]}
-    files[base]['files'].append(line.strip())
+    files[base]['files'].append(line.strip().replace('//','/'))
 
 files_base_sorted = files.keys()
 files_base_sorted.sort()
@@ -37,6 +37,14 @@ for base in files_base_sorted:
         result = lines[0].strip()
     else :
         result = 'UNKNOWN'
+ 
+    if result == 'UNKNOWN':
+        files[base]['dataset'] = 'UNKNOWN'
+        files[base]['status'] = 'UNKNOWN'
+        files[base]['cust'] = ''
+        files[base]['noncust'] = ''
+        continue
+
     dataset = result.split()[0]
     status = result.split()[1]
     files[base]['dataset'] = dataset
