@@ -27,7 +27,7 @@ for opt, arg in opts :
         input_xml_filename = arg
 
 if input_xml_filename == None:
-    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/525.xml'
+    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/523.xml'
     input = urllib.urlopen(url)
 else :
     input = open(input_xml_filename)
@@ -70,6 +70,8 @@ for item in items:
 categories = tickets.keys()
 categories.sort()
 
+print '<html>'
+print '<pre>'
 print '--------------------------------------------------------------------------------'
 print 'Report generated on',current,'UTC'
 print '--------------------------------------------------------------------------------'
@@ -91,6 +93,8 @@ for category in categories:
             except:
                 ggus_id = 0
             if ggus_id == 0:
-                print "SAV:%i open since %4i days in squad: %35s at site: %20s and summary: %s" % (id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])
+                print "<a href='http://savannah.cern.ch/support/index.php?%i'>SAV:%i</a> open since %4i days in squad: %35s at site: %20s and summary: %s" % (id,id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])
             else :
-                print "GGUS:%i open since %4i days in squad: %35s at site: %20s and summary: %s" % (ggus_id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])        
+                print "<a href='https://ggus.eu/ws/ticket_info.php?ticket=%i'>GGUS:%i</a> open since %4i days in squad: %35s at site: %20s and summary: %s" % (ggus_id,ggus_id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])        
+print '</pre>'
+print '</html>'
