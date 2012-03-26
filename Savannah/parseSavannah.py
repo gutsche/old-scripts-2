@@ -27,7 +27,7 @@ for opt, arg in opts :
         input_xml_filename = arg
 
 if input_xml_filename == None:
-    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/523.xml'
+    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/526.xml'
     input = urllib.urlopen(url)
 else :
     input = open(input_xml_filename)
@@ -75,6 +75,14 @@ print '<pre>'
 print '--------------------------------------------------------------------------------'
 print 'Report generated on',current,'UTC'
 print '--------------------------------------------------------------------------------'
+
+print ''
+print 'Summary: open tickets per category'
+print '--------------------------------------------------------------------------------'
+print ''
+for category in categories:
+    print "%30s: %5i open tickets" % (category,len(tickets[category].keys()))
+
 for category in categories:
     print ''
     print category
