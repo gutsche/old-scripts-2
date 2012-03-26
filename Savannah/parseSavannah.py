@@ -46,6 +46,7 @@ xmldoc = minidom.parseString(x)
 #         print item.getElementsByTagName('item_id')[0]
 
 tickets = {}
+squads = {}
 
 savaneexport = xmldoc.getElementsByTagName('savaneexport')[0]
 items = savaneexport.getElementsByTagName('item')
@@ -66,6 +67,8 @@ for item in items:
     # print "id: %i, category: %s, squad: %s, summary: %s" % (id,category,squad, summary)
     if category not in tickets.keys(): tickets[category] = {}
     tickets[category][id] = {'summary':summary,'squad':squad,'site':site,'submitted_on':submitted_on,'open_since':open_since,'ggus':ggus,'ggus_url':ggus_url}
+    if squad not in squads.keys(): squads[squad] = 0
+    squads[squad] += 1
     
 categories = tickets.keys()
 categories.sort()
@@ -81,7 +84,16 @@ print 'Summary: open tickets per category'
 print '--------------------------------------------------------------------------------'
 print ''
 for category in categories:
-    print "%30s: %5i open tickets" % (category,len(tickets[category].keys()))
+    print "%40s: %5i open tickets" % (category,len(tickets[category].keys()))
+
+print ''
+print 'Summary: open tickets per squad'
+print '--------------------------------------------------------------------------------'
+print ''
+sorted_squads = squads.keys()
+sorted_squads.sort()
+for squad in sorted_squads:
+    print "%40s: %5i open tickets" % (squad,squads[squad])
 
 for category in categories:
     print ''
