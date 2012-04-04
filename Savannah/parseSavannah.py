@@ -4,6 +4,7 @@ import sys,getopt,re
 import urllib
 from datetime import datetime
 import time
+import calendar
 from xml.dom import minidom
 
 def getText(nodelist):
@@ -12,12 +13,12 @@ def getText(nodelist):
         if node.nodeType == node.TEXT_NODE:
             rc.append(node.data)
     return ''.join(rc)
-    
+
 def getTag(node,tagname):
     return getText(node.getElementsByTagName(tagname)[0].childNodes)
 
 current = datetime.utcnow()
-current_unix = int(time.mktime(current.timetuple()))
+current_unix = int(calendar.timegm(current.timetuple()))
 input_xml_filename = None
 opts, args = getopt.getopt(sys.argv[1:], "", ["file="])
 
@@ -63,13 +64,21 @@ for item in items:
         ggus = True
     else :
         ggus = False
-    ggus_url = getTag(item,'custom_text_field_1')    
-    # print "id: %i, category: %s, squad: %s, summary: %s" % (id,category,squad, summary)
+    ggus_url = getTag(item,'custom_text_field_1')
+    history = item.getElementsByTagName('history')
+    last_modification = open_since
+    if len(history) > 0:
+        events = history[0].getElementsByTagName('event')
+        date = submitted_on
+        for event in events:
+            date = int(getTag(event, 'date'))
+        last_modification = int((current_unix-date)/86400)
+    #print "id: %i, category: %s, squad: %s, summary: %s, last_mod: %4i days" % (id,category,squad, summary, last_modification)
     if category not in tickets.keys(): tickets[category] = {}
-    tickets[category][id] = {'summary':summary,'squad':squad,'site':site,'submitted_on':submitted_on,'open_since':open_since,'ggus':ggus,'ggus_url':ggus_url}
+    tickets[category][id] = {'summary':summary,'squad':squad,'site':site,'submitted_on':submitted_on,'open_since':open_since,'last_modified':last_modification,'ggus':ggus,'ggus_url':ggus_url}
     if squad not in squads.keys(): squads[squad] = 0
     squads[squad] += 1
-    
+
 categories = tickets.keys()
 categories.sort()
 
@@ -113,8 +122,8 @@ for category in categories:
             except:
                 ggus_id = 0
             if ggus_id == 0:
-                print "<a href='http://savannah.cern.ch/support/index.php?%i'>SAV:%i</a> open since %4i days in squad: %35s at site: %20s and summary: %s" % (id,id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])
+                print "<a href='http://savannah.cern.ch/support/index.php?%i'>SAV:%i</a> open since %4i days and last modified %4i days ago in squad: %35s at site: %20s and summary: %s" % (id,id,time,tickets[category][id]['last_modified'],tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])
             else :
-                print "<a href='https://ggus.eu/ws/ticket_info.php?ticket=%i'>GGUS:%i</a> open since %4i days in squad: %35s at site: %20s and summary: %s" % (ggus_id,ggus_id,time,tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])        
+                print "<a href='https://ggus.eu/ws/ticket_info.php?ticket=%i'>GGUS:%i</a> open since %4i days and last modified %4i days ago in squad: %35s at site: %20s and summary: %s" % (ggus_id,ggus_id,time,tickets[category][id]['last_modified'],tickets[category][id]['squad'],tickets[category][id]['site'],tickets[category][id]['summary'])
 print '</pre>'
 print '</html>'
