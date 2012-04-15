@@ -1,8 +1,8 @@
-dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_gen.blocks
-dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_raw.blocks
-dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" | grep -v RECO > mc_2012_jan_sim.blocks
-dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" | grep RECO > mc_2012_jan_reco.blocks
-dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_aod.blocks
+# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_gen.blocks
+# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_raw.blocks
+# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" | grep -v RECO > mc_2012_jan_sim.blocks
+# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" | grep RECO > mc_2012_jan_reco.blocks
+# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2012-01-01 and block.createdate < 2012-02-01" > mc_2012_jan_aod.blocks
 
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-02-01 and block.createdate < 2012-03-01" > mc_2012_feb_gen.blocks
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-02-01 and block.createdate < 2012-03-01" > mc_2012_feb_raw.blocks
@@ -10,11 +10,11 @@ dbs search --noheader --production --query="find block,block.size,block.numevent
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-02-01 and block.createdate < 2012-03-01" | grep RECO > mc_2012_feb_reco.blocks
 dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2012-02-01 and block.createdate < 2012-03-01" > mc_2012_feb_aod.blocks
  
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_gen.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_raw.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" | grep -v RECO > mc_2012_mar_sim.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" | grep RECO > mc_2012_mar_reco.blocks
-# dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_aod.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_gen.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_raw.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" | grep -v RECO > mc_2012_mar_sim.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-SIM* and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" | grep RECO > mc_2012_mar_reco.blocks
+dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = AODSIM and block.createdate >= 2012-03-01 and block.createdate < 2012-04-01" > mc_2012_mar_aod.blocks
 # 
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN and block.createdate >= 2012-04-01 and block.createdate < 2012-05-01" > mc_2012_apr_gen.blocks
 # dbs search --noheader --production --query="find block,block.size,block.numevents,block.createdate where tier = GEN-RAW* and block.createdate >= 2012-04-01 and block.createdate < 2012-05-01" > mc_2012_apr_raw.blocks
@@ -83,11 +83,11 @@ cat mc_2012_feb_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam
 cat mc_2012_feb_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2012 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 cat mc_2012_feb_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "February 2012 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 
-# cat mc_2012_mar_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2012_mar_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2012_mar_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-RAW: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2012_mar_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
-# cat mc_2012_mar_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2012_mar_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2012_mar_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2012_mar_raw.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-RAW: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2012_mar_reco.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 GEN-SIM-RECO: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
+cat mc_2012_mar_aod.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "March 2012 AODSIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 
 # cat mc_2012_apr_gen.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "April 2012 GEN: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
 # cat mc_2012_apr_sim.blocks | grep -v Backfill | grep -vi jobrobot | grep -vi sam | awk '{SUM1+=$2} {SUM2+=$3} END {print "April 2012 GEN-SIM: Size [TB]: "SUM1/1000000000000" Events: "SUM2}' >> statistics.txt
