@@ -22,6 +22,7 @@ T2_NON_US = []
 T3_NON_US = []
 
 for node in result['phedex']['node']:
+    print node
     name = str(node['name'])
     if name.count('T0_') > 0 :
         if name.count('_MSS') <= 0 :
