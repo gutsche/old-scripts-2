@@ -19,10 +19,15 @@ def queryDBS(title,dataset_query):
     print title+ ":"
     print "----------------------------------"
     print ""
-    print "%s: %s" % ("PRODUCTION".ljust(12),locale.format("%d", result['PRODUCTION'], grouping=True).rjust(20))
-    print "%s: %s" % ("VALID".ljust(12),locale.format("%d", result['VALID'], grouping=True).rjust(20))
+    total = 0
+    if 'PRODUCTION' in result.keys():
+        print "%s: %s" % ("PRODUCTION".ljust(12),locale.format("%d", result['PRODUCTION'], grouping=True).rjust(20))
+        total += result['PRODUCTION']
+    if 'VALID' in result.keys():
+        print "%s: %s" % ("VALID".ljust(12),locale.format("%d", result['VALID'], grouping=True).rjust(20))
+        total += result['VALID']
     print "----------------------------------"
-    print "%s: %s" % ("TOTAL".ljust(12),locale.format("%d", result['VALID']+result['PRODUCTION'], grouping=True).rjust(20))
+    print "%s: %s" % ("TOTAL".ljust(12),locale.format("%d", total, grouping=True).rjust(20))
     print ""
 
 
