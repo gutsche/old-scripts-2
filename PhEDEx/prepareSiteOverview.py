@@ -51,10 +51,10 @@ for node in result['phedex']['node']:
     else:
         print 'error, cannot associate name:',name,'to site category'
 
-#print len(T0)
-#print len(T1),len(T1_US)
-#print len(T2),len(T2_US)
-#print len(T3),len(T3_US)
+print len(T0)
+print len(T1),len(T1_US)
+print len(T2),len(T2_US)
+print len(T3),len(T3_US)
 
 print ''
 print 'T1 US'
