@@ -74,3 +74,4 @@ alias condorqrunning='condor_q -constraint 'JobStatus==2' -format "%i  " Cluster
 
 alias ov='python /afs/cern.ch/user/c/cmst1/condor_overview.py'
 alias mc='python $HOME/scripts/DBS/mcprod.py'
+alias cc='python $HOME/scripts/PhEDEx/checkCustodialLocation.py'
