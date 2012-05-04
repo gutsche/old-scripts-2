@@ -30,7 +30,9 @@ def queryDBS(title,dataset_query):
         result[array[0]] = int(array[1])
     
     print ""
-    print title + " (DBS query string: " + dataset_query + "):"
+    print title
+    print "----------------------------------"
+    print "(DBS query string: " + dataset_query + ")"
     print "----------------------------------"
     print ""
     total = 0
@@ -44,14 +46,17 @@ def queryDBS(title,dataset_query):
     print "%s: %s" % ("TOTAL".ljust(12),locale.format("%d", total, grouping=True).rjust(20))
     print ""
 
-campaigns = queryForDifferentCampaigns("Summer12","AODSIM")
+# campaigns = queryForDifferentCampaigns("Summer12","AODSIM")
 queryDBS("Summer12 GEN-SIM","*Summer12*GEN-SIM")
-queryDBS("Summer12 DR51X AODSIM","*Summer12-PU_S7_START50*AODSIM")
-queryDBS("Summer12 DR51X NOPU AODSIM","*Summer12-NoPileUp_START50*AODSIM")
-queryDBS("Summer12 DR52X AODSIM","*Summer12-PU_S7_START52*AODSIM")
-for campaign in campaigns:
-    if campaign == "PU_S7_START50_V15": continue
-    if campaign == "PU_S7_START52_V5": continue
-    if campaign == 'NoPileUp_START50_V15' : continue
-    dataset_query = '*Summer12-' + campaign + '*AODSIM'
-    queryDBS("Summer12 AODSIM",dataset_query)
+# queryDBS("Summer12 DR51X AODSIM","*Summer12-PU_S7_START50*AODSIM")
+# queryDBS("Summer12 DR51X NOPU AODSIM","*Summer12-NoPileUp_START50*AODSIM")
+queryDBS("Summer12 DR52X AODSIM","*Summer12-PU_S7_START52_V*AODSIM")
+queryDBS("Summer12 DR52X LowPU AODSIM","*Summer12-PU_S8_START52_V*AODSIM")
+queryDBS("Summer12 DR52X TSG GEN-SIM-RECO","*Summer12-PU_S9_START52_V*GEN-SIM-RECO")
+# for campaign in campaigns:
+    # if campaign == "PU_S7_START50_V15": continue
+    # if campaign == "PU_S7_START52_V5": continue
+    # if campaign == 'NoPileUp_START50_V15' : continue
+    # dataset_query = '*Summer12-' + campaign + '*AODSIM'
+    # queryDBS("Summer12 AODSIM",dataset_query)
+    # print campaign
