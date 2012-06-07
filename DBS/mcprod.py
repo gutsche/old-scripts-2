@@ -51,8 +51,8 @@ queryDBS("Summer12 GEN-SIM","*Summer12*GEN-SIM")
 # queryDBS("Summer12 DR51X AODSIM","*Summer12-PU_S7_START50*AODSIM")
 # queryDBS("Summer12 DR51X NOPU AODSIM","*Summer12-NoPileUp_START50*AODSIM")
 queryDBS("Summer12 DR52X AODSIM","*Summer12-PU_S7_START52_V*AODSIM")
-queryDBS("Summer12 DR52X LowPU AODSIM","*Summer12-PU_S8_START52_V*AODSIM")
-queryDBS("Summer12 DR52X TSG GEN-SIM-RECO","*Summer12-PU_S9_START52_V*GEN-SIM-RECO")
+# queryDBS("Summer12 DR52X LowPU AODSIM","*Summer12-PU_S8_START52_V*AODSIM")
+# queryDBS("Summer12 DR52X TSG GEN-SIM-RECO","*Summer12-PU_S9_START52_V*GEN-SIM-RECO")
 # for campaign in campaigns:
     # if campaign == "PU_S7_START50_V15": continue
     # if campaign == "PU_S7_START52_V5": continue

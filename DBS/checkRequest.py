@@ -193,7 +193,14 @@ if len(blocks) > 0 :
 
         print 'block:',block,'DBS status:',status,'custodial:',custsites,'non-custodial:',sites
 
-LFNs = []
+datatiers_cat1 = ['RAW']
+datatiers_cat4 = ['GEN-SIM','GEN-SIM-RAW','GEN-RAW']
+
+lfn_cat1 = []
+lfn_cat2 = []
+lfn_cat3 = []
+lfn_cat4 = []
+lfn_cat5 = []
 
 if len(datasets) > 0 :
     for dataset in datasets:
@@ -202,14 +209,30 @@ if len(datasets) > 0 :
         localargs = shlex.split(commandline)
         output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
         lines = output.communicate()[0].split('\n')
-        if lines[0].count('/store/') > 0:
-            tmplfn = '/'+'/'.join(lines[0].split('/')[1:7])
-            if tmplfn not in LFNs:
-                LFNs.append(tmplfn)
-        else :
+        if len(lines) == 1:
             array = dataset.split('/')
             array2 = array[2].split('-')
             print 'Problem with query for dataset: ' + dataset + ' possible LFN structure from parsing the dataset name: \n/store/data/%s/%s/%s/%s' % (array2[0],array[1],array[3],'-'.join(array2[1:]))
+            continue
+        for line in lines:
+            if line.count('/store/') > 0:
+                parts = line.split('/')
+                tier = parts[5]
+                tmplfn_p = '/'+'/'.join(parts[1:7])
+                tmplfn = '/'+'/'.join(parts[1:6])
+                if tmplfn.count('/store/data/') > 0 :
+                    if tier in datatiers_cat1:
+                        if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
+                    else:
+                        if tmplfn_p.count('Prompt') > 0:
+                            if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                        else :
+                            if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
+                else:
+                    if tier in datatiers_cat4:
+                        if tmplfn not in lfn_cat4: lfn_cat4.append(tmplfn)
+                    else:
+                        if tmplfn not in lfn_cat5: lfn_cat5.append(tmplfn)
 
 if len(blocks) > 0 :
     for block in blocks:
@@ -218,23 +241,62 @@ if len(blocks) > 0 :
         localargs = shlex.split(commandline)
         output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
         lines = output.communicate()[0].split('\n')
-        if lines[0].count('/store/') > 0:
-            tmplfn = '/'+'/'.join(lines[0].split('/')[1:7])
-            if tmplfn not in LFNs:
-                LFNs.append(tmplfn)
-        else :
+        if len(lines) == 1:
             print 'Problem with query for block:',block
+            continue
+        if lines[0].count('/store/') > 0:
+            parts = lines[0].split('/')
+            tier = parts[5]
+            tmplfn_p = '/'+'/'.join(parts[1:7])
+            tmplfn = '/'+'/'.join(parts[1:6])
+            if tmplfn.count('/store/data/') > 0 :
+                if tier in datatiers_cat1:
+                    if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
+                else:
+                    if tmplfn_p.count('Prompt') > 0:
+                        if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                    else :
+                        if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
+            else:
+                if tier in datatiers_cat4:
+                    if tmplfn not in lfn_cat4: lfn_cat4.append(tmplfn)
+                else:
+                    if tmplfn not in lfn_cat5: lfn_cat5.append(tmplfn)
 
-LFNs.sort()
 print ''
 print 'Tape families needed for:'
 print ''
-print 'cat(4):'
-for item in LFNs:
-    if item.count('/GEN-SIM/') > 0 or item.count('/GEN-SIM-RAW') > 0:
+if len(lfn_cat1) > 0:
+    lfn_cat1.sort()
+    print 'cat(1):'
+    for item in lfn_cat1:
         print item  
-print ''
-print 'cat(5):'
-for item in LFNs:
-    if item.count('/GEN-SIM/') <= 0 and item.count('/GEN-SIM-RAW') <= 0:
+    print ''
+
+if len(lfn_cat2) > 0:
+    lfn_cat2.sort()
+    print 'cat(2):'
+    for item in lfn_cat2:
         print item  
+    print ''
+
+if len(lfn_cat3) > 0:
+    lfn_cat3.sort()
+    print 'cat(3):'
+    for item in lfn_cat3:
+        print item  
+    print ''
+
+if len(lfn_cat4) > 0:
+    lfn_cat4.sort()
+    print 'cat(4):'
+    for item in lfn_cat4:
+        print item  
+    print ''
+
+if len(lfn_cat5) > 0:
+    lfn_cat5.sort()
+    print 'cat(5):'
+    for item in lfn_cat5:
+        print item  
+    print ''
