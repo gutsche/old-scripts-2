@@ -2,35 +2,36 @@
 
 import sys,getopt,urllib2,json,os,datetime,subprocess,shlex
 
-requestId = None
+requestID = None
 allSites = 1
 try:
     opts, args = getopt.getopt(sys.argv[1:], "", ["id="])
 except getopt.GetoptError:
-    print 'Please specify PhEDEx request ID with --id'
+    print 'Please specify comma separated list of PhEDEx request IDs with --id'
     sys.exit(2)
 
 # check command line parameter
 for opt, arg in opts :
     if opt == "--id" :
-        requestID = arg
+        requestID = arg.split(',')
         
 if requestID == None:
-    print 'Please specify PhEDEx request ID with --id'
+    print 'Please specify comma separated list of PhEDEx request IDs with --id'
     sys.exit(2)
 
 datasets = []
 blocks = []
 
-url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/transferrequests?request=' + requestID
-jstr = urllib2.urlopen(url).read()
-jstr = jstr.replace("\n", " ")
-result = json.loads(jstr)
-for item in result['phedex']['request']:
-    for dataset in item['data']['dbs']['dataset']:
-        datasets.append(dataset['name'])
-    for block in item['data']['dbs']['block']:
-        blocks.append(block['name'])
+for id in requestID:
+    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/transferrequests?request=' + id
+    jstr = urllib2.urlopen(url).read()
+    jstr = jstr.replace("\n", " ")
+    result = json.loads(jstr)
+    for item in result['phedex']['request']:
+        for dataset in item['data']['dbs']['dataset']:
+            datasets.append(dataset['name'])
+        for block in item['data']['dbs']['block']:
+            blocks.append(block['name'])
 
 if len(datasets) > 0 :
     for dataset in datasets:
@@ -226,6 +227,8 @@ if len(datasets) > 0 :
                     else:
                         if tmplfn_p.count('Prompt') > 0:
                             if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                        elif tmplfn_p.count('ALCARECO') > 0:
+                            if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
                         else :
                             if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
                 else:
@@ -255,6 +258,8 @@ if len(blocks) > 0 :
                 else:
                     if tmplfn_p.count('Prompt') > 0:
                         if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                    elif tmplfn_p.count('ALCARECO') > 0:
+                        if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
                     else :
                         if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
             else:
@@ -263,9 +268,27 @@ if len(blocks) > 0 :
                 else:
                     if tmplfn not in lfn_cat5: lfn_cat5.append(tmplfn)
 
+
+lfn = []
+lfn.extend(lfn_cat1)
+lfn.extend(lfn_cat2)
+lfn.extend(lfn_cat3)
+lfn.extend(lfn_cat4)
+lfn.extend(lfn_cat5)
+
+eras = []
+for item in lfn:
+    era = item.split('/')[3]
+    if era not in eras: eras.append(era)
+
 print ''
-print 'Tape families needed for:'
+print'Subject: tape family request for era','.'.join(eras)
 print ''
+print 'Hi all,'
+print ''
+print 'can I please have tape families for era', '.'.join(eras) ,'for:'
+print ''
+
 if len(lfn_cat1) > 0:
     lfn_cat1.sort()
     print 'cat(1):'
@@ -300,3 +323,10 @@ if len(lfn_cat5) > 0:
     for item in lfn_cat5:
         print item  
     print ''
+
+print "for PhEDEx requests:",','.join(requestID)
+print ''
+print 'Thanks,'
+print ''
+print 'OLI'
+print ''
