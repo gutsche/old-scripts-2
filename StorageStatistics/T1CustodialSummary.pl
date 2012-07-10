@@ -57,8 +57,10 @@ push(@releaseCycles,"Winter10");
 push(@releaseCycles,"Spring11");
 push(@releaseCycles,"Summer11");
 push(@releaseCycles,"Fall11");
+push(@releaseCycles,"Summer12");
 push(@releaseCycles,"StoreResults");
 push(@releaseCycles,"JobRobot");
+push(@releaseCycles,"Summer12_DR53X");
 
 #Cosmics
 push(@releaseCycles,"GlobalMar08");
@@ -81,7 +83,11 @@ push(@releaseCycles,"Run2010B");
 push(@releaseCycles,"HIRun2010");
 push(@releaseCycles,"Run2011A");
 push(@releaseCycles,"Run2011B");
-
+push(@releaseCycles,"HIRun2011");
+push(@releaseCycles,"Commissioning12");
+push(@releaseCycles,"Run2012A");
+push(@releaseCycles,"Run2012B");
+push(@releaseCycles,"Run2012C");
 
 for($releaseCycleIndex=0; $releaseCycleIndex < scalar(@releaseCycles); $releaseCycleIndex++) {
     print "@releaseCycles[$releaseCycleIndex]", "\n";
@@ -94,6 +100,7 @@ my @datatierList;
 if ($datatier eq "") {
     push(@datatierList, "RAW");
     push(@datatierList, "RECO");
+    push(@datatierList, "AOD");
     push(@datatierList, "ALCARECO");
     push(@datatierList, "DQM");
     push(@datatierList, "RAW-RECO");
@@ -105,6 +112,15 @@ if ($datatier eq "") {
     push(@datatierList, "AODSIM");
     push(@datatierList, "GEN-SIM-RAWDEBUG");
     push(@datatierList, "GEN-SIM-RECODEBUG");
+    push(@datatierList, "GEN-SIM-DIGI-RAW");
+    push(@datatierList, "GEN-SIM-DIGI-RAW-HLTDEBUG");
+    push(@datatierList, "GEN-SIM-DIGI-RAW-RECO");
+    push(@datatierList, "GEN-SIM-DIGI-RECO");
+    push(@datatierList, "GEN-SIM-DIGI-RECODEBUG");
+    push(@datatierList, "GEN-SIM-RAW-HLT");
+    push(@datatierList, "GEN-SIM-RAW-HLTDEBUG");
+    push(@datatierList, "GEN-SIM-RAW-HLTDEBUG-RECO");
+
 } else {
     push(@datatierList, $datatier);
 }
