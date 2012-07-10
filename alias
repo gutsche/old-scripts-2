@@ -73,5 +73,6 @@ alias condorq='condor_q -format "%i  " ClusterID -format " %i " JobStatus  -form
 alias condorqrunning='condor_q -constraint 'JobStatus==2' -format "%i  " ClusterID -format " %i " JobStatus  -format " %d " ServerTime-EnteredCurrentStatus -format "%s" ProdAgent_JobID -format " %s\n" DESIRED_Sites'
 
 alias ov='python /afs/cern.ch/user/c/cmst1/condor_overview.py'
+alias gv='python /afs/cern.ch/user/c/cmst1/condor_global_overview.py'
 alias mc='python $HOME/scripts/DBS/mcprod.py'
 alias cc='python $HOME/scripts/PhEDEx/checkCustodialLocation.py'
