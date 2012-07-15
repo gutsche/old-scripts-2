@@ -213,8 +213,9 @@ if len(datasets) > 0 :
         if len(lines) == 1:
             array = dataset.split('/')
             array2 = array[2].split('-')
-            print 'Problem with query for dataset: ' + dataset + ' possible LFN structure from parsing the dataset name: \n/store/data/%s/%s/%s/%s' % (array2[0],array[1],array[3],'-'.join(array2[1:]))
-            continue
+            lfn = '/store/data/%s/%s/%s/%s' % (array2[0],array[1],array[3],'-'.join(array2[1:]))
+            print 'Problem with query for dataset: ' + dataset + ' possible LFN structure from parsing the dataset name: ',lfn
+            lines = [lfn]
         for line in lines:
             if line.count('/store/') > 0:
                 parts = line.split('/')
@@ -282,11 +283,11 @@ for item in lfn:
     if era not in eras: eras.append(era)
 
 print ''
-print'Subject: tape family request for era','.'.join(eras)
+print'Subject: tape family request for era(s)',','.join(eras),"for PhEDEx request(s):",','.join(requestID)
 print ''
 print 'Hi all,'
 print ''
-print 'can I please have tape families for era', '.'.join(eras) ,'for:'
+print 'can I please have tape families for era(s)', ','.join(eras) ,'for:'
 print ''
 
 if len(lfn_cat1) > 0:
@@ -324,7 +325,6 @@ if len(lfn_cat5) > 0:
         print item  
     print ''
 
-print "for PhEDEx requests:",','.join(requestID)
 print ''
 print 'Thanks,'
 print ''
