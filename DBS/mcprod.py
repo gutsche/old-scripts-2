@@ -60,4 +60,6 @@ queryDBS("Summer12 DR52X AODSIM","*Summer12-PU_S7_START52_V*AODSIM")
     # dataset_query = '*Summer12-' + campaign + '*AODSIM'
     # queryDBS("Summer12 AODSIM",dataset_query)
     # print campaign
-queryDBS("Summer12 DR53X AODSIM","*Summer12_DR53X*AODSIM")
+queryDBS("Summer12 DR53X AODSIM","*Summer12_DR53X*PU_S7*AODSIM")
+queryDBS("Summer12 DR53X AODSIM","*Summer12_DR53X*PU_S10*AODSIM")
+queryDBS("Upgrade MC AODSIM","*428_R2*AODSIM")
