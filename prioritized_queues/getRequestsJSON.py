@@ -1,41 +1,61 @@
-#!/usr/bin/env python
-import json
-import urllib2,urllib, httplib, sys, re, os
+#!/usr/bin/env python2.6
+from os import getenv
+from json import loads, dump
+from sys import argv, exit, stderr, stdout
+from urllib2 import AbstractHTTPHandler, urlopen, \
+                    build_opener, install_opener, HTTPError
+from httplib import HTTPSConnection
 
-url='vocms204.cern.ch'
-conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-r1=conn.request("GET",'/reqmgr/monitorSvc/requestmonitor', None, {"Accept": "application/json"})
-r2=conn.getresponse()
-requests = json.loads(r2.read())
-good_status = ['running', 'acquired', 'assignment-approved', 'new']
-good_requests = []
-for request in requests:
-    print request
-    if 'status' not in request.keys():
-        print request
-        continue
-    if request['status'] in good_status:
-        url = 'cmsweb.cern.ch'
-        workflow = request['request_name']
-        conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-        r1=conn.request("GET",'/couchdb/reqmgr_workload_cache/'+workflow, None, {"Accept": "application/json"})
-        r2=conn.getresponse()
-        details = json.loads(r2.read())
-        request['details'] = details
-        url = 'cmsweb.cern.ch'
-        conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-        r1=conn.request("GET",'/reqmgr/reqMgr/request/'+workflow, None, {"Accept": "application/json"})
-        r2=conn.getresponse()
-        details = json.loads(r2.read())
-        request['details2'] = details
-        url = 'cmsweb.cern.ch'
-        conn  =  httplib.HTTPSConnection(url, cert_file = os.getenv('X509_USER_PROXY'), key_file = os.getenv('X509_USER_PROXY'))
-        r1=conn.request("GET",'/reqmgr/reqMgr/outputDatasetsByRequestName?requestName=' + workflow)
-        r2=conn.getresponse()
-        datasets = json.loads(r2.read())
-        request['OutputDatasets'] = datasets
-        good_requests.append(request)
+class X509HTTPS(HTTPSConnection):
+  def __init__(self, host, *args, **kwargs):
+    HTTPSConnection.__init__(self, host, key_file = x509_proxy,
+                             cert_file = x509_proxy, **kwargs)
 
-output_file = open('requests.json','w')
-json.dump(good_requests,output_file)
-output_file.close()
+class X509Auth(AbstractHTTPHandler):
+  def default_open(self, req):
+    return self.do_open(X509HTTPS, req)
+
+def get_good_reqs(globalmon, cmsweb):
+  doc = urlopen(globalmon+'monitorSvc/requestmonitor')
+  reqs = loads(doc.read())
+  good_status = ['running', 'acquired', 'assignment-approved', 'new']
+  good_reqs = []
+  for r in reqs:
+    workflow = r['request_name']
+    status = r.get('status', None)
+    if not status:
+      print >>stderr, "Request "+workflow+" does not have status."
+    elif status in good_status:
+      try:
+        doc = urlopen(cmsweb+'couchdb/reqmgr_workload_cache/'+workflow)
+        r['details'] = loads(doc.read())
+        doc = urlopen(cmsweb+'reqmgr/reqMgr/request/'+workflow)
+        r['details2'] = loads(doc.read())
+        doc = urlopen(cmsweb+'reqmgr/reqMgr/outputDatasetsByRequestName?requestName='+workflow)
+        r['OutputDatasets'] = loads(doc.read())
+        good_reqs.append(r)
+      except HTTPError:
+        # request not on the cache anymore
+        print >>stderr, "Failed to fetch details for request "+workflow
+        pass
+  return good_reqs
+
+if __name__ == '__main__':
+  if len(argv) != 3:
+    print >>stderr, 'Usage: %s <globalmonitor_base_url> <cmsweb_base_url> > output.json' % argv[0]
+    print >>stderr, '  ex.: %s https://vocms204.cern.ch/reqmgr/' % argv[0], \
+                    'https://cmsweb.cern.ch/ > output.json'
+    exit(1)
+  globalmon, cmsweb = argv[1:]
+
+  x509_proxy = getenv("X509_USER_PROXY", None)
+  if not x509_proxy:
+    print >>stderr, "Proxy certificate not found."
+    exit(1)
+
+  opener = build_opener(X509Auth())  
+  opener.addheaders = [('User-agent', 'Mozilla/5.0'), ('Accept', 'application/json')]
+  install_opener(opener)
+  
+  dump(get_good_reqs(globalmon,cmsweb), stdout)
+  exit(0)

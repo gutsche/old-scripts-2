@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.6
 
 import sys,os,json,subprocess,shlex
 from datetime import datetime
@@ -6,13 +6,9 @@ current = datetime.utcnow()
 
 verbose = False
 
-if len(sys.argv) != 2:
-    print ""
-    print "Please specify an input json file as command line parameter"
-    print ""
-    sys.exit(1)
+dbscmd='dbs search --production --noheader '
 
-requests = json.load(open(sys.argv[1]))
+requests = json.load(sys.stdin)
 
 good_status = ['new', 'assignment-approved', 'acquired','running']
 
@@ -28,19 +24,9 @@ details_keys = []
 details2_keys = []
 results = {}
 slots_assign = {'t1' : 20000, 't1_highprio' : 12000, 'mc' : 20000, 'mc_highprio' : 12000, 'production' : 20000}
-site_slots = {'T1_US_FNAL': 5500, 'T1_TW_ASGC': 1400, 'T1_FR_CCIN2P3': 2000, 'T1_IT_CNAF': 1500, 'T1_ES_PIC': 900, 'T1_DE_KIT': 1456, 'T1_UK_RAL': 1000}
+site_slots = {'T1_US_FNAL': 5500, 'T1_TW_ASGC': 1400, 'T1_FR_CCIN2P3': 1000, 'T1_IT_CNAF': 1500, 'T1_ES_PIC': 900, 'T1_DE_KIT': 1456, 'T1_UK_RAL': 1000}
 
 for request in requests:
-    # tmp2 = {}
-    # tmp2["InputDataset"] = None
-    # if "InputDataset" in request.keys(): tmp2["InputDataset"] = request["InputDataset"]
-    # if tmp2["InputDataset"] == None and "InputDataset" in request['details'].keys(): tmp2["InputDataset"] = request['details']["InputDataset"]
-    # if tmp2["InputDataset"] == None and "InputDataset" in request['details2'].keys(): tmp2["InputDataset"] = request['details2']["InputDataset"]
-    # if tmp2["InputDataset"] != "/TauPlusX/Run2012B-v1/RAW" : 
-    #     print "Wrong Input dataset:",tmp2["InputDataset"]
-    #     continue
-    # print "Input dataset:",tmp2["InputDataset"]
-
     status = request['status']
     request_name = request['request_name']
     # print request_name,status
@@ -57,6 +43,13 @@ for request in requests:
         if key not in details_keys: details_keys.append(key)
     for key in request['details2'].keys():
         if key not in details2_keys: details2_keys.append(key)
+
+    if 'RequestType' in request.keys():
+        if request['RequestType'] == 'Resubmission': continue
+    if 'RequestType' in request['details'].keys():
+        if request['details']['RequestType'] == 'Resubmission': continue
+    if 'RequestType' in request['details2'].keys():
+        if request['details2']['RequestType'] == 'Resubmission': continue
 
     if 'Assignments' in request['details2'].keys():
         assignments = request['details2']['Assignments']
@@ -119,17 +112,17 @@ for request in requests:
         if tmp['BlockWhitelist'] == None : tmp['BlockWhitelist'] =  request['details2'].get('BlockWhitelist', [])
         tmp['RunWhitelist'] = request['details'].get('RunWhitelist', None)
         if tmp['RunWhitelist'] == None : tmp['RunWhitelist'] = request['details2'].get('RunWhitelist', [])
-        #commandline = 'dbs search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(tmp["InputDataset"])
+        #commandline = dbscms+'search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(tmp["InputDataset"])
         if len(tmp['BlockWhitelist']) > 0:
             i = 0
             evnts = 0
             while i < len(tmp['BlockWhitelist']):
                 j = 1
-                commandline = 'dbs search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+ str(tmp["InputDataset"]) + ' and ('
+                commandline = dbscmd+'search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+ str(tmp["InputDataset"]) + ' and ('
                 while j < 20 and i + j < len(tmp['BlockWhitelist']):
                     commandline += ' block = ' + str(tmp['BlockWhitelist'][i + j]) + ' or'
                     j += 1
-                commandline += ' block = ' + str(tmp['BlockWhitelist'][i]) + ')" --noheader --production'
+                commandline += ' block = ' + str(tmp['BlockWhitelist'][i]) + ')"'
                 i += j
                 localargs = shlex.split(commandline)
                 output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
@@ -149,11 +142,11 @@ for request in requests:
             evnts = 0
             while i < len(tmp['RunWhitelist']):
                 j = 1
-                commandline = 'dbs search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+ str(tmp["InputDataset"]) + ' and ('
+                commandline = dbscmd+'search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+ str(tmp["InputDataset"]) + ' and ('
                 while j < 30 and i + j < len(tmp['RunWhitelist']):
                     commandline += ' run = ' + str(tmp['RunWhitelist'][i + j]) + ' or'
                     j += 1
-                commandline += ' run = ' + str(tmp['RunWhitelist'][i]) + ')" --noheader --production'
+                commandline += ' run = ' + str(tmp['RunWhitelist'][i]) + ')"'
                 i += j
                 localargs = shlex.split(commandline)
                 output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
@@ -169,7 +162,7 @@ for request in requests:
             else:
                 tmp["RequestNumEvents"] = evnts
         else:
-            commandline = 'dbs search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(tmp["InputDataset"]) + '" --noheader --production'
+            commandline = dbscmd+'search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(tmp["InputDataset"]) + '"'
             localargs = shlex.split(commandline)
             output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
             lines = output.communicate()[0].split('\n')
@@ -207,7 +200,7 @@ for request in requests:
             dataTier = str(outputDataset)[1:].split('/')[2]
             acqEra = str(outputDataset)[1:].split('/')[1]
             if acqEra != 'None-None':
-                commandline = 'dbs search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(outputDataset) + '" --noheader --production'
+                commandline = dbscmd+'search --query="find dataset,dataset.status,sum(block.numevents) where dataset = '+str(outputDataset) + '"'
                 localargs = shlex.split(commandline)
                 output = subprocess.Popen(localargs, shell=False, stdout=subprocess.PIPE)
                 lines = output.communicate()[0].split('\n')
@@ -286,9 +279,14 @@ for local_queue in sorted_local_queues:
                     for tier in item['CompletionPercentage'].keys():
                         if tier != 'DQM':
                             usablePercentages[tier] = item['CompletionPercentage'][tier]
-                    team_total_CPU += item["CPUHours"]*(1.0 - min(usablePercentages.values()))
-                    if len(item["t1_sites"]) > 0:
-                        site_summary[item["t1_sites"][0]]['totalCPUHours'] += item["CPUHours"]*(1.0 - min(usablePercentages.values()))
+                    if len(usablePercentages.values()) > 0 :
+                        team_total_CPU += item["CPUHours"]*(1.0 - min(usablePercentages.values()))
+                        if len(item["t1_sites"]) > 0:
+                            site_summary[item["t1_sites"][0]]['totalCPUHours'] += item["CPUHours"]*(1.0 - min(usablePercentages.values()))
+                    else :
+                        team_total_CPU += item["CPUHours"]
+                        if len(item["t1_sites"]) > 0:
+                            site_summary[item["t1_sites"][0]]['totalCPUHours'] += item["CPUHours"]
     team_summary[local_queue] = {'cpuHours' : team_total_CPU, 'days' : 0, 'hours' : 0}
     if local_queue in slots_assign.keys():
         total_hours = team_total_CPU/slots_assign[local_queue]
@@ -304,13 +302,12 @@ print '=========================================================================
 for team in sorted(team_summary.keys(), key = lambda x: team_summary[x]['cpuHours'], reverse=True):
     print 'team: %12s CPU Hours remaining: %12d "Real" time remaining: %3d days %2d hours Approximated slots: %2dk' %  (team, team_summary[team]['cpuHours'], team_summary[team]['days'], team_summary[team]['hours'], slots_assign.get(team, 0)/1000)
 
-#print ''
-#print ''
-#print 'Custodial T1 Site summary:'
-#print '============================================'
-#for site in sorted(site_summary.keys(), key = lambda x: site_summary[x]['totalCPUHours'], reverse=True):
-#    print 'site: %14s CPU Hours remaining: %12d Workflows assigned: %4d maximum slots: %5d' % (site, site_summary[site]['totalCPUHours'], site_summary[site]['workflows'], site_slots[site])
-
+# print ''
+# print ''
+# print 'Custodial T1 Site summary:'
+# print '============================================'
+# for site in sorted(site_summary.keys(), key = lambda x: site_summary[x]['totalCPUHours'], reverse=True):
+#     print 'site: %14s CPU Hours remaining: %12d Workflows assigned: %4d maximum slots: %5d' % (site, site_summary[site]['totalCPUHours'], site_summary[site]['workflows'], site_slots[site])
 
 ofInterest = {}
 ofInterest["13Jul"] = {"campaign":"13Jul2012","tier":["AOD"],"time_per_event":15.0}
@@ -368,4 +365,3 @@ for interest in estimates.keys():
     for tier1 in estimates[interest].keys():
         print "Tier1: %14s has %5d slots and still to run %12d CPUhours which corresponds to %6.2f days" % (tier1,site_slots[tier1],estimates[interest][tier1],estimates[interest][tier1]/site_slots[tier1]/24.)
     print ''
-                        
