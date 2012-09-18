@@ -222,7 +222,7 @@ if len(datasets) > 0 :
                 tier = parts[5]
                 tmplfn_p = '/'+'/'.join(parts[1:7])
                 tmplfn = '/'+'/'.join(parts[1:6])
-                if tmplfn.count('/store/data/') > 0 :
+                if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                     if tier in datatiers_cat1:
                         if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
                     else:
@@ -253,7 +253,7 @@ if len(blocks) > 0 :
             tier = parts[5]
             tmplfn_p = '/'+'/'.join(parts[1:7])
             tmplfn = '/'+'/'.join(parts[1:6])
-            if tmplfn.count('/store/data/') > 0 :
+            if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                 if tier in datatiers_cat1:
                     if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
                 else:
