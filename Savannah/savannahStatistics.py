@@ -86,7 +86,8 @@ current = datetime.utcnow()
 current_unix = timegm(current.timetuple())
 input_xml_filename = None
 openedInTheLastNDays = 365
-opts, args = getopt.getopt(sys.argv[1:], '', ['file=', 'days='])
+listcutoff = None
+opts, args = getopt.getopt(sys.argv[1:], '', ['file=', 'days=', 'listcutoff='])
 
 # check command line parameter
 for opt, arg in opts:
@@ -94,9 +95,11 @@ for opt, arg in opts:
         input_xml_filename = arg
     elif opt == '--days':
         openedInTheLastNDays = int(arg)
+    elif opt == '--listcutoff':
+        listcutoff = int(arg)
 
 if input_xml_filename == None:
-    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/534.xml'
+    url='https://savannah.cern.ch/export/cmscompinfrasup/gutsche/535.xml'
     input = urllib.urlopen(url)
 else:
     input = open(input_xml_filename)
@@ -108,6 +111,9 @@ RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
                    unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
                    unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff))
 x = re.sub(RE_XML_ILLEGAL, "?", input.read())
+# Remove broken control unicode chars
+brokenControl = '\xc2([^\x80-\xbf])'
+x = re.sub(brokenControl, '?\g<1>', x)
 xmldoc = minidom.parseString(x)
 
 
@@ -118,11 +124,15 @@ squads = {}
 tickets = {}
 tickets = {'close_times': [], 'response_times': [], 'median_close_time': 0.0, 'median_response_time': 0.0, 'close_time_error': 0.0, 'response_time_error': 0.0, 'avg_close_time': 0.0, 'avg_response_time': 0.0, 'stdev_close_time': 0.0, 'stdev_response_time': 0.0}
 
+ticket_list = {}
+
 for item in items:
     squad = getTag(item, 'assigned_to')
     submitted_on = float(getTag(item, 'submitted_on'))
     closed_on = float(getTag(item, 'closed_on'))
     first_response_on = getTimeOfFirstMeaningfulResponse(item)
+    site = getTag(item, 'custom_select_box_1')
+    item_id = getTag(item, 'item_id')
     if (current_unix - submitted_on) > (openedInTheLastNDays*86400):
         continue
 
@@ -137,6 +147,8 @@ for item in items:
 
     tickets['close_times'].append(time_until_closed)
     tickets['response_times'].append(time_until_first_response)
+    tmp = "%s %s https://savannah.cern.ch/support/index.php?%s" % (squad,site,item_id)
+    ticket_list[time_until_first_response/86400.] = tmp    
 
 
 tickets['median_close_time'] = median(tickets['close_times'])
@@ -201,3 +213,13 @@ print u'Average time to close a ticket:                 %6.2f \u00B1 %6.2f days'
 print u'Average time to the first response to a ticket: %6.2f \u00B1 %6.2f days' %(mean_response_time_total, stdev_response_time_total)
 print '</pre>'
 print '</html>'
+
+if listcutoff != None:
+    output_file = open("list","w")
+    times = ticket_list.keys()
+    times.sort(reverse=True)
+    for time in times:
+        if time > listcutoff :
+            txt = "%.2f %s\n" % (time,ticket_list[time])
+            output_file.write(txt)
+    output_file.close()
