@@ -36,7 +36,7 @@ if pending:
     jstr = jstr.replace("\n", " ")
     result = json.loads(jstr)
     for item in result['phedex']['request']:
-        requestID.append(int(item['id']))
+        requestID.append(str(item['id']))
 
 requestID.sort()
 
@@ -243,6 +243,7 @@ if len(datasets) > 0 :
                 tier = parts[5]
                 tmplfn_p = '/'+'/'.join(parts[1:7])
                 tmplfn = '/'+'/'.join(parts[1:6])
+                if tmplfn.count('/store/generator/') > 0: continue
                 if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                     if tier in datatiers_cat1:
                         if tmplfn_p not in lfn_cat1 and checkDirExists(tmplfn_p) == False : lfn_cat1.append(tmplfn_p)
@@ -274,6 +275,7 @@ if len(blocks) > 0 :
             tier = parts[5]
             tmplfn_p = '/'+'/'.join(parts[1:7])
             tmplfn = '/'+'/'.join(parts[1:6])
+            if tmplfn.count('/store/generator/') > 0: continue
             if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                 if tier in datatiers_cat1:
                     if tmplfn_p not in lfn_cat1 and checkDirExists(tmplfn_p) == False : lfn_cat1.append(tmplfn_p)
@@ -308,6 +310,9 @@ eras = []
 for item in lfn:
     era = item.split('/')[3]
     if era not in eras: eras.append(era)
+    
+print 'oli eras',eras
+print 'oli requests',requestID
 
 print ''
 print'Subject: tape family request for era(s)',','.join(eras),"for PhEDEx request(s):",','.join(requestID)
