@@ -17,10 +17,10 @@ elif [ "$1" == "cern" ]; then
 elif [ "$1" == "ucsd" ]; then 
    echo "UCSD CMS software environment" 
    source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12   
-   export SCRAM_ARCH=slc5_amd64_gcc434
+   export SCRAM_ARCH=slc5_amd64_gcc462
 elif [ "$1" == "ucsd_ui" ]; then
    echo "UCSD UI environment"
-   source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
+   source /code/osgcode/ucsdt2/gLite32/etc/profile.d/grid_env.sh
 elif [ "$1" == "cern_ui" ]; then
    echo "CERN UI environment"
    source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.sh   
@@ -33,6 +33,9 @@ elif [ "$1" == "crab_fnal_local" ]; then
 elif [ "$1" == "crab_cern" ]; then
    echo "CERN CRAB configuration"
    source /afs/cern.ch/cms/ccs/wm/scripts/Crab/crab.sh
+elif [ "$1" == "crab_ucsd" ]; then
+   echo "UCSD CRAB configuration"
+   source /code/osgcode/ucsdt2/Crab/etc/crab.sh
 elif [ "$1" == "go_fnal" ]; then
    echo "FNAL working environment"
    export CMS2_LOCATION=/uscms/home/gutsche/work/software/DataTaking/CMSSW_5_3_7/src
@@ -73,15 +76,13 @@ elif [ "$1" == "go_cern" ]; then
    cd
 elif [ "$1" == "go_ucsd" ]; then 
    echo "UCSD CMS2 working environment" 
-   #source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
-   #export SCRAM_ARCH=slc4_ia32_gcc345
-   #cd $HOME/software/TAS/CMSSW_2_2_3_V01-02-06/src/CMS2
-   #eval `scramv1 runtime -sh`
+   source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12   
+   export SCRAM_ARCH=slc5_amd64_gcc462
+   cd /home/users/gutsche/software/TAS/AFB7TeV/CMSSW_5_3_2_patch4/src
+   eval `scramv1 runtime -sh`
    #source /code/osgcode/ucsdt2/gLite/etc/profile.d/grid_env.sh
    #source /code/osgcode/ucsdt2/Crab/etc/crab.sh
-   export ROOTSYS=/code/osgcode/UCSD_root/root_v5.28.00/
-   export PATH=$PATH:$ROOTSYS/bin
-   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+   cd /home/users/gutsche/software/TAS/AFB7TeV/CMSSW_5_3_2_patch4/src/Analysis_2012/
 elif [ "$1" == "ucsd_analysis" ]; then
    source /code/osgcode/cmssoft/cmsset_default.sh CMSSW_1_6_12
    export SCRAM_ARCH=slc5_ia32_gcc434

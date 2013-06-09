@@ -2,10 +2,18 @@
 
 import sys,getopt,urllib2,json,os,datetime,subprocess,shlex
 
+def checkDirExists(lfn):
+    path = '/pnfs/cms/WAX/11' + lfn
+    result = os.path.exists(path)
+    if result == True: result = os.path.isdir(path)
+    return result
+
+
 requestID = None
+pending = False
 allSites = 1
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "", ["id="])
+    opts, args = getopt.getopt(sys.argv[1:], "", ["id=","pending"])
 except getopt.GetoptError:
     print 'Please specify comma separated list of PhEDEx request IDs with --id'
     sys.exit(2)
@@ -14,16 +22,29 @@ except getopt.GetoptError:
 for opt, arg in opts :
     if opt == "--id" :
         requestID = arg.split(',')
-        
-if requestID == None:
+    if opt == "--pending" :
+        pending = True
+
+if requestID == None and pending == False:
     print 'Please specify comma separated list of PhEDEx request IDs with --id'
     sys.exit(2)
+    
+if pending:
+    requestID = []
+    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/requestlist?decision=pending&node=T1_US_FNAL_MSS'
+    jstr = urllib2.urlopen(url).read()
+    jstr = jstr.replace("\n", " ")
+    result = json.loads(jstr)
+    for item in result['phedex']['request']:
+        requestID.append(int(item['id']))
+
+requestID.sort()
 
 datasets = []
 blocks = []
 
 for id in requestID:
-    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/transferrequests?request=' + id
+    url='https://cmsweb.cern.ch/phedex/datasvc/json/prod/transferrequests?request=' + str(id)
     jstr = urllib2.urlopen(url).read()
     jstr = jstr.replace("\n", " ")
     result = json.loads(jstr)
@@ -224,19 +245,19 @@ if len(datasets) > 0 :
                 tmplfn = '/'+'/'.join(parts[1:6])
                 if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                     if tier in datatiers_cat1:
-                        if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
+                        if tmplfn_p not in lfn_cat1 and checkDirExists(tmplfn_p) == False : lfn_cat1.append(tmplfn_p)
                     else:
                         if tmplfn_p.count('Prompt') > 0:
-                            if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                            if tmplfn_p not in lfn_cat2 and checkDirExists(tmplfn_p) == False : lfn_cat2.append(tmplfn_p)
                         elif tmplfn_p.count('ALCARECO') > 0:
-                            if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                            if tmplfn_p not in lfn_cat2 and checkDirExists(tmplfn) == False : lfn_cat2.append(tmplfn_p)
                         else :
-                            if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
+                            if tmplfn not in lfn_cat3 and checkDirExists(tmplfn) == False : lfn_cat3.append(tmplfn)
                 else:
                     if tier in datatiers_cat4:
-                        if tmplfn not in lfn_cat4: lfn_cat4.append(tmplfn)
+                        if tmplfn not in lfn_cat4 and checkDirExists(tmplfn) == False : lfn_cat4.append(tmplfn)
                     else:
-                        if tmplfn not in lfn_cat5: lfn_cat5.append(tmplfn)
+                        if tmplfn not in lfn_cat5 and checkDirExists(tmplfn) == False : lfn_cat5.append(tmplfn)
 
 if len(blocks) > 0 :
     for block in blocks:
@@ -255,19 +276,19 @@ if len(blocks) > 0 :
             tmplfn = '/'+'/'.join(parts[1:6])
             if tmplfn.count('/store/data/') > 0 or tmplfn.count('/store/hidata/') > 0 :
                 if tier in datatiers_cat1:
-                    if tmplfn_p not in lfn_cat1: lfn_cat1.append(tmplfn_p)
+                    if tmplfn_p not in lfn_cat1 and checkDirExists(tmplfn_p) == False : lfn_cat1.append(tmplfn_p)
                 else:
                     if tmplfn_p.count('Prompt') > 0:
-                        if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                        if tmplfn_p not in lfn_cat2 and checkDirExists(tmplfn_p) == False : lfn_cat2.append(tmplfn_p)
                     elif tmplfn_p.count('ALCARECO') > 0:
-                        if tmplfn_p not in lfn_cat2: lfn_cat2.append(tmplfn_p)
+                        if tmplfn_p not in lfn_cat2 and checkDirExists(tmplfn) == False : lfn_cat2.append(tmplfn_p)
                     else :
-                        if tmplfn not in lfn_cat3: lfn_cat3.append(tmplfn)
+                        if tmplfn not in lfn_cat3 and checkDirExists(tmplfn) == False : lfn_cat3.append(tmplfn)
             else:
                 if tier in datatiers_cat4:
-                    if tmplfn not in lfn_cat4: lfn_cat4.append(tmplfn)
+                    if tmplfn not in lfn_cat4 and checkDirExists(tmplfn) == False : lfn_cat4.append(tmplfn)
                 else:
-                    if tmplfn not in lfn_cat5: lfn_cat5.append(tmplfn)
+                    if tmplfn not in lfn_cat5 and checkDirExists(tmplfn) == False : lfn_cat5.append(tmplfn)
 
 
 lfn = []
@@ -276,6 +297,12 @@ lfn.extend(lfn_cat2)
 lfn.extend(lfn_cat3)
 lfn.extend(lfn_cat4)
 lfn.extend(lfn_cat5)
+
+if len(lfn) <= 0:
+    print ''
+    print 'No tape families have to be created, all good to go!'
+    print ''
+    sys.exit(0)
 
 eras = []
 for item in lfn:

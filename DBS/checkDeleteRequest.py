@@ -4,8 +4,9 @@ import sys,getopt,urllib2,json,os,datetime,subprocess,shlex
 
 requestId = None
 allSites = 1
+skipT0 = False
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "", ["id="])
+    opts, args = getopt.getopt(sys.argv[1:], "", ["id=","skipT0"])
 except getopt.GetoptError:
     print 'Please specify PhEDEx request ID with --id'
     sys.exit(2)
@@ -14,6 +15,8 @@ except getopt.GetoptError:
 for opt, arg in opts :
     if opt == "--id" :
         requestID = arg
+    if opt == "--skipT0":
+        skipT0 = True
         
 if requestID == None:
     print 'Please specify PhEDEx request ID with --id'
@@ -69,6 +72,7 @@ if len(datasets) > 0 :
                 for replica in block['replica']:
                     files = replica['files']
                     site = str(replica['node'])
+                    if skipT0 == True and site[0:2] == 'T0' : continue
                     is_custodial = replica['custodial']
                     if allSites == 1 or ( site[0:2] == 'T1' or site[0:2] == 'T0') :
                         if is_custodial == 'y' :
